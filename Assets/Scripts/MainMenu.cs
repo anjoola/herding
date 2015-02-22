@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ManMenu : MonoBehaviour {
+public class MainMenu : MonoBehaviour {
 
 	double RANGE = 10.0f;
 	double BUTTON_THRESHOLD = 200f;
