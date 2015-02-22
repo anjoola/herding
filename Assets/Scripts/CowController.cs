@@ -21,7 +21,8 @@ public class CowController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		startY = rigidbody.transform.position.y;
-		Debug.Log (rigidbody.transform.forward);
+        Debug.Log (rigidbody.transform.forward);
+        plane.SetNormalAndPosition(new Vector3(0.0f, 1.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
 	}
 
 	private float dist;
@@ -29,7 +30,6 @@ public class CowController : MonoBehaviour {
 	private Plane plane;
 	
 	void OnMouseDown() {
-		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -63,47 +63,47 @@ public class CowController : MonoBehaviour {
 	{
 		isMouseDown = false;
 	}
-
-	private float nextGaussianRand(float mean, float stdDev){
-		for (int i = 0; i < seed; i++) rand1.NextDouble();
-		float u1 = (float)rand1.NextDouble(); //these are uniform(0,1) random doubles
-		float u2 = (float)rand1.NextDouble();
-		float value = -2 * Mathf.Log10 (u1);
-		float randStdNormal = Mathf.Sqrt(value) *
-			Mathf.Sin(2 * Mathf.PI * u2); //random normal(0,1)
-		float randNormal =
-			mean + stdDev * randStdNormal;
-		return randNormal;
-	}
-
-//	void OnMouseDrag() { 
-//		Debug.Log ("Drag");
-//		Vector3 curScreenPoint = Input.mousePosition;
-//		Vector3 curWorldPosition = Camera.main.ScreenToWorldPoint(curScreenPoint + screenSpaceOffset);
-//		curWorldPosition.z = curWorldPosition.y;
-//		curWorldPosition.y = startY;
-//		rigidbody.transform.position = curWorldPosition;
+//
+//	private float nextGaussianRand(float mean, float stdDev){
+//		for (int i = 0; i < seed; i++) rand1.NextDouble();
+//		float u1 = (float)rand1.NextDouble(); //these are uniform(0,1) random doubles
+//		float u2 = (float)rand1.NextDouble();
+//		float value = -2 * Mathf.Log10 (u1);
+//		float randStdNormal = Mathf.Sqrt(value) *
+//			Mathf.Sin(2 * Mathf.PI * u2); //random normal(0,1)
+//		float randNormal =
+//			mean + stdDev * randStdNormal;
+//		return randNormal;
 //	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-		if (Time.frameCount % 10 == 0) {
-			float headingAngle = Quaternion.LookRotation (rigidbody.transform.forward).eulerAngles.y;
-			float nextHeadingAngle = nextGaussianRand (headingAngle, amtRandomness);
-			Vector3 eulerAngleVelocity = new Vector3 (0, nextHeadingAngle, 0);
-
-			Debug.Log (nextHeadingAngle);
-
-			
-			float nextXForward = stepSize * ((float)Math.Cos (nextHeadingAngle));
-			float nextZForward = stepSize * ((float)Math.Sin (nextHeadingAngle));
-			Vector3 nextForward = new Vector3 (nextXForward, 0.0f, nextZForward);
-			rigidbody.transform.forward = nextForward;
-
-			if (!isMouseDown){
-				rigidbody.transform.position += stepSize * rigidbody.transform.forward;
-			}
-		}
-
-	}
+//
+////	void OnMouseDrag() { 
+////		Debug.Log ("Drag");
+////		Vector3 curScreenPoint = Input.mousePosition;
+////		Vector3 curWorldPosition = Camera.main.ScreenToWorldPoint(curScreenPoint + screenSpaceOffset);
+////		curWorldPosition.z = curWorldPosition.y;
+////		curWorldPosition.y = startY;
+////		rigidbody.transform.position = curWorldPosition;
+////	}
+//	
+//	// Update is called once per frame
+//	void FixedUpdate () {
+//		if (Time.frameCount % 10 == 0) {
+//			float headingAngle = Quaternion.LookRotation (rigidbody.transform.forward).eulerAngles.y;
+//			float nextHeadingAngle = nextGaussianRand (headingAngle, amtRandomness);
+//			Vector3 eulerAngleVelocity = new Vector3 (0, nextHeadingAngle, 0);
+//
+//			Debug.Log (nextHeadingAngle);
+//
+//			
+//			float nextXForward = stepSize * ((float)Math.Cos (nextHeadingAngle));
+//			float nextZForward = stepSize * ((float)Math.Sin (nextHeadingAngle));
+//			Vector3 nextForward = new Vector3 (nextXForward, 0.0f, nextZForward);
+//			rigidbody.transform.forward = nextForward;
+//
+//			if (!isMouseDown){
+//				rigidbody.transform.position += stepSize * rigidbody.transform.forward;
+//			}
+//		}
+//
+//	}
 }
