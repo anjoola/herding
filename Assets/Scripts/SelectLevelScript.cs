@@ -19,58 +19,50 @@ public class SelectLevelScript : MonoBehaviour {
 	bool isUILayerActive = false;
 	public GameObject uiLayer;
 	public Text levelName;
-	public Text levelScore;
 	public RawImage levelImage;
-	public Button startButton;
+	public GameObject[] stars;
+	public Text levelScore;
 	public Button backButton;
+	public Button startButton;
 	string selectedLevel;
 
-	//float SCALE_FACTOR = 1.1f;
-	//float SCALE_TIME = 1.0f;
-
-	public void goBack() {
-		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
-	}
-	public void startLevel() {
-		Application.LoadLevel(selectedLevel);
-	}
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
 		cameraOrigRot = Camera.main.transform.rotation;
-	}
 
+		// Load savefile.
+		LoadSave.loadGame();
+	}
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
 			Vector3 mousePos = Input.mousePosition;
-	
-			// 
-			if (isUILayerActive) {
 
-
-			}
 			// See if the user clicked on a level and try to load that level's information.
-			else {
-				LoadLevelInfo(mousePos, "Cow Palace", "CowPalace");
-				LoadLevelInfo(mousePos, "City", "CowPalace");
+			if (!isUILayerActive) {
+				foreach (Level level in LoadSave.currentGame.levels) {
+					LoadLevelInfo(mousePos, level);
+				}
 			}
 		}
 	}
-	/*
-	void OnMouseEnter() {
-		iTween.ScaleBy (gameObject, iTween.Hash (
-			"x", SCALE_FACTOR,
-			"y", SCALE_FACTOR,
-			"z", SCALE_FACTOR,
-			"time", SCALE_TIME));
+	void OnApplicationQuit() {
+		// Save savefile.
+		LoadSave.saveGame();
 	}
-	void OnMouseExit() {
-		iTween.ScaleBy (gameObject, iTween.Hash (
-			"x", 1/SCALE_FACTOR,
-			"y", 1/SCALE_FACTOR,
-			"z", 1/SCALE_FACTOR,
-			"time", SCALE_TIME));
-	}*/
+
+	/**
+	 * Goes back to the world map if on the Ui layer.
+	 */
+	public void goBack() {
+		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
+	}
+	/**
+	 * Starts a level.
+	 */
+	public void startLevel() {
+		Application.LoadLevel(selectedLevel);
+	}
 
 	/**
 	 * Loads level information if the user clicks on the right spot.
@@ -80,20 +72,26 @@ public class SelectLevelScript : MonoBehaviour {
 	 *                  needs to be objects called "Level Model" and "Level Zoom".
 	 * sceneName: Name of the scene associated with this level.
 	 */
-	bool LoadLevelInfo(Vector3 mousePos, string levelAssetsName, string sceneName) {
-		Vector3 objLoc = Camera.main.WorldToScreenPoint(GameObject.Find(levelAssetsName + " Model").transform.position);
+	bool LoadLevelInfo(Vector3 mousePos, Level level) {
+		Vector3 objLoc = Camera.main.WorldToScreenPoint(
+			GameObject.Find(level.assetsName + " Model").transform.position);
 		// TODO detect clicks on the objects better
 		if (Mathf.Abs (objLoc.x - mousePos.x) < CLICK_THRESHOLD &&
 		    Mathf.Abs (objLoc.y - mousePos.y) < CLICK_THRESHOLD) {
 
 			// Find the target camera zoom location and move the camera there.
-			GameObject cameraZoomLoc = GameObject.Find(levelAssetsName + " Zoom");
+			GameObject cameraZoomLoc = GameObject.Find(level.assetsName + " Zoom");
 			StartCoroutine(MoveCameraLoc(cameraZoomLoc));
 
-			levelName.text = levelAssetsName;
-			// TODO score, stars, and image
-
-			selectedLevel = sceneName;
+			// Level name, score, stars, image.
+			levelName.text = level.assetsName;
+			levelScore.text = "Score: " + level.numPoints;
+			for (int i = 0; i < level.numStars; i++) {
+				stars[i].SetActive(i < level.numStars);
+			}
+			// TODO image
+		
+			selectedLevel = level.sceneName;
 			return true;
 		}
 		return false;
@@ -113,7 +111,7 @@ public class SelectLevelScript : MonoBehaviour {
 		while (t < 1.0f) {
 			t += Time.deltaTime * (Time.timeScale / TRANSITION_DURATION);
 			Camera.main.transform.position = Vector3.Lerp(startingPos, targetPos, t);
-			// TODO rotation
+			// TODO rotation?
 			yield return 0;
 		}
 
