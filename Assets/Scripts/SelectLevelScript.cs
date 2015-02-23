@@ -24,15 +24,18 @@ public class SelectLevelScript : MonoBehaviour {
 	public Text levelScore;
 	public Button backButton;
 	public Button startButton;
-	string selectedLevel;
+	public GameObject selectLevel;
+
+	// The current level.
+	public static Level currentLevel;
 
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
 		cameraOrigRot = Camera.main.transform.rotation;
 
-		// Load savefile.
-		LoadSave.loadGame();
+		iTween.MoveBy(GameObject.Find("Level Select Info"),
+		              iTween.Hash("y", -10, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
 	}
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
@@ -40,15 +43,11 @@ public class SelectLevelScript : MonoBehaviour {
 
 			// See if the user clicked on a level and try to load that level's information.
 			if (!isUILayerActive) {
-				foreach (Level level in LoadSave.currentGame.levels) {
+				foreach (Level level in GlobalState.currentGame.levels) {
 					LoadLevelInfo(mousePos, level);
 				}
 			}
 		}
-	}
-	void OnApplicationQuit() {
-		// Save savefile.
-		LoadSave.saveGame();
 	}
 
 	/**
@@ -56,12 +55,14 @@ public class SelectLevelScript : MonoBehaviour {
 	 */
 	public void goBack() {
 		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
+		GlobalState.currentLevel = null;
 	}
 	/**
 	 * Starts a level.
 	 */
 	public void startLevel() {
-		Application.LoadLevel(selectedLevel);
+		Application.LoadLevel(GlobalState.currentLevel.sceneName);
+		enableUI(false);
 	}
 
 	/**
@@ -85,13 +86,13 @@ public class SelectLevelScript : MonoBehaviour {
 
 			// Level name, score, stars, image.
 			levelName.text = level.assetsName;
-			levelScore.text = "Score: " + level.numPoints;
+			levelScore.text = level.getScore();
 			for (int i = 0; i < level.numStars; i++) {
 				stars[i].SetActive(i < level.numStars);
 			}
 			// TODO image
 		
-			selectedLevel = level.sceneName;
+			GlobalState.currentLevel = level;
 			return true;
 		}
 		return false;
@@ -122,6 +123,7 @@ public class SelectLevelScript : MonoBehaviour {
 	 * Displays or hides the UI layer.
 	 */
 	void enableUI(bool active) {
+		selectLevel.SetActive(!active);
 		uiLayer.SetActive(active);
 		isUILayerActive = active;
 	}

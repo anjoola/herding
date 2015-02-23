@@ -20,7 +20,7 @@ public class Level {
 	// Whether or not the level is completed.
 	public bool isCompleted;
 	// Number of points gotten.
-	public int numPoints;
+	public int score;
 	// The number of stars earned.
 	public int numStars;
 	
@@ -29,12 +29,18 @@ public class Level {
 		this.sceneName = sceneName;
 
 		this.isCompleted = false;
-		this.numPoints = 0;
+		this.score = 0;
 		this.numStars = 3;
 	}
-	public void setCompleted(int numPoints) {
+	public string getScore() {
+		return "Score: " + score;
+	}
+	public void incrementScore(int score) {
+		this.score += score;
+	}
+	public void setCompleted(int score) {
 		isCompleted = true;
-		this.numPoints = numPoints;
+		this.score = score;
 
 		// Compute stars.
 		// TODO

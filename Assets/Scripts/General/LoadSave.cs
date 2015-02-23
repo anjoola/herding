@@ -6,7 +6,6 @@ using System.IO;
 
 public class LoadSave {
 	static string SAVE_FILE = "/savefile.gd";
-	public static GameState currentGame;
 
 	/**
 	 * Saves the current game.
@@ -14,22 +13,21 @@ public class LoadSave {
 	public static void saveGame() {
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.persistentDataPath + SAVE_FILE);
-		bf.Serialize(file, LoadSave.currentGame);
+		bf.Serialize(file, GlobalState.currentGame);
 		file.Close(); 
 	}
 	/**
 	 * Loads an existing game or creates a new file if one doesn't exist.
 	 */
 	public static void loadGame() {
-		if (File.Exists(Application.persistentDataPath + SAVE_FILE)) {
+		try {
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + SAVE_FILE, FileMode.Open);
-			LoadSave.currentGame = (GameState)bf.Deserialize(file);
+			GlobalState.currentGame = (GameState)bf.Deserialize(file);
 			file.Close();
-		}
-		// Otherwise, create a new game save.
-		else {
-			LoadSave.currentGame = new GameState();
+		} catch (System.SystemException) {
+			// Otherwise, create a new game save.
+			GlobalState.currentGame = new GameState();
 		}
 	}
 }
