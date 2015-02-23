@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 /**
@@ -6,7 +7,7 @@ using System.Collections;
  */
 public class SelectLevelScript : MonoBehaviour {
 	// Transition duration from one camera position to another.
-	float TRANSITION_DURATION = 0.8f;
+	float TRANSITION_DURATION = 0.7f;
 
 	// Camera position and rotation.
 	Vector3 cameraOrigPos;
@@ -14,9 +15,25 @@ public class SelectLevelScript : MonoBehaviour {
 	
 	float CLICK_THRESHOLD = 100f;
 
+	// UI layer components.
+	bool isUILayerActive = false;
+	public GameObject uiLayer;
+	public Text levelName;
+	public Text levelScore;
+	public RawImage levelImage;
+	public Button startButton;
+	public Button backButton;
+	string selectedLevel;
+
 	//float SCALE_FACTOR = 1.1f;
 	//float SCALE_TIME = 1.0f;
 
+	public void goBack() {
+		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
+	}
+	public void startLevel() {
+		Application.LoadLevel(selectedLevel);
+	}
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
@@ -26,13 +43,17 @@ public class SelectLevelScript : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
 			Vector3 mousePos = Input.mousePosition;
+	
+			// 
+			if (isUILayerActive) {
 
-			// See if the user clicked on a level and try to load that level
-			LoadLevelInfo(mousePos, "Cow Palace", "CowPalace");
 
-			//cameraTargetPos = cameraOrigPos;
-			//cameraTargetRot = cameraOrigRot;
-			//StartCoroutine(MoveCameraLoc());
+			}
+			// See if the user clicked on a level and try to load that level's information.
+			else {
+				LoadLevelInfo(mousePos, "Cow Palace", "CowPalace");
+				LoadLevelInfo(mousePos, "City", "CowPalace");
+			}
 		}
 	}
 	/*
@@ -61,6 +82,7 @@ public class SelectLevelScript : MonoBehaviour {
 	 */
 	bool LoadLevelInfo(Vector3 mousePos, string levelAssetsName, string sceneName) {
 		Vector3 objLoc = Camera.main.WorldToScreenPoint(GameObject.Find(levelAssetsName + " Model").transform.position);
+		// TODO detect clicks on the objects better
 		if (Mathf.Abs (objLoc.x - mousePos.x) < CLICK_THRESHOLD &&
 		    Mathf.Abs (objLoc.y - mousePos.y) < CLICK_THRESHOLD) {
 
@@ -68,8 +90,10 @@ public class SelectLevelScript : MonoBehaviour {
 			GameObject cameraZoomLoc = GameObject.Find(levelAssetsName + " Zoom");
 			StartCoroutine(MoveCameraLoc(cameraZoomLoc));
 
-			// Show level information.
-			//Application.LoadLevel (levelName);
+			levelName.text = levelAssetsName;
+			// TODO score, stars, and image
+
+			selectedLevel = sceneName;
 			return true;
 		}
 		return false;
@@ -79,15 +103,28 @@ public class SelectLevelScript : MonoBehaviour {
 	 * Moves the camera location to the target position and rotation.
 	 */
 	IEnumerator MoveCameraLoc(GameObject target) {
+		return MoveCameraLoc(target.transform.position, target.transform.rotation, true);
+	}
+	IEnumerator MoveCameraLoc(Vector3 targetPos, Quaternion targetRot, bool enabled) {
+		if (!enabled) enableUI(false);
+
 		float t = 0.0f;
 		Vector3 startingPos = Camera.main.transform.position;
-		Vector3 targetPos = target.transform.position;
-		Quaternion targetRot = target.transform.rotation;
 		while (t < 1.0f) {
 			t += Time.deltaTime * (Time.timeScale / TRANSITION_DURATION);
 			Camera.main.transform.position = Vector3.Lerp(startingPos, targetPos, t);
 			// TODO rotation
 			yield return 0;
 		}
+
+		if (enabled) enableUI(true);
+	}
+
+	/**
+	 * Displays or hides the UI layer.
+	 */
+	void enableUI(bool active) {
+		uiLayer.SetActive(active);
+		isUILayerActive = active;
 	}
 }
