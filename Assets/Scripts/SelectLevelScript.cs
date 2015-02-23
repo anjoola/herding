@@ -32,7 +32,6 @@ public class SelectLevelScript : MonoBehaviour {
 		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
 	}
 	public void startLevel() {
-		print ("HERE");
 		Application.LoadLevel(selectedLevel);
 	}
 	void Start () {
@@ -83,6 +82,7 @@ public class SelectLevelScript : MonoBehaviour {
 	 */
 	bool LoadLevelInfo(Vector3 mousePos, string levelAssetsName, string sceneName) {
 		Vector3 objLoc = Camera.main.WorldToScreenPoint(GameObject.Find(levelAssetsName + " Model").transform.position);
+		// TODO detect clicks on the objects better
 		if (Mathf.Abs (objLoc.x - mousePos.x) < CLICK_THRESHOLD &&
 		    Mathf.Abs (objLoc.y - mousePos.y) < CLICK_THRESHOLD) {
 
