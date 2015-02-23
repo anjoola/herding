@@ -10,6 +10,7 @@ public class Boid : MonoBehaviour
 
 	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
 
+
 	void Start ()
 	{
 		Debug.Log ("Start");
@@ -37,6 +38,15 @@ public class Boid : MonoBehaviour
 	private Vector3 v3Offset;
 	private Plane plane;
 
+	void OnTriggerEnter2D(Collider2D other) {
+		if (other.gameObject.tag == "DetectionTag")
+		{
+			Debug.Log ("Destroying");
+			_boids.Remove (gameObject.rigidbody2D);
+			Destroy(gameObject);
+        }
+    }
+    
 
 	void OnMouseDown() {
 		Debug.Log ("Down");
