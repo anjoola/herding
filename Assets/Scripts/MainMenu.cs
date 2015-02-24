@@ -31,7 +31,7 @@ public class MainMenu : MonoBehaviour {
 
 			if (Mathf.Abs (startButtonPos.x - mousePos.x) < BUTTON_THRESHOLD &&
 			    Mathf.Abs (startButtonPos.y - mousePos.y) < BUTTON_THRESHOLD) {
-				Application.LoadLevel ("WorldMap");
+				Application.LoadLevel("WorldMap");
 			}
 		}
 	}
