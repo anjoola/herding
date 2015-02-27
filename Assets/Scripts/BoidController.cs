@@ -19,7 +19,7 @@ public class BoidController : MonoBehaviour
 		// Create all the boids and add them as a child of the controller
 		for (int i=0; i<_number_of_boids; i++)
 		{
-			GameObject go = (GameObject)Instantiate(_boid_prefab);
+			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(0,0,0), Quaternion.Euler(90, -20, 180));
 			go.transform.parent = transform;
 		}
 	}
