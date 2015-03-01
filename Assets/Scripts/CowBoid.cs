@@ -34,10 +34,7 @@ public class CowBoid : MonoBehaviour
 		_height = _top - _bottom;
 
 
-		Debug.Log (_left + "," + _right + "," + _top + "," + _bottom);
-		Debug.Log (rigidbody2D.position);
 		StartWrap ();
-		Debug.Log (rigidbody2D.position);
 	}
 
 	private float dist;
@@ -49,13 +46,14 @@ public class CowBoid : MonoBehaviour
 		{
 //TODO			IncrementPoint();
 			Debug.Log ("Increment Point");
+			
+			GlobalStateController.addScore(40);
 			Destroy ();
         }
     }
     
 
 	void OnMouseDown() {
-		Debug.Log ("Down");
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
@@ -99,6 +97,7 @@ public class CowBoid : MonoBehaviour
 		{
 			//TODO change to actually call game over.
 			Debug.Log ("Game over");
+			GlobalStateController.finishLevel();
 		}
 	}
 
@@ -117,9 +116,9 @@ public class CowBoid : MonoBehaviour
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)
-			rigidbody2D.position = new Vector2(_left + 1.5f * _width , rigidbody2D.position.y);
+			rigidbody2D.position = new Vector2(centerX , rigidbody2D.position.y);
 		else if (rigidbody2D.position.x > _right)
-			rigidbody2D.position = new Vector2(_left + 1.5f * _width , rigidbody2D.position.y);
+			rigidbody2D.position = new Vector2(centerX , rigidbody2D.position.y);
 		if (rigidbody2D.position.y < _bottom)
 			rigidbody2D.position = new Vector2(rigidbody2D.position.x, centerY);
 		else if (rigidbody2D.position.y > _top)
@@ -148,7 +147,6 @@ public class CowBoid : MonoBehaviour
 
 		if (changed) 
 		{
-			Debug.Log ("Destroy!!!!!!!!");
 			Destroy ();
 		}
     }
