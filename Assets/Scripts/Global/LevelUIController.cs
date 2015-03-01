@@ -11,6 +11,8 @@ using System.Collections;
 public class LevelUIController : MonoBehaviour {
 	public Text timer;
 	public Text score;
+
+	public GameObject menuButton;
 	
 	/**
 	 * Updates the score and timer.
@@ -27,5 +29,9 @@ public class LevelUIController : MonoBehaviour {
 	 */
 	public void showMenu() {
 		GlobalStateController.pauseLevel();
+	}
+
+	public void enableMenuButton(bool enabled) {
+		menuButton.SetActive(enabled);
 	}
 }

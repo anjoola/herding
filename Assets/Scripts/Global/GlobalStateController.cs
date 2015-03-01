@@ -17,6 +17,8 @@ public class GlobalStateController : MonoBehaviour {
 	private static PauseMenuController pauseMenuController;
 	public static GameObject levelUI;
 	private static LevelUIController levelUIController;
+	public static GameObject levelComplete;
+	private static LevelCompleteController levelCompleteController;
 
 	// Timer.
 	public static int currTime;
@@ -29,6 +31,7 @@ public class GlobalStateController : MonoBehaviour {
 		DontDestroyOnLoad(transform.gameObject);
 		DontDestroyOnLoad(pauseMenu);
 		DontDestroyOnLoad(levelUI);
+		DontDestroyOnLoad(levelComplete);
 	}
 	void Start() {
 		// Load savefile.
@@ -39,10 +42,13 @@ public class GlobalStateController : MonoBehaviour {
 		pauseMenuController = pauseMenu.GetComponent("PauseMenuController") as PauseMenuController;
 		levelUI = GameObject.Find("LevelUI");
 		levelUIController = levelUI.GetComponent("LevelUIController") as LevelUIController;
+		levelComplete = GameObject.Find("LevelComplete");
+		levelCompleteController = levelComplete.GetComponent("LevelCompleteController") as LevelCompleteController;
 
 		// Hide menus for now.
 		enablePauseMenu(false);
 		enableLevelUI(false);
+		enableLevelComplete(false);
 	
 		// Disable timer but start the timer thread.
 		currTime = 0;
@@ -57,16 +63,23 @@ public class GlobalStateController : MonoBehaviour {
 	}
 
 	/* --------------------------------------------------- LEVELS ----------------------------------------------------*/
-
+	
 	public static void startLevel() {
 		currentLevel.start();
 	
+		// TODO load scene nicely
 		Application.LoadLevel(currentLevel.sceneName);
 
 		startTimer(currentLevel.maxTime);
 		resetScore();
+
 		enablePauseMenu(false);
 		enableLevelUI(true);
+		levelUIController.enableMenuButton(true);
+		enableLevelComplete(false);
+	}
+	public static void restartLevel() {
+		startLevel();
 	}
 	public static void pauseLevel() {
 		//SendMessage("Pause"); TODO
@@ -77,49 +90,47 @@ public class GlobalStateController : MonoBehaviour {
 		enablePauseMenu(false);
 		resumeTimer();
 	}
-	public static void restartLevel() {
-		//SendMessage("restartLevel"); TODO
-		// TODO pretty similar to startLevel
-		currentLevel.start();
-	
-		startTimer(currentLevel.maxTime);
-		resetScore();
-		enablePauseMenu(false);
-		enableLevelUI(true);
-	}
 	public static void exitLevel() {
 		stopTimer();
+	
 		enableLevelUI(false);
 		enablePauseMenu(false);
+		enableLevelComplete(false);
 		
 		// TODO cleanup for this level?
 		Application.LoadLevel("WorldMap");
 	}
-	public static void finishLevel() {
-		currentLevel.finish();
+	public static void finishLevel(bool wasTimeUp=false) {
+		stopTimer();
+		if (wasTimeUp) {
+			levelCompleteController.timeUp();
+		} else {
+			// TODO levelCompleteController.levelComplete();
+			levelCompleteController.gameOver();
+		}
+	
+		levelUIController.enableMenuButton(false);
+		enablePauseMenu (false);
+		enableLevelComplete(true);
 
-		exitLevel();
+		currentLevel.finish();
 	}
 
 	/* ---------------------------------------------------- TIMER ----------------------------------------------------*/
 
 	public static void startTimer(int time) {
-//		Time.timeScale = 1;
 		currTime = time;
 		timerEnabled = true;
 		levelUIController.updateTimer(currTime);
 	}
 	public static void pauseTimer() {
-//		Time.timeScale = 0;
 		timerEnabled = false;
 	}
 	public static void resumeTimer() {
-//		Time.timeScale = 1;
 		timerEnabled = true;
 	}
 
 	public static void stopTimer() {
-//		Time.timeScale = 0;
 		timerEnabled = false;
 	}
 	/**
@@ -134,9 +145,9 @@ public class GlobalStateController : MonoBehaviour {
 			if (currTime == 0) {
 				timerEnabled = false;
 				// TODO send signal that timer stopped
-			}
 
-			// TODO remove, only for demo purposes
+				finishLevel(true);
+			}
 		}
 	}
 
@@ -172,5 +183,8 @@ public class GlobalStateController : MonoBehaviour {
 		if (currentLevel == null && enabled) return;
 
 		levelUI.SetActive(enabled);
+	}
+	public static void enableLevelComplete(bool enabled) {
+		levelComplete.SetActive(enabled);
 	}
 }
