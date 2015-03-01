@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class LoadSave {
+public class SaveController {
 	static string SAVE_FILE = "/savefile.gd";
 
 	/**
@@ -13,21 +13,24 @@ public class LoadSave {
 	public static void saveGame() {
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.persistentDataPath + SAVE_FILE);
-		bf.Serialize(file, GlobalState.currentGame);
+		bf.Serialize(file, GlobalStateController.currentGame);
 		file.Close(); 
 	}
 	/**
 	 * Loads an existing game or creates a new file if one doesn't exist.
 	 */
 	public static void loadGame() {
+		GlobalStateController.currentGame = new GameModel();
+		return;
+		// TODO add back and remove above
 		try {
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + SAVE_FILE, FileMode.Open);
-			GlobalState.currentGame = (GameState)bf.Deserialize(file);
+			GlobalStateController.currentGame = (GameModel)bf.Deserialize(file);
 			file.Close();
 		} catch (System.SystemException) {
 			// Otherwise, create a new game save.
-			GlobalState.currentGame = new GameState();
+			GlobalStateController.currentGame = new GameModel();
 		}
 	}
 }
