@@ -46,6 +46,8 @@ public class CowBoid : MonoBehaviour
 		{
 //TODO			IncrementPoint();
 			Debug.Log ("Increment Point");
+			
+			GlobalStateController.addScore(40);
 			Destroy ();
         }
     }
@@ -95,6 +97,7 @@ public class CowBoid : MonoBehaviour
 		{
 			//TODO change to actually call game over.
 			Debug.Log ("Game over");
+			GlobalStateController.finishLevel();
 		}
 	}
 

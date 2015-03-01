@@ -104,17 +104,22 @@ public class GlobalStateController : MonoBehaviour {
 	/* ---------------------------------------------------- TIMER ----------------------------------------------------*/
 
 	public static void startTimer(int time) {
+//		Time.timeScale = 1;
 		currTime = time;
 		timerEnabled = true;
 		levelUIController.updateTimer(currTime);
 	}
 	public static void pauseTimer() {
+//		Time.timeScale = 0;
 		timerEnabled = false;
 	}
 	public static void resumeTimer() {
+//		Time.timeScale = 1;
 		timerEnabled = true;
 	}
+
 	public static void stopTimer() {
+//		Time.timeScale = 0;
 		timerEnabled = false;
 	}
 	/**
@@ -132,7 +137,6 @@ public class GlobalStateController : MonoBehaviour {
 			}
 
 			// TODO remove, only for demo purposes
-			addScore(40);
 		}
 	}
 
