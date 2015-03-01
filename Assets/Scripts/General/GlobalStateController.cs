@@ -22,6 +22,8 @@ public class GlobalStateController : MonoBehaviour {
 	public static int currTime;
 	private static bool timerEnabled;
 
+	public static bool isPaused;
+
 	void Awake() {
 		// Make sure prefabs are not destroyed.
 		DontDestroyOnLoad(transform.gameObject);
@@ -46,6 +48,8 @@ public class GlobalStateController : MonoBehaviour {
 		currTime = 0;
 		timerEnabled = false;
 		InvokeRepeating("UpdateTimer", 0, 1.0f);
+
+		isPaused = false;
 	}
 	void OnApplicationQuit() {
 		// Save savefile.
@@ -150,10 +154,14 @@ public class GlobalStateController : MonoBehaviour {
 	 */
 	public static void enablePauseMenu(bool enabled) {
 		if (currentLevel == null && enabled) return;
-
-		pauseMenu.SetActive(enabled);
+		
+		isPaused = enabled;
 		if (enabled) {
 			pauseMenuController.updateText(currentLevel.assetsName, currentLevel.score);
+			pauseMenuController.slideIn();
+		}
+		else {
+			pauseMenuController.slideOut();
 		}
 	}
 	public static void enableLevelUI(bool enabled) {
