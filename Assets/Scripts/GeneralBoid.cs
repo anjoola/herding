@@ -5,16 +5,21 @@ using System.Collections.Generic;
 // Boid created by the BoidController class
 public class GeneralBoid : MonoBehaviour 
 {
-	private static List<Rigidbody2D> _boids = new List<Rigidbody2D>(); // A list of all the boids rigidbodies in the scene
+	private static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
 	
 	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
 
 	
-	private static List<Vector2> pausedVel = new List<Vector2>();
+	private static List<Vector2> pausedVel;
 	
 	private bool paused = true;
 	private bool isMouseDown = false;
+
+	public void Awake(){
+		_boids = new List<Rigidbody2D>();
+		pausedVel = new List<Vector2>();
+	}
 	
 	public static void PauseBoids()
 	{
@@ -27,6 +32,9 @@ public class GeneralBoid : MonoBehaviour
 	
 	public static void UnPauseBoids()
 	{
+		if (_boids == null || pausedVel == null) return;
+		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
+		Debug.Log ("Unpausing");
 		for (int i = 0; i < _boids.Count; i++)
 		{
 			_boids[i].velocity = pausedVel[i];
@@ -34,9 +42,7 @@ public class GeneralBoid : MonoBehaviour
 		
 		pausedVel = new List<Vector2>();
 	}
-	
-	
-	
+
 	void Start ()
 	{
 		Debug.Log ("Start");

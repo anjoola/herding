@@ -100,6 +100,14 @@ public class GlobalStateController : MonoBehaviour {
 		// TODO cleanup for this level?
 		Application.LoadLevel("WorldMap");
 	}
+
+
+	public static void exitLevel2(){
+		enableLevelUI(false);
+		Application.LoadLevel("WorldMap");
+	}
+
+
 	public static void finishLevel(bool wasTimeUp=false) {
 		stopTimer();
 		if (wasTimeUp) {
