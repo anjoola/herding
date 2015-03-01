@@ -25,4 +25,6 @@ public class BoidController : MonoBehaviour
 			go.transform.parent = transform;
 		}
 	}
+
+
 }

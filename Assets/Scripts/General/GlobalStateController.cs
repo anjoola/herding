@@ -69,7 +69,7 @@ public class GlobalStateController : MonoBehaviour {
 		enableLevelUI(true);
 	}
 	public static void pauseLevel() {
-		//SendMessage("Pause"); TODO
+//		SendMessage("Pause");
 		pauseTimer();
 		enablePauseMenu(true);
 	}
@@ -160,11 +160,13 @@ public class GlobalStateController : MonoBehaviour {
 		if (currentLevel == null && enabled) return;
 		
 		isPaused = enabled;
+
 		if (enabled) {
 			pauseMenuController.updateText(currentLevel.assetsName, currentLevel.score);
 			pauseMenuController.slideIn();
 		}
 		else {
+			GeneralBoid.UnPauseBoids();
 			pauseMenuController.slideOut();
 		}
 	}
