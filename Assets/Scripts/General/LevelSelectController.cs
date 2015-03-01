@@ -3,9 +3,12 @@ using UnityEngine.UI;
 using System.Collections;
 
 /**
- *  TODO documentation
+ *  Script for selecting levels
+ *    - Show level description UI when clicking on a level
+ *    - Detecting taps on level objects
+ *    - Starts a level
  */
-public class SelectLevelScript : MonoBehaviour {
+public class LevelSelectController : MonoBehaviour {
 	// Transition duration from one camera position to another.
 	float TRANSITION_DURATION = 0.7f;
 
@@ -16,7 +19,6 @@ public class SelectLevelScript : MonoBehaviour {
 	float CLICK_THRESHOLD = 100f;
 
 	// UI layer components.
-	bool isUILayerActive = false;
 	public GameObject uiLayer;
 	public Text levelName;
 	public RawImage levelImage;
@@ -24,17 +26,14 @@ public class SelectLevelScript : MonoBehaviour {
 	public Text levelScore;
 	public Button backButton;
 	public Button startButton;
-	public GameObject selectLevel;
-
-	// The current level.
-	public static Level currentLevel;
+	public GameObject selectLevelText;
 
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
 		cameraOrigRot = Camera.main.transform.rotation;
 
-		iTween.MoveBy(GameObject.Find("Level Select Info"),
+		iTween.MoveBy(GameObject.Find("Select a Level Text"),
 		              iTween.Hash("y", -10, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
 	}
 	void Update () {
@@ -42,27 +41,40 @@ public class SelectLevelScript : MonoBehaviour {
 			Vector3 mousePos = Input.mousePosition;
 
 			// See if the user clicked on a level and try to load that level's information.
-			if (!isUILayerActive) {
-				foreach (Level level in GlobalState.currentGame.levels) {
-					LoadLevelInfo(mousePos, level);
+			if (!uiLayer.activeSelf) {
+				foreach (Level level in GlobalStateController.currentGame.levels) {
+					loadLevelInfo(mousePos, level);
 				}
 			}
 		}
 	}
 
+	/* ----------------------------------------------- Button Handlers ---------------------------------------------- */
+
 	/**
-	 * Goes back to the world map if on the Ui layer.
+	 * Goes back to the world map if on the UI layer.
 	 */
 	public void goBack() {
 		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
-		GlobalState.currentLevel = null;
+		GlobalStateController.currentLevel = null;
 	}
+
 	/**
-	 * Starts a level.
+	 * Starts a level. Hides the world map UI.
 	 */
 	public void startLevel() {
-		Application.LoadLevel(GlobalState.currentLevel.sceneName);
-		enableUI(false);
+		enableWorldMapUI(false);
+		GlobalStateController.startLevel();
+	}
+
+	/* ---------------------------------------- World Map Level Info Display ---------------------------------------- */
+
+	/**
+	 * Displays or hides the world map UI layer.
+	 */
+	void enableWorldMapUI(bool active) {
+		selectLevelText.SetActive(!active);
+		uiLayer.SetActive(active);
 	}
 
 	/**
@@ -73,7 +85,7 @@ public class SelectLevelScript : MonoBehaviour {
 	 *                  needs to be objects called "Level Model" and "Level Zoom".
 	 * sceneName: Name of the scene associated with this level.
 	 */
-	bool LoadLevelInfo(Vector3 mousePos, Level level) {
+	bool loadLevelInfo(Vector3 mousePos, Level level) {
 		Vector3 objLoc = Camera.main.WorldToScreenPoint(
 			GameObject.Find(level.assetsName + " Model").transform.position);
 		// TODO detect clicks on the objects better
@@ -84,28 +96,41 @@ public class SelectLevelScript : MonoBehaviour {
 			GameObject cameraZoomLoc = GameObject.Find(level.assetsName + " Zoom");
 			StartCoroutine(MoveCameraLoc(cameraZoomLoc));
 
-			// Level name, score, stars, image.
-			levelName.text = level.assetsName;
-			levelScore.text = level.getScore();
-			for (int i = 0; i < level.numStars; i++) {
-				stars[i].SetActive(i < level.numStars);
-			}
-			// TODO image
-		
-			GlobalState.currentLevel = level;
+			setLevelInfo(level);
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Moves the camera location to the target position and rotation.
+	 * Set the level information in the UI.
+	 */
+	void setLevelInfo(Level level) {
+		// Level name, score, stars, image.
+		levelName.text = level.assetsName;
+		levelScore.text = "High Score: " + level.highScore;
+		for (int i = 0; i < level.numStars; i++) {
+			stars[i].SetActive(i < level.numStars);
+		}
+		// TODO image
+		
+		GlobalStateController.currentLevel = level;
+	}
+
+	/* --------------------------------------------------- Camera --------------------------------------------------- */
+
+	/**
+	 * Moves the camera location to the target game object.
 	 */
 	IEnumerator MoveCameraLoc(GameObject target) {
 		return MoveCameraLoc(target.transform.position, target.transform.rotation, true);
 	}
+
+	/**
+	 * Moves the camera location to the target position and rotation.
+	 */
 	IEnumerator MoveCameraLoc(Vector3 targetPos, Quaternion targetRot, bool enabled) {
-		if (!enabled) enableUI(false);
+		if (!enabled) enableWorldMapUI(false);
 
 		float t = 0.0f;
 		Vector3 startingPos = Camera.main.transform.position;
@@ -116,15 +141,6 @@ public class SelectLevelScript : MonoBehaviour {
 			yield return 0;
 		}
 
-		if (enabled) enableUI(true);
-	}
-
-	/**
-	 * Displays or hides the UI layer.
-	 */
-	void enableUI(bool active) {
-		selectLevel.SetActive(!active);
-		uiLayer.SetActive(active);
-		isUILayerActive = active;
+		if (enabled) enableWorldMapUI(true);
 	}
 }
