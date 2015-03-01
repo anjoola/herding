@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
 [System.Serializable]
-public class GameState {
+public class GameModel {
 	public List<Level> levels;
 
-	public GameState() {
-		levels = Level.getInitLevels();
+	public GameModel() {
+		levels = AllLevelsList.getAllLevels();
 	}
 }
