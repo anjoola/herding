@@ -82,7 +82,7 @@ public class GlobalStateController : MonoBehaviour {
 		startLevel();
 	}
 	public static void pauseLevel() {
-		//SendMessage("Pause"); TODO
+//		SendMessage("Pause");
 		pauseTimer();
 		enablePauseMenu(true);
 	}
@@ -100,6 +100,14 @@ public class GlobalStateController : MonoBehaviour {
 		// TODO cleanup for this level?
 		Application.LoadLevel("WorldMap");
 	}
+
+
+	public static void exitLevel2(){
+		enableLevelUI(false);
+		Application.LoadLevel("WorldMap");
+	}
+
+
 	public static void finishLevel(bool wasTimeUp=false) {
 		stopTimer();
 		if (wasTimeUp) {
@@ -171,11 +179,13 @@ public class GlobalStateController : MonoBehaviour {
 		if (currentLevel == null && enabled) return;
 		
 		isPaused = enabled;
+
 		if (enabled) {
 			pauseMenuController.updateText(currentLevel.assetsName, currentLevel.score);
 			pauseMenuController.slideIn();
 		}
 		else {
+			GeneralBoid.UnPauseBoids();
 			pauseMenuController.slideOut();
 		}
 	}
