@@ -26,6 +26,9 @@ public class GlobalStateController : MonoBehaviour {
 
 	public static bool isPaused;
 
+	// Volume.
+	public static bool isVolumeOn;
+
 	void Awake() {
 		// Make sure prefabs are not destroyed.
 		DontDestroyOnLoad(transform.gameObject);
@@ -56,6 +59,7 @@ public class GlobalStateController : MonoBehaviour {
 		InvokeRepeating("UpdateTimer", 0, 1.0f);
 
 		isPaused = false;
+		isVolumeOn = true; // TODO detect ios volume setting
 	}
 	void OnApplicationQuit() {
 		// Save savefile.
@@ -82,7 +86,6 @@ public class GlobalStateController : MonoBehaviour {
 		startLevel();
 	}
 	public static void pauseLevel() {
-//		SendMessage("Pause");
 		pauseTimer();
 		enablePauseMenu(true);
 	}
@@ -100,14 +103,6 @@ public class GlobalStateController : MonoBehaviour {
 		// TODO cleanup for this level?
 		Application.LoadLevel("WorldMap");
 	}
-
-
-	public static void exitLevel2(){
-		enableLevelUI(false);
-		Application.LoadLevel("WorldMap");
-	}
-
-
 	public static void finishLevel(bool wasTimeUp=false) {
 		stopTimer();
 		if (wasTimeUp) {
@@ -170,7 +165,18 @@ public class GlobalStateController : MonoBehaviour {
 		levelUIController.updateScore(currentLevel.score);
 	}
 
-	/* ------------------------------------------------------ UI -----------------------------------------------------*/
+	/* --------------------------------------------------- VOLUME ----------------------------------------------------*/
+
+	public static void turnVolumeOn() {
+		isVolumeOn = true;
+		// TODO ios-specific tihngs
+	}
+	public static void turnVolumeOff() {
+		isVolumeOn = false;
+		// TODO ios-specific things
+	}
+
+	/* ----------------------------------------------------- UI ------------------------------------------------------*/
 
 	/**
 	 * Enable and disable UI.

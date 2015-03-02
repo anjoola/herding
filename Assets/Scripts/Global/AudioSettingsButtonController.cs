@@ -1,0 +1,48 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class AudioSettingsButtonController : MonoBehaviour {
+	public TypogenicText text;
+	private string VOLUME_ON = "";
+	private string VOLUME_OFF = "";
+
+	private Color darkColor;
+	private Color lightColor;
+
+	void Start() {
+		lightColor = new Color(0.7f, 0.7f, 0.7f);
+		darkColor = new Color(0.6f, 0.6f, 0.6f);
+
+		text.ColorTopLeft = Color.white;
+		text.ColorBottomLeft = lightColor;
+	
+		if (GlobalStateController.isVolumeOn) {
+			text.Set(VOLUME_ON);
+		} else {
+			text.Set(VOLUME_OFF);
+		}
+	}
+	void OnMouseDown() {
+		text.ColorTopLeft = lightColor;
+		text.ColorBottomLeft = darkColor;
+
+		// TODO change button style
+	}
+	void OnMouseUp() {
+		text.ColorTopLeft = Color.white;
+		text.ColorBottomLeft = lightColor;
+
+		// TODO change button style
+
+		toggleVolume(); // TODO
+	}
+	void toggleVolume() {
+		if (GlobalStateController.isVolumeOn) {
+			GlobalStateController.turnVolumeOff();
+			text.Set(VOLUME_ON);
+		} else {
+			GlobalStateController.turnVolumeOn();
+			text.Set(VOLUME_OFF);
+		}
+	}
+}
