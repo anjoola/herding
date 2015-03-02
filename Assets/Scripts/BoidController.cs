@@ -21,7 +21,21 @@ public class BoidController : MonoBehaviour
 		for (int i=0; i<_number_of_boids; i++)
 		{
 
-			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(0,0,0), Quaternion.Euler(90, -20, 180));
+			float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
+			float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
+			float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
+			float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
+			float _width = _right - _left;
+			float _height = _top - _bottom;
+
+			float centerX = _left + 0.5f * _width;
+			float centerY = _bottom + 0.5f * _height;
+
+			float nucleusX = Random.Range(_left, _right);
+			float nucleusY = Random.Range(_top, _bottom);
+
+
+			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
 			go.transform.parent = transform;
 		}
 	}
