@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class MainMenuController : MonoBehaviour {
-	double RANGE = 10.0f;
+	double RANGE = 1.0f;
 	GameObject startButton;
 
 	void Start () {

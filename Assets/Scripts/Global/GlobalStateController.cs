@@ -110,7 +110,7 @@ public class GlobalStateController : MonoBehaviour {
 		}
 	
 		levelUIController.enableMenuButton(false);
-		enablePauseMenu (false);
+		enablePauseMenu(false);
 		enableLevelComplete(true);
 
 		currentLevel.finish();
