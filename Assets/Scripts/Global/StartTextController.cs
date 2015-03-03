@@ -3,7 +3,6 @@ using System.Collections;
 
 public class StartTextController : MonoBehaviour {
 	void OnMouseUp() {
-		// TODO smooth transition
-		Application.LoadLevel("WorldMap");
+		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black);
 	}
 }

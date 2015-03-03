@@ -70,10 +70,9 @@ public class GlobalStateController : MonoBehaviour {
 	
 	public static void startLevel() {
 		currentLevel.start();
-	
-		// TODO load scene nicely
-		Application.LoadLevel(currentLevel.sceneName);
+		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black);
 
+		// TODO don't want to show this until level actually loads
 		startTimer(currentLevel.maxTime);
 		resetScore();
 
@@ -99,9 +98,9 @@ public class GlobalStateController : MonoBehaviour {
 		enableLevelUI(false);
 		enablePauseMenu(false);
 		enableLevelComplete(false);
-		
+
 		// TODO cleanup for this level?
-		Application.LoadLevel("WorldMap");
+		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black);
 	}
 	public static void finishLevel(bool wasTimeUp=false) {
 		stopTimer();
