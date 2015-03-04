@@ -12,7 +12,6 @@ public class PauseMenuController : MonoBehaviour {
 	public GameObject overlay;
 	public GameObject pauseMenu;
 	public GameObject upperPanel;
-	public GameObject lowerPanel;
 	public GameObject buttons;
 
 	public void updateText(string levelName, int score) {
@@ -22,21 +21,17 @@ public class PauseMenuController : MonoBehaviour {
 	
 	public void slideIn() {
 		activate();
-		iTween.MoveBy(upperPanel, iTween.Hash("y", -200, "easeType", "linear", "loopType", "none", "delay", 0.0,
-		                                      "time", DISPLAY_TIME));
-		iTween.MoveBy(lowerPanel, iTween.Hash("y", 150, "easeType", "linear", "loopType", "none", "delay", 0.0,
+		iTween.MoveBy(upperPanel, iTween.Hash("y", -4, "easeType", "linear", "loopType", "none", "delay", 0.0,
 		                                      "time", DISPLAY_TIME));
 		iTween.ScaleBy(buttons, iTween.Hash("x", SCALE, "y", SCALE, "z", SCALE, "easeType", "linear", "loopType", "none",
 		                                    "delay", 0.0, "time", DISPLAY_TIME));
-		iTween.FadeTo(overlay, iTween.Hash("alpha", 0, "includechildren", true, "time", DISPLAY_TIME));
 	}
-	public void slideOut() {
-		iTween.MoveBy(upperPanel, iTween.Hash("y", 200, "easeType", "linear", "loopType", "none", "delay", 0.0,
-		                                      "time", DISPLAY_TIME));
-		iTween.MoveBy(lowerPanel, iTween.Hash("y", -150, "easeType", "linear", "loopType", "none", "delay", 0.0,
-		                                      "time", DISPLAY_TIME));
+	public void slideOut(bool hurry=false) {
+		float time = hurry ? 0 : DISPLAY_TIME;
+		iTween.MoveBy(upperPanel, iTween.Hash("y", 4, "easeType", "linear", "loopType", "none", "delay", 0.0,
+		                                      "time", time));
 		iTween.ScaleBy(buttons, iTween.Hash("x", 1/SCALE, "y", 1/SCALE, "z", 1/SCALE, "easeType", "linear",
-		                                    "loopType", "none", "delay", 0.0, "time", DISPLAY_TIME,
+		                                    "loopType", "none", "delay", 0.0, "time", time,
 		                                    "oncomplete", "deactivate", "oncompletetarget", pauseMenu));
 	}
 	public void activate() {
