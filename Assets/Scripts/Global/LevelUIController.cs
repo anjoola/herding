@@ -21,7 +21,7 @@ public class LevelUIController : MonoBehaviour {
 		this.score.text = "Score: " + score;
 	}
 	public void updateTimer(int timeLeft) {
-		timer.text = "Time: " + timeLeft;
+		timer.text = ("" + timeLeft).PadLeft(3, '0');
 	}
 
 	/**

@@ -10,8 +10,8 @@ public class AudioSettingsButtonController : MonoBehaviour {
 	private Color lightColor;
 
 	void Start() {
-		lightColor = new Color(0.7f, 0.7f, 0.7f);
-		darkColor = new Color(0.6f, 0.6f, 0.6f);
+		lightColor = new Color(0.6f, 0.6f, 0.6f);
+		darkColor = new Color(0.5f, 0.5f, 0.5f);
 
 		text.ColorTopLeft = Color.white;
 		text.ColorBottomLeft = lightColor;
@@ -23,7 +23,7 @@ public class AudioSettingsButtonController : MonoBehaviour {
 		}
 	}
 	void OnMouseDown() {
-		text.ColorTopLeft = lightColor;
+		text.ColorTopLeft = Color.white;
 		text.ColorBottomLeft = darkColor;
 
 		// TODO change button style

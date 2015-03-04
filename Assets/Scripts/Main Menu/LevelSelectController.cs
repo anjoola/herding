@@ -34,7 +34,7 @@ public class LevelSelectController : MonoBehaviour {
 		cameraOrigRot = Camera.main.transform.rotation;
 
 		iTween.MoveBy(GameObject.Find("Select a Level Text"),
-		              iTween.Hash("y", -10, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
+		              iTween.Hash("y", -2, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
 	}
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
