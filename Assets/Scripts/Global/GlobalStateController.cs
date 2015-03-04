@@ -19,27 +19,16 @@ public class GlobalStateController : MonoBehaviour {
 	private static LevelUIController levelUIController;
 	public static GameObject levelComplete;
 	private static LevelCompleteController levelCompleteController;
+	public static GameObject notes;
+	private static NotesController notesController;
+
+	public static bool isPaused;
 
 	// Timer.
 	public static int currTime;
 	private static bool timerEnabled;
 
-	public static bool isPaused;
-
-	// Volume.
-	public static bool isVolumeOn;
-
 	void Awake() {
-		// Make sure prefabs are not destroyed.
-		DontDestroyOnLoad(transform.gameObject);
-		DontDestroyOnLoad(pauseMenu);
-		DontDestroyOnLoad(levelUI);
-		DontDestroyOnLoad(levelComplete);
-	}
-	void Start() {
-		// Load savefile.
-		SaveController.loadGame();
-
 		// Get objects.
 		pauseMenu = GameObject.Find("PauseMenu");
 		pauseMenuController = pauseMenu.GetComponent("PauseMenuController") as PauseMenuController;
@@ -47,11 +36,25 @@ public class GlobalStateController : MonoBehaviour {
 		levelUIController = levelUI.GetComponent("LevelUIController") as LevelUIController;
 		levelComplete = GameObject.Find("LevelComplete");
 		levelCompleteController = levelComplete.GetComponent("LevelCompleteController") as LevelCompleteController;
+		notes = GameObject.Find("NotesArea");
+		notesController = notes.GetComponent("NotesController") as NotesController;
 
+		// Make sure prefabs are not destroyed.
+		DontDestroyOnLoad(transform.gameObject);
+		DontDestroyOnLoad(pauseMenu);
+		DontDestroyOnLoad(levelUI);
+		DontDestroyOnLoad(levelComplete);
+		DontDestroyOnLoad(notes);
+	}
+	void Start() {
+		// Load savefile.
+		SaveController.loadGame();
+	
 		// Hide menus for now.
-		enablePauseMenu(false);
+		enablePauseMenu(false, true);
 		enableLevelUI(false);
 		enableLevelComplete(false);
+		hideNotes();
 	
 		// Disable timer but start the timer thread.
 		currTime = 0;
@@ -59,7 +62,6 @@ public class GlobalStateController : MonoBehaviour {
 		InvokeRepeating("UpdateTimer", 0, 1.0f);
 
 		isPaused = false;
-		isVolumeOn = true; // TODO detect ios volume setting
 	}
 	void OnApplicationQuit() {
 		// Save savefile.
@@ -96,7 +98,7 @@ public class GlobalStateController : MonoBehaviour {
 		stopTimer();
 	
 		enableLevelUI(false);
-		enablePauseMenu(false);
+		enablePauseMenu(false, true);
 		enableLevelComplete(false);
 
 		// TODO cleanup for this level?
@@ -112,7 +114,7 @@ public class GlobalStateController : MonoBehaviour {
 		}
 	
 		levelUIController.enableMenuButton(false);
-		enablePauseMenu(false);
+		enablePauseMenu(false, true);
 		enableLevelComplete(true);
 
 		currentLevel.finish();
@@ -153,26 +155,28 @@ public class GlobalStateController : MonoBehaviour {
 		}
 	}
 
+	/* ---------------------------------------------------- NOTES ----------------------------------------------------*/
+
+	public static void showNotes(string note) {
+		notes.SetActive(true);
+		notesController.setText(note);
+	}
+	public static void hideNotes() {
+		// TODO when to call this?
+		notes.SetActive(false);
+	}
+
 	/* ---------------------------------------------------- SCORE ----------------------------------------------------*/
 
 	public static void resetScore() {
+		if (currentLevel == null) return;
 		currentLevel.score = 0;
 		levelUIController.updateScore(0);
 	}
-    public static void addScore(int score) {
+	public static void addScore(int score) {
+		if (currentLevel == null) return;
 		currentLevel.incrementScore(score);
 		levelUIController.updateScore(currentLevel.score);
-	}
-
-	/* --------------------------------------------------- VOLUME ----------------------------------------------------*/
-
-	public static void turnVolumeOn() {
-		isVolumeOn = true;
-		// TODO ios-specific tihngs
-	}
-	public static void turnVolumeOff() {
-		isVolumeOn = false;
-		// TODO ios-specific things
 	}
 
 	/* ----------------------------------------------------- UI ------------------------------------------------------*/
@@ -180,7 +184,7 @@ public class GlobalStateController : MonoBehaviour {
 	/**
 	 * Enable and disable UI.
 	 */
-	public static void enablePauseMenu(bool enabled) {
+	public static void enablePauseMenu(bool enabled, bool hurry=false) {
 		if (currentLevel == null && enabled) return;
 		
 		isPaused = enabled;
@@ -191,7 +195,7 @@ public class GlobalStateController : MonoBehaviour {
 		}
 		else {
 			GeneralBoid.UnPauseBoids();
-			pauseMenuController.slideOut();
+			pauseMenuController.slideOut(hurry);
 		}
 	}
 	public static void enableLevelUI(bool enabled) {
@@ -200,6 +204,10 @@ public class GlobalStateController : MonoBehaviour {
 		levelUI.SetActive(enabled);
 	}
 	public static void enableLevelComplete(bool enabled) {
-		levelComplete.SetActive(enabled);
+		if (enabled) {
+			levelCompleteController.slideIn();
+		} else {
+			levelCompleteController.slideOut();
+		}
 	}
 }

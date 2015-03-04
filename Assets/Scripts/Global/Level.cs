@@ -34,9 +34,10 @@ public class Level {
 	public void incrementScore(int score) {
 		this.score += score;
 	}
-	public void computeStars() {
+	public int computeStars() {
 		// TODO
 		this.numStars = 3;
+		return this.numStars;
 	}
 
 	public void start() {

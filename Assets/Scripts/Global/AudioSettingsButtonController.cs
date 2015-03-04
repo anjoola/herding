@@ -16,7 +16,7 @@ public class AudioSettingsButtonController : MonoBehaviour {
 		text.ColorTopLeft = Color.white;
 		text.ColorBottomLeft = lightColor;
 	
-		if (GlobalStateController.isVolumeOn) {
+		if (AudioController.isVolumeOn) {
 			text.Set(VOLUME_ON);
 		} else {
 			text.Set(VOLUME_OFF);
@@ -37,11 +37,11 @@ public class AudioSettingsButtonController : MonoBehaviour {
 		toggleVolume(); // TODO
 	}
 	void toggleVolume() {
-		if (GlobalStateController.isVolumeOn) {
-			GlobalStateController.turnVolumeOff();
+		if (AudioController.isVolumeOn) {
+			AudioController.turnVolumeOff();
 			text.Set(VOLUME_ON);
 		} else {
-			GlobalStateController.turnVolumeOn();
+			AudioController.turnVolumeOn();
 			text.Set(VOLUME_OFF);
 		}
 	}
