@@ -6,7 +6,7 @@ public class PauseMenuController : MonoBehaviour {
 	float DISPLAY_TIME = 0.3f;
 	float SCALE = 20;
 
-	public TypogenicText levelName;
+	public Text levelName;
 	public Text score;
 
 	public GameObject overlay;
@@ -15,7 +15,7 @@ public class PauseMenuController : MonoBehaviour {
 	public GameObject buttons;
 
 	public void updateText(string levelName, int score) {
-		this.levelName.Text = levelName;
+		this.levelName.text = levelName;
 		this.score.text = "Score: " + score;
 	}
 	
