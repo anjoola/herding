@@ -133,7 +133,7 @@ public class GlobalStateController : MonoBehaviour {
 	public static void startTimer(int time) {
 		currTime = time;
 		timerEnabled = true;
-		//levelUIController.updateTimer(currTime);
+		levelUIController.updateTimer(currTime);
 	}
 	public static void pauseTimer() {
 		timerEnabled = false;
