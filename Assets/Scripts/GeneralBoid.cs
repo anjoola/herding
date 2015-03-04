@@ -13,10 +13,10 @@ public class GeneralBoid : MonoBehaviour
 	
 	private static List<Vector2> pausedVel;
 	
-	private bool paused = true;
+	private bool paused;
 	private bool isMouseDown = false;
 
-	public bool testing = true;
+	public static bool testing = false;
 
 	public void Awake(){
 		_boids = new List<Rigidbody2D>();
@@ -49,6 +49,8 @@ public class GeneralBoid : MonoBehaviour
 
 	void Start ()
 	{
+		paused = true;
+
 		Debug.Log ("Start");
 		// Get the boid controller from the parent
 		_boid_controller = GetComponentInParent<BoidController>();
@@ -80,9 +82,12 @@ public class GeneralBoid : MonoBehaviour
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.tag == "DetectionTag")
 		{
-			Debug.Log ("Increment Point");
 			
-			if (!testing) GlobalStateController.addScore(40);
+			if (!testing) {
+
+				Debug.Log ("Increment Point");
+				GlobalStateController.addScore(40);
+			}
 			Destroy ();
 		}
 	}
