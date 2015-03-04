@@ -24,8 +24,6 @@ public class LevelSelectController : MonoBehaviour {
 	public RawImage levelImage;
 	public GameObject[] stars;
 	public Text levelScore;
-	public Button backButton;
-	public Button startButton;
 	public GameObject selectLevelText;
 
 	void Start () {
@@ -35,6 +33,8 @@ public class LevelSelectController : MonoBehaviour {
 
 		iTween.MoveBy(GameObject.Find("Select a Level Text"),
 		              iTween.Hash("y", -2, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
+
+		GlobalStateController.showNotes("Welcome to HERDING GAME! Choose a level by tapping on any object with a marker!");
 	}
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
@@ -110,7 +110,10 @@ public class LevelSelectController : MonoBehaviour {
 		levelName.text = level.assetsName;
 		levelScore.text = "High Score: " + level.highScore;
 		for (int i = 0; i < level.numStars; i++) {
-			stars[i].SetActive(i < level.numStars);
+			stars[i].SetActive(true);
+		}
+		for (int i = level.numStars; i < 5; i++) {
+			stars[i].SetActive(false);
 		}
 		// TODO image
 		

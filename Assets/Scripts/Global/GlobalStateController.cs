@@ -63,6 +63,14 @@ public class GlobalStateController : MonoBehaviour {
 
 		isPaused = false;
 	}
+	void Update() {
+		// Dismiss notes if user taps.
+		if (Input.GetMouseButtonDown(0)) {
+			if (notes.activeSelf) {
+				hideNotes();
+			}
+		}
+	}
 	void OnApplicationQuit() {
 		// Save savefile.
 		SaveController.saveGame();
@@ -125,7 +133,7 @@ public class GlobalStateController : MonoBehaviour {
 	public static void startTimer(int time) {
 		currTime = time;
 		timerEnabled = true;
-		levelUIController.updateTimer(currTime);
+		//levelUIController.updateTimer(currTime);
 	}
 	public static void pauseTimer() {
 		timerEnabled = false;
@@ -160,9 +168,10 @@ public class GlobalStateController : MonoBehaviour {
 	public static void showNotes(string note) {
 		notes.SetActive(true);
 		notesController.setText(note);
+		// TODO nice fade in effect
 	}
 	public static void hideNotes() {
-		// TODO when to call this?
+		// TODO nice fade out effect
 		notes.SetActive(false);
 	}
 

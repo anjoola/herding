@@ -28,7 +28,7 @@ public class Level {
 		this.isCompleted = false;
 		this.score = 0;
 		this.highScore = 0;
-		this.numStars = 5;
+		this.numStars = 0;
 	}
 
 	public void incrementScore(int score) {
