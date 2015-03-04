@@ -3,29 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Boid created by the BoidController class
-public class GeneralBoid : MonoBehaviour 
+public class CowBoid2 : MonoBehaviour 
 {
-	private static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
+	private static List<Rigidbody2D> _boids = new List<Rigidbody2D>(); // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
 	
 	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
 
 	
-	private static List<Vector2> pausedVel;
+	private static List<Vector2> pausedVel = new List<Vector2>();
 	
 	private bool paused = true;
-	private bool isMouseDown = false;
-
-	public bool testing = true;
-
-	public void Awake(){
-		_boids = new List<Rigidbody2D>();
-		pausedVel = new List<Vector2>();
-
-		Input.multiTouchEnabled = true;
-	}
 	
-	public static void PauseBoids()
+	static void PauseBoids()
 	{
 		for (int i = 0; i < _boids.Count; i++)
 		{
@@ -36,9 +26,6 @@ public class GeneralBoid : MonoBehaviour
 	
 	public static void UnPauseBoids()
 	{
-		if (_boids == null || pausedVel == null) return;
-		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
-		Debug.Log ("Unpausing");
 		for (int i = 0; i < _boids.Count; i++)
 		{
 			_boids[i].velocity = pausedVel[i];
@@ -46,7 +33,9 @@ public class GeneralBoid : MonoBehaviour
 		
 		pausedVel = new List<Vector2>();
 	}
-
+	
+	
+	
 	void Start ()
 	{
 		Debug.Log ("Start");
@@ -80,30 +69,26 @@ public class GeneralBoid : MonoBehaviour
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.tag == "DetectionTag")
 		{
+			//TODO			IncrementPoint();
 			Debug.Log ("Increment Point");
 			
-			if (!testing) GlobalStateController.addScore(40);
+			GlobalStateController.addScore(40);
 			Destroy ();
 		}
 	}
 	
 	
 	void OnMouseDown() {
-		isMouseDown = true;
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.isPaused) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
 		v3Offset = transform.position - ray.GetPoint (dist);         
 	}
-
-	void OnMouseUp() {
-		isMouseDown = false;        
-    }
-    
+	
 	void OnMouseDrag() {
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.isPaused) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -114,8 +99,7 @@ public class GeneralBoid : MonoBehaviour
 	// Fixed update used when dealing with rigid bodies
 	void FixedUpdate () 
 	{
-		if (isMouseDown) return;
-		if (GlobalStateController.isPaused && !testing) 
+		if (GlobalStateController.isPaused) 
 		{
 			PauseBoids ();
 			return;
@@ -145,7 +129,7 @@ public class GeneralBoid : MonoBehaviour
 		{
 			//TODO change to actually call game over.
 			Debug.Log ("Game over");
-			if (!testing) GlobalStateController.finishLevel();
+			GlobalStateController.finishLevel();
 		}
 	}
 	
@@ -246,48 +230,48 @@ public class GeneralBoid : MonoBehaviour
 			}
 		}
 		
-        // Average the sum_vector and clamp magnitude
-        if (count > 0)
-        {
-            sum_vector /= count;
-            sum_vector = Vector2.ClampMagnitude(sum_vector, 1);
-        }
-        
-        return sum_vector;
-    }
-    
-    // Calculate the separation component of the flocking algorithm
-    Vector2 Separation ()
-    {
-        Vector2 sum_vector = new Vector2();
-        int count = 0;
-        
-        // For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sum_vector
-        for (int i=0; i<_boids.Count; i++)
-        {
-            float dist = Vector2.Distance(rigidbody2D.position, _boids[i].position);
-            
-            if (dist < _boid_controller._separation_radius && dist > 0) // dist > 0 prevents including this boid
-            {
-                sum_vector += (rigidbody2D.position - _boids[i].position).normalized / dist;
-                count++;
-            }
-        }
-        
-        // Average the sum_vector
-        if (count > 0)
-        {
-            sum_vector /= count;
-        }
-        return  sum_vector;
-    }
-    
-    // Draw the radius of the cohesion neighbourhood in green, and the radius of the separation neighbourhood in red, in the scene view
-    void OnDrawGizmosSelected ()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, _boid_controller._cohesion_radius);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _boid_controller._separation_radius);
-    }
+		// Average the sum_vector and clamp magnitude
+		if (count > 0)
+		{
+			sum_vector /= count;
+			sum_vector = Vector2.ClampMagnitude(sum_vector, 1);
+		}
+		
+		return sum_vector;
+	}
+	
+	// Calculate the separation component of the flocking algorithm
+	Vector2 Separation ()
+	{
+		Vector2 sum_vector = new Vector2();
+		int count = 0;
+		
+		// For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sum_vector
+		for (int i=0; i<_boids.Count; i++)
+		{
+			float dist = Vector2.Distance(rigidbody2D.position, _boids[i].position);
+			
+			if (dist < _boid_controller._separation_radius && dist > 0) // dist > 0 prevents including this boid
+			{
+				sum_vector += (rigidbody2D.position - _boids[i].position).normalized / dist;
+				count++;
+			}
+		}
+		
+		// Average the sum_vector
+		if (count > 0)
+		{
+			sum_vector /= count;
+		}
+		return  sum_vector;
+	}
+	
+	// Draw the radius of the cohesion neighbourhood in green, and the radius of the separation neighbourhood in red, in the scene view
+	void OnDrawGizmosSelected ()
+	{
+		Gizmos.color = Color.green;
+		Gizmos.DrawWireSphere(transform.position, _boid_controller._cohesion_radius);
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, _boid_controller._separation_radius);
+	}
 }

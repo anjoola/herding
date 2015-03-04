@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Boid created by the BoidController class
-public class GeneralBoid : MonoBehaviour 
+public class MultiTouchGeneralBoid : MonoBehaviour 
 {
 	private static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
