@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class AutoFade : MonoBehaviour {
 	private static AutoFade m_Instance = null;
@@ -47,7 +48,7 @@ public class AutoFade : MonoBehaviour {
 		GL.PopMatrix();
 	}
 	
-	private IEnumerator Fade(float aFadeOutTime, float aFadeInTime, Color aColor)
+	private IEnumerator Fade(float aFadeOutTime, float aFadeInTime, Color aColor, Action callback)
 	{
 		float t = 0.0f;
 		while (t<1.0f)
@@ -67,24 +68,26 @@ public class AutoFade : MonoBehaviour {
 			DrawQuad(aColor,t);
 		}
 		m_Fading = false;
+		if (callback != null) callback();
 	}
-	private void StartFade(float aFadeOutTime, float aFadeInTime, Color aColor)
+	private void StartFade(float aFadeOutTime, float aFadeInTime, Color aColor, Action callback)
 	{
 		m_Fading = true;
-		StartCoroutine(Fade(aFadeOutTime, aFadeInTime, aColor));
+		StartCoroutine(Fade(aFadeOutTime, aFadeInTime, aColor, callback));
 	}
 	
-	public static void LoadLevel(string aLevelName,float aFadeOutTime, float aFadeInTime, Color aColor)
+	public static void LoadLevel(string aLevelName,float aFadeOutTime, float aFadeInTime, Color aColor,
+	                             Action callback=null)
 	{
 		if (Fading) return;
 		Instance.m_LevelName = aLevelName;
-		Instance.StartFade(aFadeOutTime, aFadeInTime, aColor);
+		Instance.StartFade(aFadeOutTime, aFadeInTime, aColor, callback);
 	}
 	public static void LoadLevel(int aLevelIndex,float aFadeOutTime, float aFadeInTime, Color aColor)
 	{
 		if (Fading) return;
 		Instance.m_LevelName = "";
 		Instance.m_LevelIndex = aLevelIndex;
-		Instance.StartFade(aFadeOutTime, aFadeInTime, aColor);
+		Instance.StartFade(aFadeOutTime, aFadeInTime, aColor, null);
 	}
 }
