@@ -15,8 +15,9 @@ public class GeneralBoid : MonoBehaviour
 	
 	private bool paused;
 	private bool isMouseDown = false;
+	private bool isOnSeat;
 
-	public static bool testing = false;
+	public static bool testing = true;
 
 	public void Awake(){
 		_boids = new List<Rigidbody2D>();
@@ -50,6 +51,7 @@ public class GeneralBoid : MonoBehaviour
 	void Start ()
 	{
 		paused = true;
+		isOnSeat = false;
 
 		Debug.Log ("Start");
 		// Get the boid controller from the parent
@@ -78,19 +80,7 @@ public class GeneralBoid : MonoBehaviour
 	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
-	
-	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.tag == "DetectionTag")
-		{
-			
-			if (!testing) {
 
-				Debug.Log ("Increment Point");
-				GlobalStateController.addScore(40);
-			}
-			Destroy ();
-		}
-	}
 	
 	
 	void OnMouseDown() {
@@ -135,14 +125,14 @@ public class GeneralBoid : MonoBehaviour
 		// Add the force to the rigid body and face the direction of movement
 		rigidbody2D.AddForce(acceleration * Time.fixedDeltaTime);
 		FaceTowardsHeading();
-		
+
 		// When going off screen, wrap to the opposite screen edge
 		
 		//		DestroyNotWrap ();
 		Wrap();
 	}
 	
-	void Destroy()
+	public void Destroy()
 	{
 		_boids.Remove (gameObject.rigidbody2D);
 		Destroy (gameObject);
