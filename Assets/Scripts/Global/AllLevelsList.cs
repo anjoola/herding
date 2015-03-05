@@ -12,7 +12,8 @@ public class AllLevelsList : MonoBehaviour {
 
 		// (prefix of all related assets, e.g. "Cow Palace Model", "Cow Palace Zoom", scene name, max time).
 		levels.Add(new Level("Cow Palace", "CowFlight", 100));
-		levels.Add(new Level("City", "CowFlight", 100));
+		levels.Add(new Level("Classroom", "Classroom", 100));
+		levels.Add(new Level("Under the Sea", "UnderTheSea", 100));
 		// TODO add more
 
 		return levels;
