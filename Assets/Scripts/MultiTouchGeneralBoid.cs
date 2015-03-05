@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Boid created by the BoidController class
-public class GeneralBoid : MonoBehaviour 
+public class MultiTouchGeneralBoid : MonoBehaviour 
 {
 	private static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
@@ -13,11 +13,10 @@ public class GeneralBoid : MonoBehaviour
 	
 	private static List<Vector2> pausedVel;
 	
-	private bool paused;
+	private bool paused = true;
 	private bool isMouseDown = false;
-	private bool isOnSeat;
 
-	public static bool testing = true;
+	public bool testing = true;
 
 	public void Awake(){
 		_boids = new List<Rigidbody2D>();
@@ -50,9 +49,6 @@ public class GeneralBoid : MonoBehaviour
 
 	void Start ()
 	{
-		paused = true;
-		isOnSeat = false;
-
 		Debug.Log ("Start");
 		// Get the boid controller from the parent
 		_boid_controller = GetComponentInParent<BoidController>();
@@ -80,7 +76,16 @@ public class GeneralBoid : MonoBehaviour
 	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
-
+	
+	void OnTriggerEnter2D(Collider2D other) {
+		if (other.gameObject.tag == "DetectionTag")
+		{
+			Debug.Log ("Increment Point");
+			
+			if (!testing) GlobalStateController.addScore(40);
+			Destroy ();
+		}
+	}
 	
 	
 	void OnMouseDown() {
@@ -125,14 +130,14 @@ public class GeneralBoid : MonoBehaviour
 		// Add the force to the rigid body and face the direction of movement
 		rigidbody2D.AddForce(acceleration * Time.fixedDeltaTime);
 		FaceTowardsHeading();
-
+		
 		// When going off screen, wrap to the opposite screen edge
 		
 		//		DestroyNotWrap ();
 		Wrap();
 	}
 	
-	public void Destroy()
+	void Destroy()
 	{
 		_boids.Remove (gameObject.rigidbody2D);
 		Destroy (gameObject);

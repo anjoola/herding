@@ -80,16 +80,19 @@ public class GlobalStateController : MonoBehaviour {
 	
 	public static void startLevel() {
 		currentLevel.start();
-		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black);
-
-		// TODO don't want to show this until level actually loads
-		startTimer(currentLevel.maxTime);
 		resetScore();
 
-		enablePauseMenu(false);
+		enablePauseMenu(false, true);
+		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, loadLevelUI);
+		enableLevelComplete(false);
+	}
+	public static void loadLevelUI() {
+		if (currentLevel == null) return;
+
 		enableLevelUI(true);
 		levelUIController.enableMenuButton(true);
-		enableLevelComplete(false);
+
+		startTimer(currentLevel.maxTime);
 	}
 	public static void restartLevel() {
 		startLevel();
@@ -133,7 +136,7 @@ public class GlobalStateController : MonoBehaviour {
 	public static void startTimer(int time) {
 		currTime = time;
 		timerEnabled = true;
-		//levelUIController.updateTimer(currTime);
+		levelUIController.updateTimer(currTime);
 	}
 	public static void pauseTimer() {
 		timerEnabled = false;

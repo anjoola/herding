@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Boid created by the BoidController class
-public class CowBoid : GeneralBoid
+public class ChildBoid : GeneralBoid
 {
-	
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.tag == "DetectionTag")
+		Debug.Log ("Hello");
+		if (other.gameObject.tag == "SeatTag")
 		{
 			
 			if (!testing) {
@@ -15,7 +15,7 @@ public class CowBoid : GeneralBoid
 				Debug.Log ("Increment Point");
 				GlobalStateController.addScore(40);
             }
-			base.Destroy ();
+            base.Destroy ();
         }
-	}
+    }
 }

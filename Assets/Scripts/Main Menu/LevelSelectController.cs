@@ -24,17 +24,16 @@ public class LevelSelectController : MonoBehaviour {
 	public RawImage levelImage;
 	public GameObject[] stars;
 	public Text levelScore;
-	public GameObject selectLevelText;
 
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
 		cameraOrigRot = Camera.main.transform.rotation;
 
-		iTween.MoveBy(GameObject.Find("Select a Level Text"),
-		              iTween.Hash("y", -2, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
-
-		GlobalStateController.showNotes("Welcome to HERDING GAME! Choose a level by tapping on any object with a marker!");
+		if (!GlobalStateController.currentGame.played) {
+			GlobalStateController.showNotes("Welcome to HERDING GAME! Choose a level by tapping on any object with a marker!");
+			GlobalStateController.currentGame.played = true;
+		}
 	}
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {
@@ -73,7 +72,6 @@ public class LevelSelectController : MonoBehaviour {
 	 * Displays or hides the world map UI layer.
 	 */
 	void enableWorldMapUI(bool active) {
-		selectLevelText.SetActive(!active);
 		uiLayer.SetActive(active);
 	}
 

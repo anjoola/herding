@@ -6,7 +6,7 @@ public class LevelCompleteController : MonoBehaviour {
 	string TIME_UP = "Time's Up!";
 	string GAME_OVER = "Game Over!";
 	string LEVEL_COMPLETE = "Level Complete!";
-	float STAR_SCALE = 1.1f;
+	float STAR_SCALE = 1.2f;
 	float SCALE = 20.0f;
 	float DISPLAY_TIME = 0.3f;
 
