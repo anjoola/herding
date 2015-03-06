@@ -1,0 +1,138 @@
+fileFormatVersion: 2
+guid: 9f91c4ae09a74cf4faa30d948024b28f
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Circle
+    100002: Circle_001
+    100004: Clothes
+    100006: Cylinder
+    100008: Cylinder_001
+    100010: Cylinder_002
+    100012: Cylinder_003
+    100014: //RootNode
+    100016: Sphere
+    100018: Sphere_001
+    100020: Sphere_002
+    100022: Sphere_003
+    100024: Sphere_004
+    100026: Sphere_005
+    100028: Sphere_006
+    100030: Sphere_007
+    400000: Circle
+    400002: Circle_001
+    400004: Clothes
+    400006: Cylinder
+    400008: Cylinder_001
+    400010: Cylinder_002
+    400012: Cylinder_003
+    400014: //RootNode
+    400016: Sphere
+    400018: Sphere_001
+    400020: Sphere_002
+    400022: Sphere_003
+    400024: Sphere_004
+    400026: Sphere_005
+    400028: Sphere_006
+    400030: Sphere_007
+    2300000: Circle
+    2300002: Circle_001
+    2300004: Clothes
+    2300006: Cylinder
+    2300008: Cylinder_001
+    2300010: Cylinder_002
+    2300012: Cylinder_003
+    2300014: Sphere
+    2300016: Sphere_001
+    2300018: Sphere_002
+    2300020: Sphere_003
+    2300022: Sphere_004
+    2300024: Sphere_005
+    2300026: Sphere_006
+    2300028: Sphere_007
+    3300000: Circle
+    3300002: Circle_001
+    3300004: Clothes
+    3300006: Cylinder
+    3300008: Cylinder_001
+    3300010: Cylinder_002
+    3300012: Cylinder_003
+    3300014: Sphere
+    3300016: Sphere_001
+    3300018: Sphere_002
+    3300020: Sphere_003
+    3300022: Sphere_004
+    3300024: Sphere_005
+    3300026: Sphere_006
+    3300028: Sphere_007
+    4300000: Sphere_007
+    4300002: Clothes
+    4300004: Sphere_005
+    4300006: Sphere_003
+    4300008: Cylinder
+    4300010: Circle
+    4300012: Sphere
+    4300014: Sphere_001
+    4300016: Sphere_002
+    4300018: Circle_001
+    4300020: Cylinder_001
+    4300022: Sphere_004
+    4300024: Cylinder_002
+    4300026: Cylinder_003
+    4300028: Sphere_006
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

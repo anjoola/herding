@@ -6,9 +6,9 @@ public class AudioController : MonoBehaviour {
 
 	void Awake() {
 		DontDestroyOnLoad(this.gameObject);
+		isVolumeOn = true; // TODO detect ios volume setting
 	}
 	void Start() {
-		isVolumeOn = true; // TODO detect ios volume setting
 	}
 
 	public static void turnVolumeOn() {
