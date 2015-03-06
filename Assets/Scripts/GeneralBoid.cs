@@ -17,7 +17,10 @@ public class GeneralBoid : MonoBehaviour
 	private bool isMouseDown = false;
 	private bool isOnSeat;
 
-	public static bool testing = true;
+
+	protected bool inCollision;
+
+	public static bool testing = false;
 
 	public void Awake(){
 		_boids = new List<Rigidbody2D>();
@@ -44,14 +47,15 @@ public class GeneralBoid : MonoBehaviour
 		{
 			_boids[i].velocity = pausedVel[i];
 		}
-		
+
 		pausedVel = new List<Vector2>();
 	}
 
-	void Start ()
+	public void Start ()
 	{
 		paused = true;
 		isOnSeat = false;
+		inCollision = false;
 
 		Debug.Log ("Start");
 		// Get the boid controller from the parent
@@ -81,35 +85,57 @@ public class GeneralBoid : MonoBehaviour
 	private Vector3 v3Offset;
 	private Plane plane;
 
+
+
 	
-	
-	void OnMouseDown() {
+	void OnInputDown(Vector2 mousePosition)
+	{
 		isMouseDown = true;
 		if (GlobalStateController.isPaused && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
-		v3Offset = transform.position - ray.GetPoint (dist);         
+		v3Offset = transform.position - ray.GetPoint (dist);  
 	}
-
-	void OnMouseUp() {
-		isMouseDown = false;        
-    }
-    
-	void OnMouseDrag() {
+	
+	void OnInputUp(Vector2 mousePosition)
+	{
+		isMouseDown = false; 
+	}
+	
+	void OnInputDrag(Vector2 mousePosition)
+	{
 		if (GlobalStateController.isPaused && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
 		Vector3 v3Pos = ray.GetPoint (dist);
-		transform.position = v3Pos + v3Offset;    
+		transform.position = v3Pos + v3Offset; 
 	}
+
+
+	protected void OnMouseDown()
+	{
+		OnInputDown (Input.mousePosition);
+	}
+
+	protected void OnMouseUp()
+	{
+		OnInputUp (Input.mousePosition);
+	}
+
+	protected void OnMouseDrag()
+	{
+		OnInputDrag (Input.mousePosition);
+	}
+
 	
 	// Fixed update used when dealing with rigid bodies
-	void FixedUpdate () 
+	protected void FixedUpdate () 
 	{
 		if (isMouseDown) return;
+		if (inCollision) return;
 		if (GlobalStateController.isPaused && !testing) 
 		{
 			PauseBoids ();
@@ -131,11 +157,23 @@ public class GeneralBoid : MonoBehaviour
 		//		DestroyNotWrap ();
 		Wrap();
 	}
-	
+
 	public void Destroy()
 	{
 		_boids.Remove (gameObject.rigidbody2D);
 		Destroy (gameObject);
+		if (_boids.Count == 0) 
+		{
+			//TODO change to actually call game over.
+			Debug.Log ("Game over");
+			if (!testing) GlobalStateController.finishLevel();
+		}
+	}
+
+
+	public void RemovePhysicsNoDestroy()
+	{
+		_boids.Remove (gameObject.rigidbody2D);
 		if (_boids.Count == 0) 
 		{
 			//TODO change to actually call game over.

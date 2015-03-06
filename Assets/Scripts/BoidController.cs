@@ -24,7 +24,7 @@ public class BoidController : MonoBehaviour
 
 		switch(start_format){
 		case (int) START_FORMATS.GRID:
-			GridStart ();
+			PointStart ();
 			break;
 		case (int) START_FORMATS.RANDOM:
 			RandomStart ();
@@ -36,6 +36,38 @@ public class BoidController : MonoBehaviour
 			break;
 		}
 	}
+
+	void PointStart()
+	{
+		
+		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
+		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
+		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
+		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
+		float _width = _right - _left;
+		float _height = _top - _bottom;
+		
+		float centerX = _left + 0.5f * _width;
+		float centerY = _bottom + 0.5f * _height;
+		
+		float leftOffset = 20;
+		float stepX = 30;
+		float stepY = 20;
+
+		float nucleusY = 20;
+		float nucleusX = -25;
+		
+		// Create all the boids and add them as a child of the controller
+		for (int i=0; i<_number_of_boids; i++)
+		{
+			
+			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
+			go.transform.parent = transform;
+
+
+		}
+	}
+
 
 	void GridStart()
 	{
