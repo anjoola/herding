@@ -36,8 +36,8 @@ public class FishBoid : GeneralBoid
 		}
 
 	}
-
 	
+
 	
 	void OnCollisionEnter2D(Collision2D coll)
 	{

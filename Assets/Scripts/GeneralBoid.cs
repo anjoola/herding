@@ -17,6 +17,8 @@ public class GeneralBoid : MonoBehaviour
 	private bool isMouseDown = false;
 	private bool isOnSeat;
 
+	private static Vector2 gravity;
+
 
 	protected bool inCollision;
 
@@ -31,6 +33,8 @@ public class GeneralBoid : MonoBehaviour
 	
 	public static void PauseBoids()
 	{
+		gravity = Physics2D.gravity;
+		Physics2D.gravity = new Vector2 (0, 0);
 		for (int i = 0; i < _boids.Count; i++)
 		{
 			pausedVel.Add (_boids[i].velocity);
@@ -40,6 +44,7 @@ public class GeneralBoid : MonoBehaviour
 	
 	public static void UnPauseBoids()
 	{
+		Physics2D.gravity = gravity;
 		if (_boids == null || pausedVel == null) return;
 		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
 		Debug.Log ("Unpausing");
