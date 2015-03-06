@@ -10,6 +10,8 @@ public class GeneralBoid : MonoBehaviour
 	
 	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
 
+
+	protected float forceMag;
 	
 	private static List<Vector2> pausedVel;
 	
@@ -58,6 +60,7 @@ public class GeneralBoid : MonoBehaviour
 
 	public void Start ()
 	{
+		forceMag = 1.0f;
 		paused = true;
 		isOnSeat = false;
 		inCollision = false;
@@ -154,7 +157,7 @@ public class GeneralBoid : MonoBehaviour
 		acceleration = Vector2.ClampMagnitude(acceleration, _boid_controller._max_acceleration);
 		
 		// Add the force to the rigid body and face the direction of movement
-		rigidbody2D.AddForce(acceleration * Time.fixedDeltaTime);
+		rigidbody2D.AddForce(acceleration * forceMag *Time.fixedDeltaTime);
 		FaceTowardsHeading();
 
 		// When going off screen, wrap to the opposite screen edge
@@ -175,6 +178,23 @@ public class GeneralBoid : MonoBehaviour
 		}
 	}
 
+	public void OutOfBoundsDestroy(bool rightSide)
+	{
+		_boids.Remove (gameObject.rigidbody2D);
+		Destroy (gameObject);
+		if (rightSide) {
+			// made it to the other side!
+			Debug.Log ("Increment Point");
+			GlobalStateController.addScore(40);
+        }
+		if (_boids.Count == 0) 
+		{
+			//TODO change to actually call game over.
+			Debug.Log ("Game over");
+			if (!testing) GlobalStateController.finishLevel();
+        }
+    }
+    
 
 	public void RemovePhysicsNoDestroy()
 	{
@@ -213,6 +233,7 @@ public class GeneralBoid : MonoBehaviour
 	
 	void Wrap ()
 	{
+		bool rightSide = false;
 		bool changed = false;
 		if (rigidbody2D.position.x < _left) 
 		{
@@ -220,6 +241,7 @@ public class GeneralBoid : MonoBehaviour
 			rigidbody2D.position = rigidbody2D.position + new Vector2 (_width, 0);
 		} else if (rigidbody2D.position.x > _right) {
 			changed = true;
+			rightSide = true;
 			rigidbody2D.position = rigidbody2D.position - new Vector2 (_width, 0);
 		}
 		if (rigidbody2D.position.y < _bottom) 
@@ -233,7 +255,7 @@ public class GeneralBoid : MonoBehaviour
 		
 		if (changed) 
 		{
-			Destroy ();
+			OutOfBoundsDestroy (rightSide);
 		}
 	}
 	

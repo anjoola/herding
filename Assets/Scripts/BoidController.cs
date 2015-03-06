@@ -148,20 +148,22 @@ public class BoidController : MonoBehaviour
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		
+		float leftOffset = 20;
+		float stepX = 30;
+		float stepY = 20;
+		
+		float nucleusY = 30;
+		float nucleusX = -5;
+		
 		// Create all the boids and add them as a child of the controller
 		for (int i=0; i<_number_of_boids; i++)
 		{
 			
-			float nucleusX;
-			float nucleusY;
-			
-			nucleusX = Random.Range(_left, _right);
-			nucleusY = Random.Range(_top, _bottom);
-			
-			
-            GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(110, -40, 180));
+			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
             go.transform.parent = transform;
-        }
+            
+            
+		}
 	}
 
 

@@ -3,12 +3,12 @@ using System.Collections;
 
 public class FishBoid : GeneralBoid
 {
-
 	int numFramesBeforeNotInCollision;
 	// Use this for initialization
 	void Start () {
+		base.forceMag = 2.0f;
 		base.Start ();
-		Physics2D.gravity = new Vector2 (100, 0);
+		Physics2D.gravity = new Vector2 (5, 0);
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -16,9 +16,10 @@ public class FishBoid : GeneralBoid
 		{
 			
 			if (!testing) {
-				
-				Debug.Log ("Increment Point");
-				GlobalStateController.addScore(40);
+
+				// Eaten by shark
+				Debug.Log ("Eaten by shark");
+//				GlobalStateController.addScore(40);
 			}
 			base.Destroy ();
 		}
