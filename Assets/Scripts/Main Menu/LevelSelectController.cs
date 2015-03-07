@@ -25,15 +25,19 @@ public class LevelSelectController : MonoBehaviour {
 	public GameObject[] stars;
 	public Text levelScore;
 
+	public AudioSource audio;
+
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
 		cameraOrigRot = Camera.main.transform.rotation;
 
 		if (!GlobalStateController.currentGame.played) {
-			GlobalStateController.showNotes("Welcome to HERDING GAME! Choose a level by tapping on any object with a marker!");
+			GlobalStateController.showNotes("Welcome to OVERRUN! Choose a level by tapping on any object with a marker!");
 			GlobalStateController.currentGame.played = true;
 		}
+
+		AudioController.playAudio("WorldMapMusic");
 	}
 	void Update () {
 		if (Input.GetMouseButtonDown (0)) {

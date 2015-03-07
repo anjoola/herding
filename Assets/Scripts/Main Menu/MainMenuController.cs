@@ -3,13 +3,14 @@ using System.Collections;
 
 public class MainMenuController : MonoBehaviour {
 	double RANGE = 8.0f;
-	GameObject startButton;
+	public GameObject startButton;
+	public GameObject title;
 
 	void Start () {
-		startButton = GameObject.Find ("Start Text");
-
-		//iTween.MoveBy(GameObject.Find("Title"),
-		 //             iTween.Hash("y", -RANGE, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
+		iTween.MoveBy(title,
+		              iTween.Hash("x", 485, "easeType", "easeOutElastic", "loopType", "none", "delay", 1.0f, "time", 4));
+		iTween.PunchPosition(title,
+		                     iTween.Hash("x", 30, "loopType", "loop", "delay", 12, "time", 1));
 		iTween.MoveBy(startButton,
 		              iTween.Hash("y", RANGE, "easeType", "linear", "loopType", "pingPong", "delay", 0.0, "time", 1));
 	}
