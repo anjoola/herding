@@ -9,6 +9,7 @@ using System.Collections;
  *   - Creating the pause menu and level
  */
 public class GlobalStateController : MonoBehaviour {
+	public static GameObject instance;
 	public static GameModel currentGame;
 	public static Level currentLevel;
 
@@ -29,6 +30,8 @@ public class GlobalStateController : MonoBehaviour {
 	private static bool timerEnabled;
 
 	void Awake() {
+		instance = this.gameObject;
+
 		// Get objects.
 		pauseMenu = GameObject.Find("PauseMenu");
 		pauseMenuController = pauseMenu.GetComponent("PauseMenuController") as PauseMenuController;
