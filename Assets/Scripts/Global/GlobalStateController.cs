@@ -96,7 +96,7 @@ public class GlobalStateController : MonoBehaviour {
 		enableLevelUI(true);
 		levelUIController.enableMenuButton(true);
 
-		startTimer(Level.MAX_TIME);
+		startTimer(currentLevel.maxTime);
 	}
 	public static void restartLevel() {
 		AudioController.resumeVolume();
