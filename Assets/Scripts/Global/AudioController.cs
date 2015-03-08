@@ -67,7 +67,7 @@ public class AudioController : MonoBehaviour {
 		AudioListener.volume = 0.0f;
 	}
 	public static void halfVolume() {
-		AudioListener.volume = 0.5f;
+		AudioListener.volume = 0.2f;
 	}
 	public static void resumeVolume() {
 		AudioListener.volume = 1.0f;
