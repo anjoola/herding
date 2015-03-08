@@ -29,14 +29,19 @@ public class AudioController : MonoBehaviour {
 		playAudio("MainMenuMusic");
 	}
 
-	public static void playSFX() {
-		// TODO
-	}
-	public static void playAudio(string audioName) {
-		// Create a new audio source.
+	public static AudioSource getSource(string audioName) {
 		GameObject obj = Instantiate(Resources.Load(audioName)) as GameObject;
 		obj.transform.position = GlobalStateController.instance.transform.position;
-		AudioSource newAudio = obj.audio;
+		return obj.audio;
+	}
+	public static void playSFX(string audioName) {
+		AudioSource sfx = getSource(audioName);
+
+		sfx.volume = 1.0f;
+		sfx.Play();
+	}
+	public static void playAudio(string audioName) {
+		AudioSource newAudio = getSource(audioName);
 	
 		// Play the audio.
 		newAudio.volume = 0;

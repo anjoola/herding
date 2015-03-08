@@ -95,7 +95,7 @@ public class GlobalStateController : MonoBehaviour {
 		enableLevelUI(true);
 		levelUIController.enableMenuButton(true);
 
-		startTimer(currentLevel.maxTime);
+		startTimer(Level.MAX_TIME);
 	}
 	public static void restartLevel() {
 		startLevel();

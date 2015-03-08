@@ -8,22 +8,24 @@ public class Level {
 	public string assetsName;
 	// Scene name.
 	public string sceneName;
-	// Maximum time for this level.
-	public int maxTime;
+	// Maximum time for a level.
+	public static int MAX_TIME = 100;
 
 	// Whether or not the level is completed.
 	public bool isCompleted;
 	// Number of points currently gotten.
 	public int score;
+	// Number of points needed for each star.
+	public int maxScoreIncrement;
 	// High score.
 	public int highScore;
 	// The number of stars earned.
 	public int numStars;
 	
-	public Level(string assetsName, string sceneName, int maxTime) {
+	public Level(string assetsName, string sceneName, int maxScore) {
 		this.assetsName = assetsName;
 		this.sceneName = sceneName;
-		this.maxTime = maxTime;
+		this.maxScoreIncrement = maxScore / 5;
 
 		this.isCompleted = false;
 		this.score = 0;
@@ -35,8 +37,7 @@ public class Level {
 		this.score += score;
 	}
 	public int computeStars() {
-		// TODO
-		this.numStars = 3;
+		this.numStars = Mathf.Min(5, score / maxScoreIncrement);
 		return this.numStars;
 	}
 

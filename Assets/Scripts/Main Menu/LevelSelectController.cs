@@ -25,7 +25,7 @@ public class LevelSelectController : MonoBehaviour {
 	public GameObject[] stars;
 	public Text levelScore;
 
-	public AudioSource audio;
+	public GameObject levelMarkers;
 
 	void Start () {
 		// Get original camera orientation.
@@ -136,6 +136,7 @@ public class LevelSelectController : MonoBehaviour {
 	 */
 	IEnumerator MoveCameraLoc(Vector3 targetPos, Quaternion targetRot, bool enabled) {
 		if (!enabled) enableWorldMapUI(false);
+		if (enabled) levelMarkers.SetActive(false);
 
 		float t = 0.0f;
 		Vector3 startingPos = Camera.main.transform.position;
@@ -146,6 +147,7 @@ public class LevelSelectController : MonoBehaviour {
 			yield return 0;
 		}
 
+		if (!enabled) levelMarkers.SetActive(true);
 		if (enabled) enableWorldMapUI(true);
 	}
 }
