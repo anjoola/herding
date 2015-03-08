@@ -12,17 +12,29 @@ public class PreyBoid : GeneralPreyBoid
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.tag == "DetectionTag")
+		if (other.gameObject.tag == "Food Tag")
 		{
-			
+			Debug.Log ("In food area!");
 			if (!testing) {
 
 				// Eaten by shark
 				Debug.Log ("Eaten by shark");
-//				GlobalStateController.addScore(40);
+				GlobalStateController.addScore(40);
 			}
-			base.Destroy ();
 		}
+	}
+
+	void OnTriggerExit2D(Collider2D other) {
+		if (other.gameObject.tag == "Food Tag")
+		{
+			Debug.Log ("Out of food area!");
+			if (!testing) {
+				
+				// Eaten by shark
+				Debug.Log ("Eaten by shark");
+                GlobalStateController.addScore(-40);
+            }
+        }
 	}
 
 	// Update is called once per frame
