@@ -49,10 +49,20 @@ public class PredatorController : MonoBehaviour {
 		transform.position = v3Pos + v3Offset; 
 	}
 
+
+	private Vector2 prevPosition;
+
 	void OnMouseDown()
 	{
 		Debug.Log ("Down");
 		OnInputDown (Input.mousePosition);
+		prevPosition = rigidbody2D.position;
+	}
+
+	void FaceTowardsHeading(Vector2 heading)
+	{
+		float rotation = -Mathf.Atan2(heading.x, heading.y)*Mathf.Rad2Deg;
+		rigidbody2D.MoveRotation(rotation);
 	}
 	
 	void OnMouseUp()
@@ -63,6 +73,12 @@ public class PredatorController : MonoBehaviour {
 	void OnMouseDrag()
 	{
 		OnInputDrag (Input.mousePosition);
+		Vector2 predictedDir = rigidbody2D.position - prevPosition;
+		if (predictedDir.magnitude > 2) 
+		{
+			prevPosition = rigidbody2D.position;
+			FaceTowardsHeading (predictedDir);
+		}
 	}
 	
 	// Update is called once per frame
