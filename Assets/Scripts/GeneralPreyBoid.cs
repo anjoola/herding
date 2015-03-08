@@ -194,11 +194,13 @@ public class GeneralPreyBoid : MonoBehaviour
 			if (!testing) GlobalStateController.finishLevel();
         }
     }
-    
+  
 
 	public void RemovePhysicsNoDestroy()
 	{
+		gameObject.collider2D.enabled = false;
 		_boids.Remove (gameObject.rigidbody2D);
+
 		if (_boids.Count == 0) 
 		{
 			//TODO change to actually call game over.

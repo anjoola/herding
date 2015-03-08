@@ -58,4 +58,11 @@ public class ChildBoid : GeneralBoid
             }
         }
     }
+
+	void OnCollisionEnter2D(Collision2D coll)
+	{
+		Debug.Log ("Avoiding collision");
+		if (physicsRemoved)	return;
+
+	}
 }
