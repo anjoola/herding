@@ -9,7 +9,7 @@ public class Level {
 	// Scene name.
 	public string sceneName;
 	// Maximum time for a level.
-	public static int MAX_TIME = 100;
+	public int maxTime;
 
 	// Whether or not the level is completed.
 	public bool isCompleted;
@@ -22,10 +22,11 @@ public class Level {
 	// The number of stars earned.
 	public int numStars;
 	
-	public Level(string assetsName, string sceneName, int maxScore) {
+	public Level(string assetsName, string sceneName, int maxScore, int maxTime) {
 		this.assetsName = assetsName;
 		this.sceneName = sceneName;
 		this.maxScoreIncrement = maxScore / 5;
+		this.maxTime = maxTime;
 
 		this.isCompleted = false;
 		this.score = 0;
