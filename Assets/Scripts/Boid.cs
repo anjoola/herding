@@ -13,7 +13,6 @@ public class Boid : MonoBehaviour
 
 	void Start ()
 	{
-		Debug.Log ("Start");
 		// Get the boid controller from the parent
 		_boid_controller = GetComponentInParent<BoidController>();
 

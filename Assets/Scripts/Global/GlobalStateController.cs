@@ -87,6 +87,7 @@ public class GlobalStateController : MonoBehaviour {
 
 		enablePauseMenu(false, true);
 		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, loadLevelUI);
+		AudioController.resumeVolume();
 		enableLevelComplete(false);
 	}
 	public static void loadLevelUI() {
@@ -95,18 +96,21 @@ public class GlobalStateController : MonoBehaviour {
 		enableLevelUI(true);
 		levelUIController.enableMenuButton(true);
 
-		startTimer(currentLevel.maxTime);
+		startTimer(Level.MAX_TIME);
 	}
 	public static void restartLevel() {
+		AudioController.resumeVolume();
 		startLevel();
 	}
 	public static void pauseLevel() {
 		pauseTimer();
 		enablePauseMenu(true);
+		AudioController.halfVolume();
 	}
 	public static void resumeLevel() {
 		enablePauseMenu(false);
 		resumeTimer();
+		AudioController.resumeVolume();
 	}
 	public static void exitLevel() {
 		stopTimer();
@@ -117,8 +121,11 @@ public class GlobalStateController : MonoBehaviour {
 
 		// TODO cleanup for this level?
 		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black);
+		AudioController.resumeVolume();
 	}
 	public static void finishLevel(bool wasTimeUp=false) {
+		AudioController.resumeVolume();
+		AudioController.playAudio("LevelComplete");
 		stopTimer();
 		if (wasTimeUp) {
 			levelCompleteController.timeUp();

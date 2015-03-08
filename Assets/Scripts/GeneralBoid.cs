@@ -65,7 +65,6 @@ public class GeneralBoid : MonoBehaviour
 		isOnSeat = false;
 		inCollision = false;
 
-		Debug.Log ("Start");
 		// Get the boid controller from the parent
 		_boid_controller = GetComponentInParent<BoidController>();
 		
