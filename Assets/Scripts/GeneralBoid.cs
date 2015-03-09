@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // Boid created by the BoidController class
 public class GeneralBoid : MonoBehaviour 
 {
-	private static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
+	public static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
 	
 	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
@@ -180,7 +180,9 @@ public class GeneralBoid : MonoBehaviour
 		Destroy (gameObject);
 		if (rightSide) {
 			// made it to the other side!
-			GlobalStateController.addScore(40);
+			// TODO this breaks the cow palace level
+			// this should be moved to the subclasses
+			//GlobalStateController.addScore(40);
         }
 		if (_boids.Count == 0) 
 		{
