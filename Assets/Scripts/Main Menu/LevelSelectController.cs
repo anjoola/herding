@@ -12,10 +12,9 @@ public class LevelSelectController : MonoBehaviour {
 	// Transition duration from one camera position to another.
 	float TRANSITION_DURATION = 0.7f;
 
-	// Camera position and rotation.
+	// Camera position.
 	Vector3 cameraOrigPos;
-	Quaternion cameraOrigRot;
-	
+
 	float CLICK_THRESHOLD = 100f;
 
 	// UI layer components.
@@ -30,7 +29,6 @@ public class LevelSelectController : MonoBehaviour {
 	void Start () {
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
-		cameraOrigRot = Camera.main.transform.rotation;
 
 		if (!GlobalStateController.currentGame.played) {
 			GlobalStateController.showNotes("Welcome to OVERRUN! Choose a level by tapping on any object with a marker!");
@@ -58,7 +56,7 @@ public class LevelSelectController : MonoBehaviour {
 	 * Goes back to the world map if on the UI layer.
 	 */
 	public void goBack() {
-		StartCoroutine(MoveCameraLoc(cameraOrigPos, cameraOrigRot, false));
+		StartCoroutine(MoveCameraLoc(cameraOrigPos, false));
 		GlobalStateController.currentLevel = null;
 	}
 
@@ -128,13 +126,13 @@ public class LevelSelectController : MonoBehaviour {
 	 * Moves the camera location to the target game object.
 	 */
 	IEnumerator MoveCameraLoc(GameObject target) {
-		return MoveCameraLoc(target.transform.position, target.transform.rotation, true);
+		return MoveCameraLoc(target.transform.position, true);
 	}
 
 	/**
-	 * Moves the camera location to the target position and rotation.
+	 * Moves the camera location to the target position.
 	 */
-	IEnumerator MoveCameraLoc(Vector3 targetPos, Quaternion targetRot, bool enabled) {
+	IEnumerator MoveCameraLoc(Vector3 targetPos, bool enabled) {
 		if (!enabled) enableWorldMapUI(false);
 		if (enabled) levelMarkers.SetActive(false);
 
@@ -143,7 +141,6 @@ public class LevelSelectController : MonoBehaviour {
 		while (t < 1.0f) {
 			t += Time.deltaTime * (Time.timeScale / TRANSITION_DURATION);
 			Camera.main.transform.position = Vector3.Lerp(startingPos, targetPos, t);
-			// TODO rotation?
 			yield return 0;
 		}
 
