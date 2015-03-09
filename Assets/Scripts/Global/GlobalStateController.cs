@@ -125,7 +125,7 @@ public class GlobalStateController : MonoBehaviour {
 	}
 	public static void finishLevel(bool wasTimeUp=false) {
 		AudioController.resumeVolume();
-		AudioController.playAudio("LevelComplete");
+		AudioController.playAudio("LevelComplete", false);
 		stopTimer();
 		if (wasTimeUp) {
 			levelCompleteController.timeUp();

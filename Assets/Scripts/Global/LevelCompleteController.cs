@@ -18,6 +18,16 @@ public class LevelCompleteController : MonoBehaviour {
 	public GameObject[] stars;
 	public GameObject levelCompleteObj;
 
+	void Start() {
+		for (int i = 0; i < 5; i++) {
+			stars[i].SetActive(true);
+			iTween.ScaleBy(stars[i], iTween.Hash("x", STAR_SCALE, "y", STAR_SCALE, "z", STAR_SCALE,
+			                                     "easeType", "linear", "loopType", "pingPong",
+			                                     "delay", 0, "time", 0.6f));
+			stars[i].SetActive(false);
+		}
+	}
+
 	public void slideIn() {
 		activate();
 		iTween.MoveBy(topPanel, iTween.Hash("y", -10, "easeType", "linear", "loopType", "none", "delay", 0.0,
@@ -53,21 +63,20 @@ public class LevelCompleteController : MonoBehaviour {
 	}
 	public void computeStars() {
 		int numStars = GlobalStateController.currentLevel.computeStars();
-		for (int j = numStars; j < 5; j++) {
+		for (int j = 0; j < 5; j++) {
 			stars[j].SetActive(false);
 		}
 		for (int i = 0; i < numStars; i++) {
 			stars[i].SetActive(true);
-			iTween.ScaleBy(stars[i], iTween.Hash("x", STAR_SCALE, "y", STAR_SCALE, "z", STAR_SCALE,
-			                                     "easeType", "linear", "loopType", "pingPong",
-			                                     "delay", 0.1f, "time", 0.6f));
 		}
 	}
 
 	public void restart() {
+		AudioController.buttonPress();
 		GlobalStateController.restartLevel();
 	}
 	public void exitLevel() {
+		AudioController.buttonPress();
 		GlobalStateController.exitLevel();
 	}
 }

@@ -49,7 +49,6 @@ public class GeneralBoid : MonoBehaviour
 		Physics2D.gravity = gravity;
 		if (_boids == null || pausedVel == null) return;
 		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
-		Debug.Log ("Unpausing");
 		for (int i = 0; i < _boids.Count; i++)
 		{
 			_boids[i].velocity = pausedVel[i];
@@ -171,8 +170,6 @@ public class GeneralBoid : MonoBehaviour
 		Destroy (gameObject);
 		if (_boids.Count == 0) 
 		{
-			//TODO change to actually call game over.
-			Debug.Log ("Game over");
 			if (!testing) GlobalStateController.finishLevel();
 		}
 	}
@@ -183,13 +180,10 @@ public class GeneralBoid : MonoBehaviour
 		Destroy (gameObject);
 		if (rightSide) {
 			// made it to the other side!
-			Debug.Log ("Increment Point");
 			GlobalStateController.addScore(40);
         }
 		if (_boids.Count == 0) 
 		{
-			//TODO change to actually call game over.
-			Debug.Log ("Game over");
 			if (!testing) GlobalStateController.finishLevel();
         }
     }
@@ -200,8 +194,6 @@ public class GeneralBoid : MonoBehaviour
 		_boids.Remove (gameObject.rigidbody2D);
 		if (_boids.Count == 0) 
 		{
-			//TODO change to actually call game over.
-			Debug.Log ("Game over");
 			if (!testing) GlobalStateController.finishLevel();
 		}
 	}
@@ -217,7 +209,6 @@ public class GeneralBoid : MonoBehaviour
 	// Wrap the edges of the screen to keep the boids from going off screen
 	void StartWrap ()
 	{
-		Debug.Log ("StartWrapping");
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)
