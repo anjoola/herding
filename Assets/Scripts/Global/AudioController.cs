@@ -36,7 +36,6 @@ public class AudioController : MonoBehaviour {
 	}
 	public static void buttonPress() {
 		AudioController.playSFX("ButtonPress", 1.0f);
-		// TODO no sound
 	}
 	public static void playSFX(string audioName, float volume=1.0f) {
 		AudioSource sfx = getSource(audioName);

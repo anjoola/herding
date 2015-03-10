@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Boid created by the BoidController class
-public class GeneralPreyBoid : MonoBehaviour 
+public class GeneralPreyBoid : GeneralBoid 
 {
 	public static List<Rigidbody2D> _boids = new List<Rigidbody2D> (); // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller

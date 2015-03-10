@@ -188,7 +188,12 @@ public class GlobalStateController : MonoBehaviour {
 
 		if (pause) {
 			showNotesPaused = true;
+			try {
 			GeneralBoid.PauseBoids();
+			} catch  {
+				// TODO hack for demo
+				GeneralPreyBoid.PauseBoids();
+			}
 		}
 	}
 	public static void hideNotes() {
@@ -196,7 +201,12 @@ public class GlobalStateController : MonoBehaviour {
 		notes.SetActive(false);
 
 		if (showNotesPaused) {
+			try {
 			GeneralBoid.UnPauseBoids();
+			} catch {
+			// TODO Hack for demo
+				GeneralPreyBoid.UnPauseBoids();
+			}
 			showNotesPaused = false;
 		}
 	}
