@@ -24,6 +24,7 @@ public class GlobalStateController : MonoBehaviour {
 	private static NotesController notesController;
 
 	public static bool isPaused;
+	public static bool showNotesPaused;
 
 	// Timer.
 	public static int currTime;
@@ -113,6 +114,7 @@ public class GlobalStateController : MonoBehaviour {
 		AudioController.resumeVolume();
 	}
 	public static void exitLevel() {
+		hideNotes();
 		stopTimer();
 	
 		enableLevelUI(false);
@@ -124,8 +126,10 @@ public class GlobalStateController : MonoBehaviour {
 		AudioController.resumeVolume();
 	}
 	public static void finishLevel(bool wasTimeUp=false) {
+		hideNotes();
+
 		AudioController.resumeVolume();
-		AudioController.playAudio("LevelComplete");
+		AudioController.playAudio("LevelComplete", false);
 		stopTimer();
 		if (wasTimeUp) {
 			levelCompleteController.timeUp();
@@ -154,7 +158,6 @@ public class GlobalStateController : MonoBehaviour {
 	public static void resumeTimer() {
 		timerEnabled = true;
 	}
-
 	public static void stopTimer() {
 		timerEnabled = false;
 	}
@@ -162,7 +165,7 @@ public class GlobalStateController : MonoBehaviour {
 	 * Updates the timer every second if it is enabled.
 	 */
 	void UpdateTimer() {
-		if (timerEnabled && levelUI.activeSelf) {
+		if (timerEnabled && levelUI.activeSelf && !showNotesPaused) {
 			currTime--;
 			levelUIController.updateTimer(currTime);
 
@@ -178,14 +181,24 @@ public class GlobalStateController : MonoBehaviour {
 
 	/* ---------------------------------------------------- NOTES ----------------------------------------------------*/
 
-	public static void showNotes(string note) {
+	public static void showNotes(string note, bool pause=false) {
 		notes.SetActive(true);
 		notesController.setText(note);
 		// TODO nice fade in effect
+
+		if (pause) {
+			showNotesPaused = true;
+			GeneralBoid.PauseBoids();
+		}
 	}
 	public static void hideNotes() {
 		// TODO nice fade out effect
 		notes.SetActive(false);
+
+		if (showNotesPaused) {
+			GeneralBoid.UnPauseBoids();
+			showNotesPaused = false;
+		}
 	}
 
 	/* ---------------------------------------------------- SCORE ----------------------------------------------------*/

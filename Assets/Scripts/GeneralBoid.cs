@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // Boid created by the BoidController class
 public class GeneralBoid : MonoBehaviour 
 {
-	private static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
+	public static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
 	
 	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
@@ -49,7 +49,6 @@ public class GeneralBoid : MonoBehaviour
 		Physics2D.gravity = gravity;
 		if (_boids == null || pausedVel == null) return;
 		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
-		Debug.Log ("Unpausing");
 		for (int i = 0; i < _boids.Count; i++)
 		{
 			_boids[i].velocity = pausedVel[i];
@@ -98,7 +97,7 @@ public class GeneralBoid : MonoBehaviour
 	void OnInputDown(Vector2 mousePosition)
 	{
 		isMouseDown = true;
-		if (GlobalStateController.isPaused && !testing) return;
+		if ((GlobalStateController.isPaused || GlobalStateController.showNotesPaused) && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
@@ -113,7 +112,7 @@ public class GeneralBoid : MonoBehaviour
 	
 	void OnInputDrag(Vector2 mousePosition)
 	{
-		if (GlobalStateController.isPaused && !testing) return;
+		if ((GlobalStateController.isPaused || GlobalStateController.showNotesPaused) && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -143,7 +142,7 @@ public class GeneralBoid : MonoBehaviour
 	{
 		if (isMouseDown) return;
 		if (inCollision) return;
-		if (GlobalStateController.isPaused && !testing) 
+		if ((GlobalStateController.isPaused || GlobalStateController.showNotesPaused) && !testing) 
 		{
 			PauseBoids ();
 			return;
@@ -171,8 +170,6 @@ public class GeneralBoid : MonoBehaviour
 		Destroy (gameObject);
 		if (_boids.Count == 0) 
 		{
-			//TODO change to actually call game over.
-			Debug.Log ("Game over");
 			if (!testing) GlobalStateController.finishLevel();
 		}
 	}
@@ -183,13 +180,12 @@ public class GeneralBoid : MonoBehaviour
 		Destroy (gameObject);
 		if (rightSide) {
 			// made it to the other side!
-			Debug.Log ("Increment Point");
-			GlobalStateController.addScore(40);
+			// TODO this breaks the cow palace level
+			// this should be moved to the subclasses
+			//GlobalStateController.addScore(40);
         }
 		if (_boids.Count == 0) 
 		{
-			//TODO change to actually call game over.
-			Debug.Log ("Game over");
 			if (!testing) GlobalStateController.finishLevel();
         }
     }
@@ -200,8 +196,6 @@ public class GeneralBoid : MonoBehaviour
 		_boids.Remove (gameObject.rigidbody2D);
 		if (_boids.Count == 0) 
 		{
-			//TODO change to actually call game over.
-			Debug.Log ("Game over");
 			if (!testing) GlobalStateController.finishLevel();
 		}
 	}
@@ -217,7 +211,6 @@ public class GeneralBoid : MonoBehaviour
 	// Wrap the edges of the screen to keep the boids from going off screen
 	void StartWrap ()
 	{
-		Debug.Log ("StartWrapping");
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)

@@ -49,7 +49,6 @@ public class GeneralPreyBoid : MonoBehaviour
 		Physics2D.gravity = gravity;
 		if (_boids == null || pausedVel == null) return;
 		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
-		Debug.Log ("Unpausing");
 		for (int i = 0; i < _boids.Count; i++)
 		{
 			_boids[i].velocity = pausedVel[i];

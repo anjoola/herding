@@ -42,12 +42,15 @@ public class PauseMenuController : MonoBehaviour {
 	}
 
 	public void resume() {
+		AudioController.buttonPress();
 		GlobalStateController.resumeLevel();
 	}
 	public void restart() {
+		AudioController.buttonPress();
 		GlobalStateController.restartLevel();
 	}
 	public void exitLevel() {
+		AudioController.buttonPress();
 		GlobalStateController.exitLevel();
 	}
 }
