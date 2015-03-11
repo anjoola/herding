@@ -51,11 +51,18 @@ public class AutoFade : MonoBehaviour {
 	private IEnumerator Fade(float aFadeOutTime, float aFadeInTime, Color aColor, Action callback)
 	{
 		float t = 0.0f;
+		bool faded = false;
 		while (t<1.0f)
 		{
 			yield return new WaitForEndOfFrame();
 			t = Mathf.Clamp01(t + Time.deltaTime / aFadeOutTime);
 			DrawQuad(aColor,t);
+
+			// Do any loads before the scene appears here.
+			if (t >0.9f && callback != null && !faded) {
+				callback();
+				faded = true;
+			}
 		}
 		if (m_LevelName != "")
 			Application.LoadLevel(m_LevelName);
@@ -68,7 +75,6 @@ public class AutoFade : MonoBehaviour {
 			DrawQuad(aColor,t);
 		}
 		m_Fading = false;
-		if (callback != null) callback();
 	}
 	private void StartFade(float aFadeOutTime, float aFadeInTime, Color aColor, Action callback)
 	{

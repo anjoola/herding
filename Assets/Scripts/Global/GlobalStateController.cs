@@ -80,19 +80,22 @@ public class GlobalStateController : MonoBehaviour {
 		SaveController.saveGame();
 	}
 
+	public static bool shouldPause() {
+		return isPaused || showNotesPaused;
+	}
+
 	/* --------------------------------------------------- LEVELS ----------------------------------------------------*/
 	
 	public static void startLevel() {
 		currentLevel.start();
 		resetScore();
 
-		enablePauseMenu(false, true);
-		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, loadLevelUI);
-		AudioController.resumeVolume();
-		enableLevelComplete(false);
+		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, onStartLevelFinish);
 	}
-	public static void loadLevelUI() {
-		if (currentLevel == null) return;
+	public static void onStartLevelFinish() {
+		enablePauseMenu(false, true);
+		enableLevelComplete(false);
+		AudioController.resumeVolume();
 
 		enableLevelUI(true);
 		levelUIController.enableMenuButton(true);
@@ -100,8 +103,19 @@ public class GlobalStateController : MonoBehaviour {
 		startTimer(currentLevel.maxTime);
 	}
 	public static void restartLevel() {
-		AudioController.resumeVolume();
-		startLevel();
+		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, onRestartLevelFinish);
+	}
+	public static void onRestartLevelFinish() {
+		enablePauseMenu(false, true);
+		enableLevelComplete(false);
+
+		AudioController.resumeVolume();		
+		resetScore();
+		currentLevel.start();
+		enableLevelUI(true);
+		levelUIController.enableMenuButton(true);
+		
+		startTimer(currentLevel.maxTime);
 	}
 	public static void pauseLevel() {
 		pauseTimer();
@@ -114,15 +128,16 @@ public class GlobalStateController : MonoBehaviour {
 		AudioController.resumeVolume();
 	}
 	public static void exitLevel() {
+		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black, onExitLevelComplete);
+	}
+	private static void onExitLevelComplete() {
 		hideNotes();
 		stopTimer();
-	
+		
 		enableLevelUI(false);
 		enablePauseMenu(false, true);
 		enableLevelComplete(false);
 
-		// TODO cleanup for this level?
-		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black);
 		AudioController.resumeVolume();
 	}
 	public static void finishLevel(bool wasTimeUp=false) {

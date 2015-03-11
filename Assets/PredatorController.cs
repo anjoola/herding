@@ -26,7 +26,7 @@ public class PredatorController : MonoBehaviour {
 	void OnInputDown(Vector2 mousePosition)
 	{
 		isMouseDown = true;
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
@@ -41,7 +41,7 @@ public class PredatorController : MonoBehaviour {
 	
 	void OnInputDrag(Vector2 mousePosition)
 	{
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -84,7 +84,7 @@ public class PredatorController : MonoBehaviour {
 	// Update is called once per frame
 	protected void FixedUpdate () 
 	{
-		if (GlobalStateController.isPaused && !testing) 
+		if (GlobalStateController.shouldPause() && !testing) 
 		{
 			return;
 		}

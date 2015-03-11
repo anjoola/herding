@@ -98,7 +98,7 @@ public class GeneralPreyBoid : GeneralBoid
 	void OnInputDown(Vector2 mousePosition)
 	{
 		isMouseDown = true;
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
@@ -113,7 +113,7 @@ public class GeneralPreyBoid : GeneralBoid
 	
 	void OnInputDrag(Vector2 mousePosition)
 	{
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -143,7 +143,7 @@ public class GeneralPreyBoid : GeneralBoid
 	{
 		if (isMouseDown) return;
 		if (inCollision) return;
-		if (GlobalStateController.isPaused && !testing) 
+		if (GlobalStateController.shouldPause() && !testing) 
 		{
 			PauseBoids ();
 			return;
