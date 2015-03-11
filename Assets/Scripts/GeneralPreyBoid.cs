@@ -100,6 +100,7 @@ public class GeneralPreyBoid : MonoBehaviour
 		isMouseDown = true;
 		if (GlobalStateController.isPaused && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
+
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -163,6 +164,17 @@ public class GeneralPreyBoid : MonoBehaviour
 		
 		//		DestroyNotWrap ();
 		Wrap();
+	//	CheckVelocity ();
+	}
+
+	public void CheckVelocity()
+	{
+		while (rigidbody2D.velocity.magnitude <= 1) {
+			Debug.Log ("Velocity too low");
+			
+			Vector2 acceleration = new Vector2(Random.Range(-10.0f, 10.0f),Random.Range(-10.0f, 10.0f));
+			rigidbody2D.AddForce (acceleration * forceMag *Time.fixedDeltaTime);
+		}	
 	}
 
 	public void Destroy()
