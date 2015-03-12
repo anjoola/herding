@@ -191,6 +191,10 @@ public class GlobalStateController : MonoBehaviour {
 
 				finishLevel(true);
 			}
+			// 3 2 1 countdown
+			if (currTime <= 3) {
+				AudioController.timerBeep();
+			}
 		}
 	}
 

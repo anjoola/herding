@@ -6,9 +6,11 @@ public class MainMenuController : MonoBehaviour {
 	public GameObject startButton;
 	public GameObject title;
 
+	// TODO animate boy, and stuff
+
 	void Start () {
 		iTween.MoveBy(title,
-		              iTween.Hash("x", 485, "easeType", "easeOutElastic", "loopType", "none", "delay", 1.0f, "time", 4));
+		              iTween.Hash("x", 585, "easeType", "easeOutElastic", "loopType", "none", "delay", 1.0f, "time", 4));
 		iTween.PunchPosition(title,
 		                     iTween.Hash("x", 30, "loopType", "loop", "delay", 12, "time", 1));
 		iTween.MoveBy(startButton,
