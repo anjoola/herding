@@ -58,7 +58,7 @@ public class GlobalStateController : MonoBehaviour {
 		enablePauseMenu(false, true);
 		enableLevelUI(false);
 		enableLevelComplete(false);
-		hideNotes();
+		hideNotes(true);
 	
 		// Disable timer but start the timer thread.
 		currTime = 0;
@@ -67,17 +67,14 @@ public class GlobalStateController : MonoBehaviour {
 
 		isPaused = false;
 	}
-	void Update() {
-		// Dismiss notes if user taps.
-		if (Input.GetMouseButtonDown(0)) {
-			if (notes.activeSelf) {
-				hideNotes();
-			}
-		}
-	}
 	void OnApplicationQuit() {
 		// Save savefile.
 		SaveController.saveGame();
+	}
+	void Update() {
+		if (Input.GetMouseButtonDown(0) && notes.activeSelf && notesController.dismissAnywhere) {
+			hideNotes(false);
+		}
 	}
 
 	public static bool shouldPause() {
@@ -131,7 +128,7 @@ public class GlobalStateController : MonoBehaviour {
 		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black, onExitLevelComplete);
 	}
 	private static void onExitLevelComplete() {
-		hideNotes();
+		hideNotes(true);
 		stopTimer();
 		
 		enableLevelUI(false);
@@ -141,7 +138,7 @@ public class GlobalStateController : MonoBehaviour {
 		AudioController.resumeVolume();
 	}
 	public static void finishLevel(bool wasTimeUp=false) {
-		hideNotes();
+		hideNotes(true);
 
 		AudioController.resumeVolume();
 		AudioController.playAudio("LevelComplete", false);
@@ -197,9 +194,8 @@ public class GlobalStateController : MonoBehaviour {
 	/* ---------------------------------------------------- NOTES ----------------------------------------------------*/
 
 	public static void showNotes(string note, bool pause=false) {
-		notes.SetActive(true);
 		notesController.setText(note);
-		// TODO nice fade in effect
+		notesController.showNotes(pause);
 
 		if (pause) {
 			showNotesPaused = true;
@@ -211,15 +207,17 @@ public class GlobalStateController : MonoBehaviour {
 			}
 		}
 	}
-	public static void hideNotes() {
-		// TODO nice fade out effect
-		notes.SetActive(false);
-
+	public void hideNotesPublic() {
+		hideNotes(false);
+	}
+	public static void hideNotes(bool hurry) {
+		notesController.hideNotes(hurry);
+		
 		if (showNotesPaused) {
 			try {
-			GeneralBoid.UnPauseBoids();
+				GeneralBoid.UnPauseBoids();
 			} catch {
-			// TODO Hack for demo
+				// TODO Hack for demo
 				GeneralPreyBoid.UnPauseBoids();
 			}
 			showNotesPaused = false;
