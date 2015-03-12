@@ -59,7 +59,7 @@ public class AutoFade : MonoBehaviour {
 			DrawQuad(aColor,t);
 
 			// Do any loads before the scene appears here.
-			if (t >0.9f && callback != null && !faded) {
+			if (t >0.7f && callback != null && !faded) {
 				callback();
 				faded = true;
 			}

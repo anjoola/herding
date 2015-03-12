@@ -25,6 +25,7 @@ public class GlobalStateController : MonoBehaviour {
 
 	public static bool isPaused;
 	public static bool showNotesPaused;
+	public static bool timeUpPaused;
 
 	// Timer.
 	public static int currTime;
@@ -68,7 +69,6 @@ public class GlobalStateController : MonoBehaviour {
 		isPaused = false;
 	}
 	void OnApplicationQuit() {
-		// Save savefile.
 		SaveController.saveGame();
 	}
 	void Update() {
@@ -78,12 +78,13 @@ public class GlobalStateController : MonoBehaviour {
 	}
 
 	public static bool shouldPause() {
-		return isPaused || showNotesPaused;
+		return isPaused || showNotesPaused || timeUpPaused;
 	}
 
 	/* --------------------------------------------------- LEVELS ----------------------------------------------------*/
 	
 	public static void startLevel() {
+		timeUpPaused = false;
 		currentLevel.start();
 		resetScore();
 
@@ -100,6 +101,7 @@ public class GlobalStateController : MonoBehaviour {
 		startTimer(currentLevel.maxTime);
 	}
 	public static void restartLevel() {
+		timeUpPaused = false;
 		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, onRestartLevelFinish);
 	}
 	public static void onRestartLevelFinish() {
@@ -130,7 +132,8 @@ public class GlobalStateController : MonoBehaviour {
 	private static void onExitLevelComplete() {
 		hideNotes(true);
 		stopTimer();
-		
+
+		timeUpPaused = false;
 		enableLevelUI(false);
 		enablePauseMenu(false, true);
 		enableLevelComplete(false);
@@ -184,7 +187,7 @@ public class GlobalStateController : MonoBehaviour {
 			// Timer up!
 			if (currTime == 0) {
 				timerEnabled = false;
-				// TODO send signal that timer stopped
+				timeUpPaused = true;
 
 				finishLevel(true);
 			}
