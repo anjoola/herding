@@ -27,6 +27,8 @@ public class LevelSelectController : MonoBehaviour {
 	public GameObject levelMarkers;
 
 	void Start () {
+		enableWorldMapUI(false, true);
+
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
 
@@ -73,8 +75,26 @@ public class LevelSelectController : MonoBehaviour {
 	/**
 	 * Displays or hides the world map UI layer.
 	 */
-	void enableWorldMapUI(bool active) {
-		uiLayer.SetActive(active);
+	void enableWorldMapUI(bool active, bool hurry=false) {
+		float time = hurry ? 0 : TRANSITION_DURATION;
+		if (hurry && !active) {
+			uiLayer.SetActive(active);
+			uiLayer.transform.position = new Vector3(uiLayer.transform.position.x+450, 
+			                                         uiLayer.transform.position.y,
+			                                         uiLayer.transform.position.z);
+		}
+		if (!hurry && active) {
+			uiLayer.SetActive(active);
+			iTween.MoveBy(uiLayer, iTween.Hash("y", -450, "easeType", "linear", "loopType", "none", "delay", 0.0,
+			                                   "time", time));
+		} else if (!hurry) {
+			iTween.MoveBy(uiLayer, iTween.Hash("y", 450, "easeType", "linear", "loopType", "none", "delay", 0.0,
+			                                   "time", time, "oncomplete", "onDisableWorldMapCompleted",
+			                                   "oncompletetarget", this.gameObject));
+		}
+	}
+	public void onDisableWorldMapCompleted() {
+		uiLayer.SetActive(false);
 	}
 
 	/**
@@ -133,7 +153,7 @@ public class LevelSelectController : MonoBehaviour {
 	 * Moves the camera location to the target position.
 	 */
 	IEnumerator MoveCameraLoc(Vector3 targetPos, bool enabled) {
-		if (!enabled) enableWorldMapUI(false);
+		enableWorldMapUI(enabled);
 		if (enabled) levelMarkers.SetActive(false);
 
 		float t = 0.0f;
@@ -145,6 +165,5 @@ public class LevelSelectController : MonoBehaviour {
 		}
 
 		if (!enabled) levelMarkers.SetActive(true);
-		if (enabled) enableWorldMapUI(true);
 	}
 }
