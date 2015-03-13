@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Creates a flock of boids and defines values for the boids to use
+// Creates a flock of boids and defines values for the boids to use.
 public class BoidController : MonoBehaviour 
 {
 	public GameObject _boid_prefab; // The prefab boid object
@@ -13,16 +13,14 @@ public class BoidController : MonoBehaviour
 	public float _separation_radius = 20; // The radius of the neighbourhood user for the separation
 	public float _separation_weight = 5000; // The affect separation has on the acceleration
 	public float _max_acceleration = 650; // The maximum acceleration allowed
+	public GameObject[] spawnLocations;
 
 	public int start_format; // To start in Grid, Random, etc
 	enum START_FORMATS {RANDOM=1, GRID, FISH, CHILD};
-	
-
 
 	void Start () 
 	{
-
-		switch(start_format){
+		switch(start_format) {
 		case (int) START_FORMATS.GRID:
 			PointStart ();
 			break;
@@ -59,7 +57,7 @@ public class BoidController : MonoBehaviour
 
 		float nucleusY = 20;
 		float nucleusX = -25;
-		
+
 		// Create all the boids and add them as a child of the controller
 		for (int i=0; i<_number_of_boids; i++)
 		{
@@ -139,33 +137,48 @@ public class BoidController : MonoBehaviour
 		}
 	}
 
+	/**
+	 * Randomly generates a game object at particular spawn points.
+	 */
+	void RandomStart() {
+		// Compute probabilistic weights to select each spawn area.
+		float[] weights = new float[spawnLocations.Length];
+		for (int i = 0; i < spawnLocations.Length; i++) {
+			GameObject spawnLoc = spawnLocations[i];
+			float spawnWidth = spawnLoc.transform.localScale.x;
+			float spawnHeight = spawnLoc.transform.localScale.y;
+			float area = spawnWidth * spawnHeight;
 
-	void RandomStart()
-	{
-		
-		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
-		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
-		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
-		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-		float _width = _right - _left;
-		float _height = _top - _bottom;
-		
-		float centerX = _left + 0.5f * _width;
-		float centerY = _bottom + 0.5f * _height;
-		
+			if (i > 0) {
+				weights[i] = weights[i-1] + area;
+			} else {
+				weights[i] = area;
+			}
+		}
+
 		// Create all the boids and add them as a child of the controller
-		for (int i=0; i<_number_of_boids; i++)
-		{
-			
-			float nucleusX;
-			float nucleusY;
+		for (int i = 0; i < _number_of_boids; i++) {
+			// Randomly select a spawning location with weighted probability equal to the area.
+			float weight = Random.Range(0, weights[weights.Length-1]);
+			int randomIndex = 0;
+			while (randomIndex < weights.Length) {
+				if (weights[randomIndex] >= weight) break;
+				randomIndex++;
+			}
+	
+			GameObject spawnLoc = spawnLocations[randomIndex];
+			float spawnX = spawnLoc.transform.position.x;
+			float spawnY = spawnLoc.transform.position.y;
+			float spawnWidth = spawnLoc.transform.localScale.x / 2;
+			float spawnHeight = spawnLoc.transform.localScale.y / 2;
 
-			nucleusX = Random.Range(_left, _right);
-			nucleusY = Random.Range(_top, _bottom);
-
-			
-			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
-			go.transform.parent = transform;
+			// Set random location within spawn box.
+			float nucleusX = Random.Range(spawnX - spawnWidth, spawnX + spawnWidth);
+			float nucleusY = Random.Range(spawnY - spawnHeight, spawnY + spawnHeight);
+			GameObject newObj = (GameObject)Instantiate(_boid_prefab,
+			                                            new Vector3(nucleusX, nucleusY, 0),
+			                                            Quaternion.Euler(90, -20, 180));
+			newObj.transform.parent = transform;
 		}
 	}
 
@@ -199,6 +212,4 @@ public class BoidController : MonoBehaviour
             
 		}
 	}
-
-
 }
