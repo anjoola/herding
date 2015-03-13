@@ -93,28 +93,45 @@ public class PredatorController : MonoBehaviour {
 
 	void Update(){
 		if (Input.touchCount > 0) {
-			Debug.Log ("Touch: " + Input.touchCount);
+			Debug.Log ("Num touches: " + Input.touchCount);
 			for (int i = 0; i < Input.touchCount; i++) {
+				
+				Debug.Log ("Checking touch: " + i);
 				Touch t = Input.GetTouch (i);
 
-				if (t.phase == TouchPhase.Began) {
-					Debug.Log ("Began");
-					OnInputDown (t.position);
-				} else if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary){
-					Debug.Log ("Drag");
-					OnInputDrag(t.position);
-				} else {
-					Debug.Log ("Up");
-					OnInputUp(t.position);
+				Ray ray = Camera.main.ScreenPointToRay (t.position);
+				RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint(t.position), Vector2.zero);
+
+				// No hit
+				if (hit.collider == null) continue;
+				if (hit.collider.transform.position == collider2D.transform.position){
+					// hit this particular game object
+
+					Debug.Log (hit.collider.gameObject);
+					if (t.phase == TouchPhase.Began) {
+						Debug.Log ("Began");
+						OnInputDown (t.position);
+					} else if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary){
+						Debug.Log ("Drag");
+						OnInputDrag(t.position);
+					} else {
+						Debug.Log ("Up");
+						OnInputUp(t.position);
+					}
 				}
+
+
 			}
 		} else {
-
+			Debug.Log ("No touches");
 			if (Input.GetMouseButtonDown (0)) {
+				Debug.Log ("Down");
 				OnInputDown (Input.mousePosition);
 			} else if (Input.GetMouseButton (0)) {
+				Debug.Log ("Still Down");
 				OnInputDrag (Input.mousePosition);
 			} else if (Input.GetMouseButtonUp (0)) {
+				Debug.Log ("Up");
 				OnInputUp (Input.mousePosition);
 			}
 		}
