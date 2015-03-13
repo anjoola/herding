@@ -29,14 +29,17 @@ public class AudioController : MonoBehaviour {
 		playAudio("MainMenuMusic");
 	}
 
+	public static void buttonPress() {
+		AudioController.playSFX("ButtonPress", 1.0f);
+	}
+	public static void timerBeep() {
+		// TODO
+	}
+
 	public static AudioSource getSource(string audioName) {
 		GameObject obj = Instantiate(Resources.Load(audioName)) as GameObject;
 		obj.transform.position = GlobalStateController.instance.transform.position;
 		return obj.audio;
-	}
-	public static void buttonPress() {
-		AudioController.playSFX("ButtonPress", 1.0f);
-		// TODO no sound
 	}
 	public static void playSFX(string audioName, float volume=1.0f) {
 		AudioSource sfx = getSource(audioName);

@@ -26,57 +26,7 @@ public class PredatorController : MonoBehaviour {
 	}
 
 
-	
-//	public void OnInputDown(Vector2 mousePosition)
-//	{
-//		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-//		RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-//		
-//		if (hit.collider != null )
-//		{
-//			Debug.Log (hit.collider.gameObject);
-//			v3Offset = hit.collider.transform.position - ray.GetPoint (10.0f);
-//		}
-//	}
-//
-//	
-//	public void OnInputUp(Vector2 mousePosition)
-//	{
-//		isMouseDown = false; 
-//	}
-//	
-//	public void OnInputDrag(Vector2 mousePosition)
-//	{
-//		if (GlobalStateController.isPaused && !testing) return;
-//		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-//		float dist;
-//		plane.Raycast (ray, out dist);
-//		Vector3 v3Pos = ray.GetPoint (dist);
-//		transform.position = v3Pos + v3Offset; 
-//		
-//		Vector2 predictedDir = rigidbody2D.position - prevPosition;
-//		if (predictedDir.magnitude > 2) 
-//		{
-//			prevPosition = rigidbody2D.position;
-//			FaceTowardsHeading (predictedDir);
-//		}
-//	}
-
-
-	
-//	void OnInputDown(Vector2 mousePosition)
-//	{
-//		isMouseDown = true;
-//		if (GlobalStateController.isPaused && !testing) return;
-//		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
-//		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-//		float dist;
-//		plane.Raycast (ray, out dist);
-//		v3Offset = transform.position - ray.GetPoint (dist);  
-//	}
-
-
-	/******** WORKING */
+	/******** WORKING for single touch */
 	void OnInputDown(Vector2 mousePosition)
 	{
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -164,18 +114,6 @@ public class PredatorController : MonoBehaviour {
 	}
 
 	/********/
-
-
-
-
-//	void OnMouseDown()
-//	{
-//		Debug.Log ("Down");
-//		OnInputDown (Input.mousePosition);
-//		prevPosition = rigidbody2D.position;
-//
-//
-//	}
 
 
 

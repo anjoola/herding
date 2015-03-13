@@ -11,41 +11,72 @@ using System.Collections;
 public class LevelSelectController : MonoBehaviour {
 	// Transition duration from one camera position to another.
 	float TRANSITION_DURATION = 0.7f;
+	float ITWEEN_DISTANCE = 300;
 
-	// Camera position.
+	// Camera positions.
 	Vector3 cameraOrigPos;
+	Vector3 previousZoomPos;
 
+	// TODO remove
 	float CLICK_THRESHOLD = 100f;
 
-	// UI layer components.
-	public GameObject uiLayer;
+	// Level UI layer components.
+	public GameObject levelNamePanel;
+	public GameObject levelInfoPanel;
 	public Text levelName;
-	public RawImage levelImage;
 	public GameObject[] stars;
 	public Text levelScore;
 
-	public GameObject levelMarkers;
+	// Navigation within the world map
+	public GameObject subworldNav;
+	public GameObject rightZoom;
+	public GameObject leftZoom;
+	public GameObject rightBack;
+	public GameObject leftBack;
+	public GameObject cowLevelMarkers;
+	public GameObject waterLevelMarkers;
+	bool isZoomedOut;
+	bool isLeftSubworld;
+	bool focusedOnLevel;
 
 	void Start () {
+		enableLevelNameUI(false, true);
+		enableLevelInfoUI(false, true);
+		rightBack.SetActive(false);
+		leftBack.SetActive(false);
+		waterLevelMarkers.SetActive(false);
+		cowLevelMarkers.SetActive(false);
+
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
+		isZoomedOut = true;
+		isLeftSubworld = false;
 
 		if (!GlobalStateController.currentGame.played) {
-			GlobalStateController.showNotes("Welcome to OVERRUN! Choose a level by tapping on any object with a marker!");
+			GlobalStateController.showNotes("Welcome to Overrun! Choose a world by tapping either left or right.");
 			GlobalStateController.currentGame.played = true;
 		}
-
 		AudioController.playAudio("WorldMapMusic");
 	}
 	void Update () {
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown(0)) {
 			Vector3 mousePos = Input.mousePosition;
+			bool clickedOnLevel = false;
 
 			// See if the user clicked on a level and try to load that level's information.
-			if (!uiLayer.activeSelf) {
+			if (!isZoomedOut && !focusedOnLevel) {
 				foreach (Level level in GlobalStateController.currentGame.levels) {
-					loadLevelInfo(mousePos, level);
+					clickedOnLevel |= loadLevelInfo(mousePos, level);
 				}
+			}
+			if (clickedOnLevel) {
+				setArrows(false);
+			}
+			// Otherwise, zoom back into subworld.
+			if (!clickedOnLevel && !isZoomedOut && focusedOnLevel) {
+				setArrows();
+				focusedOnLevel = false;
+				StartCoroutine(MoveCameraLoc(previousZoomPos, false));
 			}
 		}
 	}
@@ -53,28 +84,118 @@ public class LevelSelectController : MonoBehaviour {
 	/* ----------------------------------------------- Button Handlers ---------------------------------------------- */
 
 	/**
-	 * Goes back to the world map if on the UI layer.
+	 * User clicked on left subworld.
+	 */
+	public void leftButton() {
+		previousZoomPos = leftZoom.transform.position;
+		zoomIntoSubworld(true);
+	}
+	/**
+	 * User clicked on right subworld.
+	 */
+	public void rightButton() {
+		previousZoomPos = rightZoom.transform.position;
+		zoomIntoSubworld(false);
+	}
+	/**
+	 * Camera zoom into a subworld once a user clicks on it.
+	 *
+	 * isLeftSubworld: True if the user clicked on the left subworld.
+	 */
+	private void zoomIntoSubworld(bool isLeftSubworld) {
+		subworldNav.SetActive(false);
+		isZoomedOut = false;
+		this.isLeftSubworld = isLeftSubworld;
+		setArrows();
+
+		StartCoroutine(MoveCameraLoc(previousZoomPos, false));
+	}
+	/**
+	 * Camera zoom out of the subworld.
+	 */
+	public void zoomOutOfSubworld() {
+		isZoomedOut = true;
+		setArrows();
+		subworldNav.SetActive(true);
+
+		StartCoroutine(MoveCameraLoc(cameraOrigPos, false));
+	}
+	private void setArrows(bool directSet=true) {
+		if (!isZoomedOut && directSet) {
+			leftBack.SetActive(!isLeftSubworld);
+			rightBack.SetActive(isLeftSubworld);
+		}
+		else {
+			waterLevelMarkers.SetActive(false);
+			cowLevelMarkers.SetActive(false);
+			leftBack.SetActive(false);
+			rightBack.SetActive(false);
+		}
+	}
+	/**
+	 * Goes back to the world map if on the level info layer.
 	 */
 	public void goBack() {
 		StartCoroutine(MoveCameraLoc(cameraOrigPos, false));
 		GlobalStateController.currentLevel = null;
 	}
-
 	/**
-	 * Starts a level. Hides the world map UI.
+	 * Starts a level. Hides the level information UI.
 	 */
 	public void startLevel() {
-		enableWorldMapUI(false);
 		GlobalStateController.startLevel();
+		enableLevelNameUI(false, false);
+		enableLevelInfoUI(false, false);
 	}
 
 	/* ---------------------------------------- World Map Level Info Display ---------------------------------------- */
 
+	void enableLevelInfoUI(bool active, bool hurry=false) {
+		float time = hurry ? 0 : TRANSITION_DURATION;
+		if (hurry && !active) {
+			levelInfoPanel.SetActive(active);
+			levelInfoPanel.transform.position = new Vector3(levelInfoPanel.transform.position.x, 
+			                                                levelInfoPanel.transform.position.y-ITWEEN_DISTANCE,
+			                                                levelInfoPanel.transform.position.z);
+		}
+		if (!hurry && active) {
+			levelInfoPanel.SetActive(active);
+			iTween.MoveBy(levelInfoPanel, iTween.Hash("y", -ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
+			                                          "delay", 0.0, "time", time));
+		} else if (!hurry) {
+			iTween.MoveBy(levelInfoPanel, iTween.Hash("y", ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
+			                                          "delay", 0.0, "time", time,
+			                                          "oncomplete", "onDisableLevelInfoPanelComplete",
+			                                          "oncompletetarget", this.gameObject));
+		}
+	}
+	private void onDisableLevelInfoPanelComplete() {
+		levelInfoPanel.SetActive(false);
+	}
 	/**
 	 * Displays or hides the world map UI layer.
 	 */
-	void enableWorldMapUI(bool active) {
-		uiLayer.SetActive(active);
+	void enableLevelNameUI(bool active, bool hurry=false) {
+		float time = hurry ? 0 : TRANSITION_DURATION;
+		if (hurry && !active) {
+			levelNamePanel.SetActive(active);
+			levelNamePanel.transform.position = new Vector3(levelNamePanel.transform.position.x, 
+			                                                levelNamePanel.transform.position.y+ITWEEN_DISTANCE,
+			                                                levelNamePanel.transform.position.z);
+		}
+		if (!hurry && active) {
+			levelNamePanel.SetActive(active);
+			iTween.MoveBy(levelNamePanel, iTween.Hash("y", -ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
+			                                          "delay", 0.0, "time", time));
+		} else if (!hurry) {
+			iTween.MoveBy(levelNamePanel, iTween.Hash("y", ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
+			                                          "delay", 0.0, "time", time,
+			                                          "oncomplete", "onDisableLevelNameUIComplete",
+													  "oncompletetarget", this.gameObject));
+		}
+	}
+	public void onDisableLevelNameUIComplete() {
+		levelNamePanel.SetActive(false);
 	}
 
 	/**
@@ -106,7 +227,9 @@ public class LevelSelectController : MonoBehaviour {
 	 * Set the level information in the UI.
 	 */
 	void setLevelInfo(Level level) {
-		// Level name, score, stars, image.
+		focusedOnLevel = true;
+
+		// Level name, score, stars.
 		levelName.text = level.assetsName;
 		levelScore.text = "High Score: " + level.highScore;
 		for (int i = 0; i < level.numStars; i++) {
@@ -115,8 +238,6 @@ public class LevelSelectController : MonoBehaviour {
 		for (int i = level.numStars; i < 5; i++) {
 			stars[i].SetActive(false);
 		}
-		// TODO image
-		
 		GlobalStateController.currentLevel = level;
 	}
 
@@ -133,8 +254,12 @@ public class LevelSelectController : MonoBehaviour {
 	 * Moves the camera location to the target position.
 	 */
 	IEnumerator MoveCameraLoc(Vector3 targetPos, bool enabled) {
-		if (!enabled) enableWorldMapUI(false);
-		if (enabled) levelMarkers.SetActive(false);
+		enableLevelNameUI(enabled);
+		enableLevelInfoUI(enabled);
+		if (enabled) {
+			waterLevelMarkers.SetActive(false);
+			cowLevelMarkers.SetActive(false);
+		}
 
 		float t = 0.0f;
 		Vector3 startingPos = Camera.main.transform.position;
@@ -144,7 +269,9 @@ public class LevelSelectController : MonoBehaviour {
 			yield return 0;
 		}
 
-		if (!enabled) levelMarkers.SetActive(true);
-		if (enabled) enableWorldMapUI(true);
+		if (!enabled && !isZoomedOut) {
+			if (isLeftSubworld) waterLevelMarkers.SetActive(true);
+			else cowLevelMarkers.SetActive(true);
+		}
 	}
 }

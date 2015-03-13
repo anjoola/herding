@@ -25,6 +25,7 @@ public class GlobalStateController : MonoBehaviour {
 
 	public static bool isPaused;
 	public static bool showNotesPaused;
+	public static bool timeUpPaused;
 
 	// Timer.
 	public static int currTime;
@@ -58,7 +59,7 @@ public class GlobalStateController : MonoBehaviour {
 		enablePauseMenu(false, true);
 		enableLevelUI(false);
 		enableLevelComplete(false);
-		hideNotes();
+		hideNotes(true);
 	
 		// Disable timer but start the timer thread.
 		currTime = 0;
@@ -67,32 +68,32 @@ public class GlobalStateController : MonoBehaviour {
 
 		isPaused = false;
 	}
+	void OnApplicationQuit() {
+		SaveController.saveGame();
+	}
 	void Update() {
-		// Dismiss notes if user taps.
-		if (Input.GetMouseButtonDown(0)) {
-			if (notes.activeSelf) {
-				hideNotes();
-			}
+		if (Input.GetMouseButtonDown(0) && notes.activeSelf && notesController.dismissAnywhere) {
+			hideNotes(false);
 		}
 	}
-	void OnApplicationQuit() {
-		// Save savefile.
-		SaveController.saveGame();
+
+	public static bool shouldPause() {
+		return isPaused || showNotesPaused || timeUpPaused;
 	}
 
 	/* --------------------------------------------------- LEVELS ----------------------------------------------------*/
 	
 	public static void startLevel() {
+		timeUpPaused = false;
 		currentLevel.start();
 		resetScore();
 
-		enablePauseMenu(false, true);
-		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, loadLevelUI);
-		AudioController.resumeVolume();
-		enableLevelComplete(false);
+		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, onStartLevelFinish);
 	}
-	public static void loadLevelUI() {
-		if (currentLevel == null) return;
+	public static void onStartLevelFinish() {
+		enablePauseMenu(false, true);
+		enableLevelComplete(false);
+		AudioController.resumeVolume();
 
 		enableLevelUI(true);
 		levelUIController.enableMenuButton(true);
@@ -100,8 +101,20 @@ public class GlobalStateController : MonoBehaviour {
 		startTimer(currentLevel.maxTime);
 	}
 	public static void restartLevel() {
-		AudioController.resumeVolume();
-		startLevel();
+		timeUpPaused = false;
+		AutoFade.LoadLevel(currentLevel.sceneName, 0.2f, 0.2f, Color.black, onRestartLevelFinish);
+	}
+	public static void onRestartLevelFinish() {
+		enablePauseMenu(false, true);
+		enableLevelComplete(false);
+
+		AudioController.resumeVolume();		
+		resetScore();
+		currentLevel.start();
+		enableLevelUI(true);
+		levelUIController.enableMenuButton(true);
+		
+		startTimer(currentLevel.maxTime);
 	}
 	public static void pauseLevel() {
 		pauseTimer();
@@ -114,19 +127,21 @@ public class GlobalStateController : MonoBehaviour {
 		AudioController.resumeVolume();
 	}
 	public static void exitLevel() {
-		hideNotes();
+		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black, onExitLevelComplete);
+	}
+	private static void onExitLevelComplete() {
+		hideNotes(true);
 		stopTimer();
-	
+
+		timeUpPaused = false;
 		enableLevelUI(false);
 		enablePauseMenu(false, true);
 		enableLevelComplete(false);
 
-		// TODO cleanup for this level?
-		AutoFade.LoadLevel("WorldMap", 0.2f, 0.2f, Color.black);
 		AudioController.resumeVolume();
 	}
 	public static void finishLevel(bool wasTimeUp=false) {
-		hideNotes();
+		hideNotes(true);
 
 		AudioController.resumeVolume();
 		AudioController.playAudio("LevelComplete", false);
@@ -172,9 +187,13 @@ public class GlobalStateController : MonoBehaviour {
 			// Timer up!
 			if (currTime == 0) {
 				timerEnabled = false;
-				// TODO send signal that timer stopped
+				timeUpPaused = true;
 
 				finishLevel(true);
+			}
+			// 3 2 1 countdown
+			if (currTime <= 3) {
+				AudioController.timerBeep();
 			}
 		}
 	}
@@ -182,21 +201,32 @@ public class GlobalStateController : MonoBehaviour {
 	/* ---------------------------------------------------- NOTES ----------------------------------------------------*/
 
 	public static void showNotes(string note, bool pause=false) {
-		notes.SetActive(true);
 		notesController.setText(note);
-		// TODO nice fade in effect
+		notesController.showNotes(pause);
 
 		if (pause) {
 			showNotesPaused = true;
+			try {
 			GeneralBoid.PauseBoids();
+			} catch  {
+				// TODO hack for demo
+				GeneralPreyBoid.PauseBoids();
+			}
 		}
 	}
-	public static void hideNotes() {
-		// TODO nice fade out effect
-		notes.SetActive(false);
-
+	public void hideNotesPublic() {
+		hideNotes(false);
+	}
+	public static void hideNotes(bool hurry) {
+		notesController.hideNotes(hurry);
+		
 		if (showNotesPaused) {
-			GeneralBoid.UnPauseBoids();
+			try {
+				GeneralBoid.UnPauseBoids();
+			} catch {
+				// TODO Hack for demo
+				GeneralPreyBoid.UnPauseBoids();
+			}
 			showNotesPaused = false;
 		}
 	}

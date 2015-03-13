@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 // Boid created by the BoidController class
-public class GeneralPreyBoid : MonoBehaviour 
+public class GeneralPreyBoid : GeneralBoid 
 {
 	public static List<Rigidbody2D> _boids = new List<Rigidbody2D> (); // A list of all the boids rigidbodies in the scene
 	private BoidController _boid_controller; // The boid controller
@@ -98,7 +98,7 @@ public class GeneralPreyBoid : MonoBehaviour
 	void OnInputDown(Vector2 mousePosition)
 	{
 		isMouseDown = true;
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -114,7 +114,7 @@ public class GeneralPreyBoid : MonoBehaviour
 	
 	void OnInputDrag(Vector2 mousePosition)
 	{
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -144,7 +144,7 @@ public class GeneralPreyBoid : MonoBehaviour
 	{
 		if (isMouseDown) return;
 		if (inCollision) return;
-		if (GlobalStateController.isPaused && !testing) 
+		if (GlobalStateController.shouldPause() && !testing) 
 		{
 			PauseBoids ();
 			return;

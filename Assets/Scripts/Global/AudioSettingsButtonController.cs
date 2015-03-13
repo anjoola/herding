@@ -19,8 +19,10 @@ public class AudioSettingsButtonController : MonoBehaviour {
 	}
 	public void SetInitialState() {
 		if (AudioController.isVolumeOn) {
+			AudioController.turnVolumeOn();
 			text.Set(VOLUME_ON);
 		} else {
+			AudioController.turnVolumeOff();
 			text.Set(VOLUME_OFF);
 		}
 	}

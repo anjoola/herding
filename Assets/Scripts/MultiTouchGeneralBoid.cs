@@ -90,7 +90,7 @@ public class MultiTouchGeneralBoid : MonoBehaviour
 	
 	void OnMouseDown() {
 		isMouseDown = true;
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
@@ -103,7 +103,7 @@ public class MultiTouchGeneralBoid : MonoBehaviour
     }
     
 	void OnMouseDrag() {
-		if (GlobalStateController.isPaused && !testing) return;
+		if (GlobalStateController.shouldPause() && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
 		plane.Raycast (ray, out dist);
@@ -115,7 +115,7 @@ public class MultiTouchGeneralBoid : MonoBehaviour
 	void FixedUpdate () 
 	{
 		if (isMouseDown) return;
-		if (GlobalStateController.isPaused && !testing) 
+		if (GlobalStateController.shouldPause() && !testing) 
 		{
 			PauseBoids ();
 			return;
