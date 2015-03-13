@@ -8,7 +8,7 @@ public class PredatorController : MonoBehaviour {
 	public float REPULSION_DISTANCE = 10;
 	public float TO_APPLY = 1;
 	
-	public static bool testing = true;
+	public static bool testing = false;
 
 	
 	

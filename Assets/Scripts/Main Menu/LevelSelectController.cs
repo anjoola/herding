@@ -33,7 +33,8 @@ public class LevelSelectController : MonoBehaviour {
 	public GameObject leftZoom;
 	public GameObject rightBack;
 	public GameObject leftBack;
-	//public GameObject levelMarkers;
+	public GameObject cowLevelMarkers;
+	public GameObject waterLevelMarkers;
 	bool isZoomedOut;
 	bool isLeftSubworld;
 	bool focusedOnLevel;
@@ -43,6 +44,8 @@ public class LevelSelectController : MonoBehaviour {
 		enableLevelInfoUI(false, true);
 		rightBack.SetActive(false);
 		leftBack.SetActive(false);
+		waterLevelMarkers.SetActive(false);
+		cowLevelMarkers.SetActive(false);
 
 		// Get original camera orientation.
 		cameraOrigPos = Camera.main.transform.position;
@@ -51,6 +54,7 @@ public class LevelSelectController : MonoBehaviour {
 
 		if (!GlobalStateController.currentGame.played) {
 			GlobalStateController.showNotes("Welcome to Overrun! Choose a world by tapping either left or right.");
+			GlobalStateController.currentGame.played = true;
 		}
 		AudioController.playAudio("WorldMapMusic");
 	}
@@ -99,11 +103,6 @@ public class LevelSelectController : MonoBehaviour {
 	 * isLeftSubworld: True if the user clicked on the left subworld.
 	 */
 	private void zoomIntoSubworld(bool isLeftSubworld) {
-		if (!GlobalStateController.currentGame.played) {
-			GlobalStateController.showNotes("Choose a level by tapping on any object with a level marker.");
-			GlobalStateController.currentGame.played = true;
-		}
-
 		subworldNav.SetActive(false);
 		isZoomedOut = false;
 		this.isLeftSubworld = isLeftSubworld;
@@ -127,6 +126,8 @@ public class LevelSelectController : MonoBehaviour {
 			rightBack.SetActive(isLeftSubworld);
 		}
 		else {
+			waterLevelMarkers.SetActive(false);
+			cowLevelMarkers.SetActive(false);
 			leftBack.SetActive(false);
 			rightBack.SetActive(false);
 		}
@@ -255,7 +256,10 @@ public class LevelSelectController : MonoBehaviour {
 	IEnumerator MoveCameraLoc(Vector3 targetPos, bool enabled) {
 		enableLevelNameUI(enabled);
 		enableLevelInfoUI(enabled);
-		//if (enabled) levelMarkers.SetActive(false);
+		if (enabled) {
+			waterLevelMarkers.SetActive(false);
+			cowLevelMarkers.SetActive(false);
+		}
 
 		float t = 0.0f;
 		Vector3 startingPos = Camera.main.transform.position;
@@ -265,6 +269,9 @@ public class LevelSelectController : MonoBehaviour {
 			yield return 0;
 		}
 
-		//if (!enabled) levelMarkers.SetActive(true);
+		if (!enabled && !isZoomedOut) {
+			if (isLeftSubworld) waterLevelMarkers.SetActive(true);
+			else cowLevelMarkers.SetActive(true);
+		}
 	}
 }
