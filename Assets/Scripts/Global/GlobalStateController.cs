@@ -242,11 +242,8 @@ public class GlobalStateController : MonoBehaviour {
 		if (pause) {
 			showNotesPaused = true;
 			try {
-			GeneralBoid.PauseBoids();
-			} catch  {
-				// TODO hack for demo
-				GeneralPreyBoid.PauseBoids();
-			}
+				GeneralBoid.PauseBoids();
+			} catch { }
 		}
 	}
 	public void hideNotesPublic() {
@@ -254,14 +251,11 @@ public class GlobalStateController : MonoBehaviour {
 	}
 	public static void hideNotes(bool hurry) {
 		notesController.hideNotes(hurry);
-		
+
 		if (showNotesPaused) {
 			try {
-				GeneralBoid.UnpauseBoids();
-			} catch {
-				// TODO Hack for demo
-				GeneralPreyBoid.UnPauseBoids();
-			}
+				GeneralBoid.PauseBoids();
+			} catch { }
 			showNotesPaused = false;
 		}
 	}

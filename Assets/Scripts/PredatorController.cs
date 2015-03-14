@@ -19,15 +19,15 @@ public class PredatorController : MonoBehaviour {
 	private bool isMouseDown;
 	private Vector2 prevPosition;
 
-	// Use this for initialization
 	void Start () {
 		isMouseDown = false;
-
 	}
-
+	// TODO pause shark animation
 
 	/******** WORKING for single touch */
 	void Update(){
+		if (!testing && GlobalStateController.isPaused) return;
+
 		Debug.Log ("Multitouch enabled?" + Input.multiTouchEnabled);
 		if (Input.touchCount > 0) {
 			Debug.Log ("Num touches: " + Input.touchCount);
@@ -102,7 +102,6 @@ public class PredatorController : MonoBehaviour {
 	void OnInputDrag(Collider2D col, Ray ray)
 	{
 		if (!isMouseDown) return;
-		if (GlobalStateController.isPaused && !testing) return;
 
 		float dist;
 		Vector3 v3Pos = ray.GetPoint (10.0f);
@@ -120,36 +119,31 @@ public class PredatorController : MonoBehaviour {
 
 
 
-	void FaceTowardsHeading(Vector2 heading)
-	{
-		float rotation = -Mathf.Atan2(heading.x, heading.y)*Mathf.Rad2Deg;
+	void FaceTowardsHeading(Vector2 heading) {
+		float rotation = -Mathf.Atan2(heading.x, heading.y) * Mathf.Rad2Deg;
 		rigidbody2D.MoveRotation(rotation);
 	}
-	
-	// Update is called once per frame
-	protected void FixedUpdate () 
-	{
-		if (GlobalStateController.isPaused && !testing) 
-		{
+
+	protected void FixedUpdate () {
+		if (GlobalStateController.isPaused && !testing) {
 			return;
 		}
-		// Get the cohesion, alignment, and separation components of the flocking
-		ExertRepulsion ();
+		// Exert repulsion on other boids.
+		ExertRepulsion();
 	}
 
+	/**
+	 * Exerts replusion on the other boids.
+	 */
+	void ExertRepulsion() {
+		for (int i = 0; i < GeneralBoid.boidRigidbodies.Count; i++) {
+			float dist = Vector2.Distance(rigidbody2D.position, GeneralBoid.boidRigidbodies[i].position);
+			Vector2 forceDir = GeneralBoid.boidRigidbodies[i].position - rigidbody2D.position;
 
-	void ExertRepulsion(){
-		for (int i=0; i<GeneralPreyBoid._boids.Count; i++)
-		{
-			float dist = Vector2.Distance(rigidbody2D.position, GeneralPreyBoid._boids[i].position);
-			Vector2 forceDir = GeneralPreyBoid._boids[i].position - rigidbody2D.position;
-			
-			if (dist < REPULSION_DISTANCE && dist > 0) // dist > 0 prevents including this boid
-			{
+			if (dist < REPULSION_DISTANCE && dist > 0) {
 				Vector2 force = forceDir * TO_APPLY * Time.fixedDeltaTime;
-				GeneralPreyBoid._boids[i].AddForce(force);
+				GeneralBoid.boidRigidbodies[i].AddForce(force);
 			}
 		}
-
 	}
 }
