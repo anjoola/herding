@@ -1,0 +1,399 @@
+fileFormatVersion: 2
+guid: 1c6f5be55451041fdb15d4a8c65daa86
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Seaweed_0
+    21300002: Seaweed_1
+    21300004: Seaweed_2
+    21300006: Seaweed_3
+    21300008: Seaweed_4
+    21300010: Seaweed_5
+    21300012: Seaweed_6
+    21300014: Seaweed_7
+    21300016: Seaweed_8
+    21300018: Seaweed_9
+    21300020: Seaweed_10
+    21300022: Seaweed_11
+    21300024: Seaweed_12
+    21300026: Seaweed_13
+    21300028: Seaweed_14
+    21300030: Seaweed_15
+    21300032: Seaweed_16
+    21300034: Seaweed_17
+    21300036: Seaweed_18
+    21300038: Seaweed_19
+    21300040: Seaweed_20
+    21300042: Seaweed_21
+    21300044: Seaweed_22
+    21300046: Seaweed_23
+    21300048: Seaweed_24
+    21300050: Seaweed_25
+    21300052: Seaweed_26
+    21300054: Seaweed_27
+    21300056: Seaweed_28
+    21300058: Seaweed_29
+    21300060: Seaweed_30
+    21300062: Seaweed_31
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Seaweed_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_1
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_2
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_3
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_4
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_5
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_6
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_7
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 313
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_9
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_10
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_11
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_12
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_14
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_15
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 234
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_17
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_18
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_19
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_20
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_21
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_22
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_23
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 155
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_25
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_26
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_27
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_28
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_29
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_30
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Seaweed_31
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 76
+        width: 60
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
