@@ -42,12 +42,14 @@ public class AudioController : MonoBehaviour {
 		return obj.audio;
 	}
 	public static void playSFX(string audioName, float volume=1.0f) {
+		if (!isVolumeOn) return;
 		AudioSource sfx = getSource(audioName);
 
 		sfx.volume = volume;
 		sfx.Play();
 	}
 	public static void playAudio(string audioName, bool fadeIn=true) {
+		if (!isVolumeOn) return;
 		AudioSource newAudio = getSource(audioName);
 	
 		// Play the audio.

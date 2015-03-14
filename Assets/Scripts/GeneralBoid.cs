@@ -1,81 +1,91 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-// Boid created by the BoidController class
-public class GeneralBoid : MonoBehaviour 
-{
-	public static List<Rigidbody2D> _boids; // A list of all the boids rigidbodies in the scene
-	private BoidController _boid_controller; // The boid controller
-	
-	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
+public class GeneralBoid : MonoBehaviour {
+	// List of all the boids.
+	public static List<GeneralBoid> boidsList;
+	public static List<Rigidbody2D> boidRigidbodies;
 
+	// Stores the velocity and gravity of the boid before pausing;
+	private Vector2 pauseVel;
+	private Vector2 gravity;
+	private float animatorSpeed;
 
+	// Boid controller.
+	private BoidController boidController;
 	protected float forceMag;
-	
-	private static List<Vector2> pausedVel;
-	
-	private bool paused;
-	private bool isMouseDown = false;
-	private bool isOnSeat;
-
-	private static Vector2 gravity;
-
-
 	protected bool inCollision;
+	private bool isMouseDown;
+	private Animator animator;
 
+	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
+	private float _left, _right, _top, _bottom, _width, _height;
+
+	// TODO remove
 	public static bool testing = false;
 
-	public void Awake(){
-		_boids = new List<Rigidbody2D>();
-		pausedVel = new List<Vector2>();
-
+	public void Awake() {
+		isMouseDown = false;
+		if (boidsList == null)	{
+			boidsList = new List<GeneralBoid>();
+			boidRigidbodies = new List<Rigidbody2D>();
+		}
 		Input.multiTouchEnabled = true;
+		animator = GetComponent<Animator>();
 	}
-	
-	public static void PauseBoids()
-	{
+
+	public void Pause() {
 		gravity = Physics2D.gravity;
-		Physics2D.gravity = new Vector2 (0, 0);
-		for (int i = 0; i < _boids.Count; i++)
-		{
-			pausedVel.Add (_boids[i].velocity);
-			_boids[i].velocity = new Vector2(0,0);
+		Physics2D.gravity = new Vector2(0, 0);
+		pauseVel = rigidbody2D.velocity;
+		rigidbody2D.velocity = new Vector2(0,0);
+
+		if (animator != null) {
+			animatorSpeed = animator.speed == 0 ? animatorSpeed : animator.speed;
+			animator.speed = 0;
 		}
 	}
-	
-	public static void UnPauseBoids()
-	{
+	public void Unpause() {
 		Physics2D.gravity = gravity;
-		if (_boids == null || pausedVel == null) return;
-		if (pausedVel.Count < _boids.Count || pausedVel.Count == 0) return;
-		for (int i = 0; i < _boids.Count; i++)
-		{
-			_boids[i].velocity = pausedVel[i];
-		}
+		rigidbody2D.velocity = pauseVel;
 
-		pausedVel = new List<Vector2>();
+		if (animator != null) {
+			animator.speed = animatorSpeed;
+		}
 	}
 
-	public void Start ()
-	{
+	public static void PauseBoids() {
+		for (int i = 0; i < boidsList.Count; i++) {
+			boidsList[i].Pause();
+		}
+	}
+
+	public static void UnpauseBoids() {
+		if (boidsList == null) return;
+
+		for (int i = 0; i < boidsList.Count; i++) {
+			boidsList[i].Unpause();
+		}
+	}
+
+	public void Start () {
 		forceMag = 1.0f;
-		paused = true;
-		isOnSeat = false;
 		inCollision = false;
 
-		// Get the boid controller from the parent
-		_boid_controller = GetComponentInParent<BoidController>();
+		// Get the boid controller from the parent.
+		boidController = GetComponentInParent<BoidController>();
 		
-		// Add the boids rigidbody2D to the boids list
-		_boids.Add(rigidbody2D);
-		
-		// Give the boid a random starting velocity
+		// Add the boid to the boids list.
+		boidsList.Add(this);
+		boidRigidbodies.Add(rigidbody2D);
+
+		// Give it a random starting velocity.
 		Vector2 vel = Random.insideUnitCircle;
 		vel *= Random.Range(20, 40);
 		rigidbody2D.velocity = vel;
 		
-		// Get some camera coordinates in world coordinates
+		// Get some camera coordinates in world coordinates.
 		_left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
 		_bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
 		_top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
@@ -83,134 +93,116 @@ public class GeneralBoid : MonoBehaviour
 		_width = _right - _left;
 		_height = _top - _bottom;
 		
-		
-		StartWrap ();
+		StartWrap();
+	}
+	void OnDestroy() {
+		boidRigidbodies.Remove(gameObject.rigidbody2D);
+		boidsList.Remove(this);
 	}
 	
-	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
 
-
-
-	
-	void OnInputDown(Vector2 mousePosition)
-	{
+	void OnInputDown(Vector2 mousePosition) {
 		isMouseDown = true;
 		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
-		plane.Raycast (ray, out dist);
-		v3Offset = transform.position - ray.GetPoint (dist);  
+		plane.Raycast(ray, out dist);
+		v3Offset = transform.position - ray.GetPoint(dist);
 	}
 	
-	void OnInputUp(Vector2 mousePosition)
-	{
+	void OnInputUp(Vector2 mousePosition) {
 		isMouseDown = false; 
 	}
 	
-	void OnInputDrag(Vector2 mousePosition)
-	{
+	void OnInputDrag(Vector2 mousePosition) {
 		if (GlobalStateController.shouldPause() && !testing) return;
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		float dist;
-		plane.Raycast (ray, out dist);
-		Vector3 v3Pos = ray.GetPoint (dist);
+		plane.Raycast(ray, out dist);
+		Vector3 v3Pos = ray.GetPoint(dist);
 		transform.position = v3Pos + v3Offset; 
 	}
 
-
-	protected void OnMouseDown()
-	{
-		OnInputDown (Input.mousePosition);
+	protected void OnMouseDown() {
+		OnInputDown(Input.mousePosition);
+	}
+	protected void OnMouseUp() {
+		OnInputUp(Input.mousePosition);
+	}
+	protected void OnMouseDrag() {
+		OnInputDrag(Input.mousePosition);
 	}
 
-	protected void OnMouseUp()
-	{
-		OnInputUp (Input.mousePosition);
-	}
-
-	protected void OnMouseDrag()
-	{
-		OnInputDrag (Input.mousePosition);
-	}
-
-	
 	// Fixed update used when dealing with rigid bodies
-	protected void FixedUpdate () 
-	{
-		if (isMouseDown) return;
-		if (inCollision) return;
-		if (GlobalStateController.shouldPause() && !testing) 
-		{
-			PauseBoids ();
+	protected void FixedUpdate () {
+		// Don't update position if being dragged or colliding.
+		if (isMouseDown || inCollision) return;
+
+		if (GlobalStateController.shouldPause() && !testing) {
+			Pause();
 			return;
 		}
-		// Get the cohesion, alignment, and separation components of the flocking
-		Vector2 acceleration = Cohesion() * _boid_controller._cohesion_weight;
-		acceleration += Alignment() * _boid_controller._alignment_weight;
-		acceleration += Separation() * _boid_controller._separation_weight;
-		// Clamp the acceleration to a maximum value
-		acceleration = Vector2.ClampMagnitude(acceleration, _boid_controller._max_acceleration);
+
+		// Get the cohesion, alignment, and separation components of the flocking.
+		Vector2 acceleration = Cohesion() * boidController._cohesion_weight;
+		acceleration += Alignment() * boidController._alignment_weight;
+		acceleration += Separation() * boidController._separation_weight;
+		// Clamp the acceleration to a maximum value.
+		acceleration = Vector2.ClampMagnitude(acceleration, boidController._max_acceleration);
 		
-		// Add the force to the rigid body and face the direction of movement
-		rigidbody2D.AddForce(acceleration * forceMag *Time.fixedDeltaTime);
+		// Add the force to the rigid body and face the direction of movement.
+		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
 		FaceTowardsHeading();
 
-		// When going off screen, wrap to the opposite screen edge
-		
-		//		DestroyNotWrap ();
+		// Check if boids go off the screen.
 		Wrap();
 	}
 
-	public void Destroy()
-	{
-		_boids.Remove (gameObject.rigidbody2D);
-		Destroy (gameObject);
-		if (_boids.Count == 0) 
-		{
-			if (!testing) GlobalStateController.finishLevel();
+	public void Destroy() {
+		Destroy(gameObject);
+
+		// All boids have hit the target.
+		if (boidRigidbodies.Count == 1) {
+			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.LevelComplete);
 		}
 	}
 
-	public void OutOfBoundsDestroy(bool rightSide)
-	{
-		_boids.Remove (gameObject.rigidbody2D);
-		Destroy (gameObject);
-		if (rightSide) {
-			// made it to the other side!
-			// TODO this breaks the cow palace level
-			// this should be moved to the subclasses
-			//GlobalStateController.addScore(40);
-        }
-		if (_boids.Count == 0) 
-		{
-			if (!testing) GlobalStateController.finishLevel();
+	public void OutOfBoundsDestroy(bool rightSide) {
+		Destroy(gameObject);
+
+		// All the boids have left, end the level.
+		if (boidRigidbodies.Count == 0) {
+			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
     
-
-	public void RemovePhysicsNoDestroy()
-	{
-		_boids.Remove (gameObject.rigidbody2D);
-		if (_boids.Count == 0) 
-		{
+	// TODO remove
+	public void RemovePhysicsNoDestroy() {
+		boidRigidbodies.Remove(rigidbody2D);
+		boidsList.Remove(this);
+		//Destroy(gameObject); TODO
+		// All the boids have been saved.
+		if (boidRigidbodies.Count == 0) {
 			if (!testing) GlobalStateController.finishLevel();
 		}
 	}
-	
-	// Face the rigid body towards the direction of travel
-	void FaceTowardsHeading()
-	{
+
+	/**
+	 * Face the rigid body towards the direction of travel.
+	 */
+	void FaceTowardsHeading() {
 		Vector2 heading = rigidbody2D.velocity.normalized;
-		float rotation = -Mathf.Atan2(heading.x, heading.y)*Mathf.Rad2Deg;
+		float rotation = -Mathf.Atan2(heading.x, heading.y) * Mathf.Rad2Deg;
 		rigidbody2D.MoveRotation(rotation);
 	}
-	
-	// Wrap the edges of the screen to keep the boids from going off screen
-	void StartWrap ()
-	{
+
+	/**
+	 * Wrap edges of the screen to keep boids from going off screen.
+	 */
+	void StartWrap () {
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)
@@ -222,13 +214,14 @@ public class GeneralBoid : MonoBehaviour
 		else if (rigidbody2D.position.y > _top)
 			rigidbody2D.position = new Vector2(rigidbody2D.position.x, centerY);
 	}
-	
-	void Wrap ()
-	{
+
+	/**
+	 * Handle if boids go off screen.
+	 */
+	void Wrap() {
 		bool rightSide = false;
 		bool changed = false;
-		if (rigidbody2D.position.x < _left) 
-		{
+		if (rigidbody2D.position.x < _left) {
 			changed = true;
 			rigidbody2D.position = rigidbody2D.position + new Vector2 (_width, 0);
 		} else if (rigidbody2D.position.x > _right) {
@@ -236,110 +229,103 @@ public class GeneralBoid : MonoBehaviour
 			rightSide = true;
 			rigidbody2D.position = rigidbody2D.position - new Vector2 (_width, 0);
 		}
-		if (rigidbody2D.position.y < _bottom) 
-		{
+		if (rigidbody2D.position.y < _bottom) {
 			changed = true;
 			rigidbody2D.position = rigidbody2D.position + new Vector2 (0, _height);
 		} else if (rigidbody2D.position.y > _top) {
 			changed = true;
 			rigidbody2D.position = rigidbody2D.position - new Vector2 (0, _height);
 		}
-		
-		if (changed) 
-		{
-			OutOfBoundsDestroy (rightSide);
+
+		if (changed) {
+			OutOfBoundsDestroy(rightSide);
 		}
 	}
 	
-	
-	// Calculate the cohesive component of the flocking algorithm
-	Vector2 Cohesion ()
-	{
-		Vector2 sum_vector = new Vector2();
+	/**
+	 * Calculate the cohesive component of the flocking algorithm.
+	 */
+	Vector2 Cohesion() {
+		Vector2 sumVector = new Vector2();
 		int count = 0;
-		
-		// For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sum_vector
-		for (int i=0; i<_boids.Count; i++)
-		{
-			float dist = Vector2.Distance(rigidbody2D.position, _boids[i].position);
-			
-			if (dist < _boid_controller._cohesion_radius && dist > 0) // dist > 0 prevents including this boid
-			{
-				sum_vector += _boids[i].position;
+
+		// For each boid, check the distance from this boid, and if within a neighbourhood, add to the sumVector.
+		for (int i = 0; i < boidRigidbodies.Count; i++) {
+			float dist = Vector2.Distance(rigidbody2D.position, boidRigidbodies[i].position);
+
+			// dist > 0 prevents including this boid.
+			if (dist < boidController._cohesion_radius && dist > 0) {
+				sumVector += boidRigidbodies[i].position;
 				count++;
 			}
 		}
 		
 		// Average the sum_vector and return value
-		if (count > 0)
-		{
-			sum_vector /= count;
-			return  sum_vector - rigidbody2D.position;
+		if (count > 0) {
+			sumVector /= count;
+			return sumVector - rigidbody2D.position;
 		}
-		
-		return sum_vector; // Sum vector is empty here
+		// Sum vector is empty here.
+		return sumVector;
 	}
 	
-	// Calculate the alignment component of the flocking algorithm
-	Vector2 Alignment ()
-	{
-		Vector2 sum_vector = new Vector2();
+	/**
+	 * Calculate the alignment component of the flocking algorithm.
+	 */
+	Vector2 Alignment() {
+		Vector2 sumVector = new Vector2();
 		int count = 0;
 		
-		// For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sum_vector
-		for (int i=0; i<_boids.Count; i++)
-		{
-			float dist = Vector2.Distance(rigidbody2D.position, _boids[i].position);
+		// For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sumVector.
+		for (int i = 0; i < boidRigidbodies.Count; i++) {
+			float dist = Vector2.Distance(rigidbody2D.position, boidRigidbodies[i].position);
 			
-			if (dist < _boid_controller._cohesion_radius && dist > 0) // dist > 0 prevents including this boid
-			{
-				sum_vector += _boids[i].velocity;
+			if (dist < boidController._cohesion_radius && dist > 0) {
+				sumVector += boidRigidbodies[i].velocity;
 				count++;
 			}
 		}
-		
-        // Average the sum_vector and clamp magnitude
-        if (count > 0)
-        {
-            sum_vector /= count;
-            sum_vector = Vector2.ClampMagnitude(sum_vector, 1);
+
+        // Average the sum_vector and clamp magnitude.
+        if (count > 0) {
+			sumVector /= count;
+			sumVector = Vector2.ClampMagnitude(sumVector, 1);
         }
-        
-        return sum_vector;
+		return sumVector;
     }
     
-    // Calculate the separation component of the flocking algorithm
-    Vector2 Separation ()
-    {
-        Vector2 sum_vector = new Vector2();
+    /**
+     * Calculate the separation component of the flocking algorithm.
+     */
+    Vector2 Separation() {
+		Vector2 sumVector = new Vector2();
         int count = 0;
         
-        // For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sum_vector
-        for (int i=0; i<_boids.Count; i++)
-        {
-            float dist = Vector2.Distance(rigidbody2D.position, _boids[i].position);
-            
-            if (dist < _boid_controller._separation_radius && dist > 0) // dist > 0 prevents including this boid
-            {
-                sum_vector += (rigidbody2D.position - _boids[i].position).normalized / dist;
+		// For each boid, check the distance from this boid, and if within a neighbourhood, add to the sumVector
+        for (int i = 0; i < boidRigidbodies.Count; i++) {
+			float dist = Vector2.Distance(rigidbody2D.position, boidRigidbodies[i].position);
+
+            if (dist < boidController._separation_radius && dist > 0) {
+				sumVector += (rigidbody2D.position - boidRigidbodies[i].position).normalized / dist;
                 count++;
             }
         }
         
-        // Average the sum_vector
-        if (count > 0)
-        {
-            sum_vector /= count;
+        // Average the sumVector.
+        if (count > 0) {
+			sumVector /= count;
         }
-        return  sum_vector;
+		return sumVector;
     }
     
-    // Draw the radius of the cohesion neighbourhood in green, and the radius of the separation neighbourhood in red, in the scene view
-    void OnDrawGizmosSelected ()
-    {
+    /**
+     * Draw the radius of the cohesion neighbourhood in green, and the radius of the separation
+     * neighbourhood in red, in the scene view.
+     */
+    void OnDrawGizmosSelected () {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, _boid_controller._cohesion_radius);
+        Gizmos.DrawWireSphere(transform.position, boidController._cohesion_radius);
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _boid_controller._separation_radius);
+        Gizmos.DrawWireSphere(transform.position, boidController._separation_radius);
     }
 }

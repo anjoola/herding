@@ -22,6 +22,7 @@ public class LevelSelectController : MonoBehaviour {
 
 	// Level UI layer components.
 	public GameObject levelNamePanel;
+	private Transform levelNamePos;
 	public GameObject levelInfoPanel;
 	public Text levelName;
 	public GameObject[] stars;
@@ -33,6 +34,7 @@ public class LevelSelectController : MonoBehaviour {
 	public GameObject leftZoom;
 	public GameObject rightBack;
 	public GameObject leftBack;
+	public GameObject zoomBackToSubworldButton;
 	public GameObject cowLevelMarkers;
 	public GameObject waterLevelMarkers;
 	bool isZoomedOut;
@@ -40,6 +42,9 @@ public class LevelSelectController : MonoBehaviour {
 	bool focusedOnLevel;
 
 	void Start () {
+		levelNamePos = levelNamePanel.transform;
+		zoomBackToSubworldButton.SetActive(false);
+
 		enableLevelNameUI(false, true);
 		enableLevelInfoUI(false, true);
 		rightBack.SetActive(false);
@@ -71,12 +76,7 @@ public class LevelSelectController : MonoBehaviour {
 			}
 			if (clickedOnLevel) {
 				setArrows(false);
-			}
-			// Otherwise, zoom back into subworld.
-			if (!clickedOnLevel && !isZoomedOut && focusedOnLevel) {
-				setArrows();
-				focusedOnLevel = false;
-				StartCoroutine(MoveCameraLoc(previousZoomPos, false));
+				zoomBackToSubworldButton.SetActive(true);
 			}
 		}
 	}
@@ -132,7 +132,13 @@ public class LevelSelectController : MonoBehaviour {
 			rightBack.SetActive(false);
 		}
 	}
-	/**
+	public void zoomBackIntoSubworld() {
+		setArrows();
+		focusedOnLevel = false;
+		StartCoroutine(MoveCameraLoc(previousZoomPos, false));
+		zoomBackToSubworldButton.SetActive(false);
+	}
+		/**
 	 * Goes back to the world map if on the level info layer.
 	 */
 	public void goBack() {
@@ -159,10 +165,12 @@ public class LevelSelectController : MonoBehaviour {
 			                                                levelInfoPanel.transform.position.z);
 		}
 		if (!hurry && active) {
+			if (levelInfoPanel.activeSelf) return;
 			levelInfoPanel.SetActive(active);
 			iTween.MoveBy(levelInfoPanel, iTween.Hash("y", -ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
 			                                          "delay", 0.0, "time", time));
 		} else if (!hurry) {
+			if (!levelInfoPanel.activeSelf) return;
 			iTween.MoveBy(levelInfoPanel, iTween.Hash("y", ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
 			                                          "delay", 0.0, "time", time,
 			                                          "oncomplete", "onDisableLevelInfoPanelComplete",
@@ -179,22 +187,30 @@ public class LevelSelectController : MonoBehaviour {
 		float time = hurry ? 0 : TRANSITION_DURATION;
 		if (hurry && !active) {
 			levelNamePanel.SetActive(active);
-			levelNamePanel.transform.position = new Vector3(levelNamePanel.transform.position.x, 
-			                                                levelNamePanel.transform.position.y+ITWEEN_DISTANCE,
-			                                                levelNamePanel.transform.position.z);
+			levelNamePanel.transform.position = new Vector3(levelNamePos.position.x, 
+			                                                levelNamePos.position.y + ITWEEN_DISTANCE,
+			                                                levelNamePos.position.z);
 		}
 		if (!hurry && active) {
+			if (levelNamePanel.activeSelf) return;
 			levelNamePanel.SetActive(active);
-			iTween.MoveBy(levelNamePanel, iTween.Hash("y", -ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
-			                                          "delay", 0.0, "time", time));
+			iTween.MoveTo(levelNamePanel, iTween.Hash("y", levelNamePos.position.y - ITWEEN_DISTANCE,
+			                                          "easeType", "linear", "loopType", "none",
+			                                          "delay", 0.0, "time", time,
+			                                          "oncomplete", "onEnableLevelNameUIComplete",
+			                                          "oncompletetarget", this.gameObject));
 		} else if (!hurry) {
-			iTween.MoveBy(levelNamePanel, iTween.Hash("y", ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
+			if (!levelNamePanel.activeSelf) return;
+			iTween.MoveTo(levelNamePanel, iTween.Hash("y", levelNamePos.position.y + ITWEEN_DISTANCE, "easeType", "linear", "loopType", "none",
 			                                          "delay", 0.0, "time", time,
 			                                          "oncomplete", "onDisableLevelNameUIComplete",
 													  "oncompletetarget", this.gameObject));
 		}
 	}
-	public void onDisableLevelNameUIComplete() {
+	private void onEnableLevelNameUIComplete() {
+		levelNamePanel.SetActive(true);
+	}
+	private void onDisableLevelNameUIComplete() {
 		levelNamePanel.SetActive(false);
 	}
 

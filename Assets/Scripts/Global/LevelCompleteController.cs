@@ -5,7 +5,7 @@ using System.Collections;
 public class LevelCompleteController : MonoBehaviour {
 	string TIME_UP = "Time's Up!";
 	string GAME_OVER = "Game Over!";
-	string LEVEL_COMPLETE = "Level Complete!";
+	string LEVEL_COMPLETE = "Success!";
 	float STAR_SCALE = 1.2f;
 	float SCALE = 20.0f;
 	float DISPLAY_TIME = 0.3f;
@@ -18,7 +18,10 @@ public class LevelCompleteController : MonoBehaviour {
 	public GameObject[] stars;
 	public GameObject levelCompleteObj;
 
+	private bool slidIn;
+
 	void Start() {
+		slidIn = true;
 		for (int i = 0; i < 5; i++) {
 			stars[i].SetActive(true);
 			iTween.ScaleBy(stars[i], iTween.Hash("x", STAR_SCALE, "y", STAR_SCALE, "z", STAR_SCALE,
@@ -29,18 +32,24 @@ public class LevelCompleteController : MonoBehaviour {
 	}
 
 	public void slideIn() {
+		if (slidIn) return;
+
 		activate();
 		iTween.MoveBy(topPanel, iTween.Hash("y", -10, "easeType", "linear", "loopType", "none", "delay", 0.0,
 		                                      "time", DISPLAY_TIME));
 		iTween.ScaleBy(buttons, iTween.Hash("x", SCALE, "y", SCALE, "z", SCALE, "easeType", "linear", "loopType", "none",
 		                                    "delay", 0.0, "time", DISPLAY_TIME));
+		slidIn = true;
 	}
 	public void slideOut() {
+		if (!slidIn) return;
+
 		iTween.MoveBy(topPanel, iTween.Hash("y", 10, "easeType", "linear", "loopType", "none", "delay", 0.0,
 		                                    "time", 0));
 		iTween.ScaleBy(buttons, iTween.Hash("x", 1/SCALE, "y", 1/SCALE, "z", 1/SCALE, "easeType", "linear",
 		                                    "loopType", "none", "delay", 0.0, "time", 0,
 		                                    "oncomplete", "deactivate", "oncompletetarget", levelCompleteObj));
+		slidIn = false;
 	}
 	public void activate() {
 		levelCompleteObj.SetActive(true);

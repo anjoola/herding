@@ -3,8 +3,8 @@ using System.Collections;
 
 public class CowSceneController : MonoBehaviour {
 	void Start () {
-		GlobalStateController.showNotes("It was a peaceful day in the Cow Palace... until all the cows got loose! " +
-		                                "Tap and drag them back to the barn!", true);
+		GlobalStateController.showNotes("Foolish ol' Charlie forgot to check on the cows, and now they are on the run! " +
+		                                "Tap and drag them back to the barn before Hank finds out!", true);
 		AudioController.playAudio("CowFlight");
 	}
 }
