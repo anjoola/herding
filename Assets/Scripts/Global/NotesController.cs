@@ -26,6 +26,7 @@ public class NotesController : MonoBehaviour {
 	}
 	public void showNotes(bool targetDismiss=false) {
 		this.dismissAnywhere = !targetDismiss;
+		if (mainNotes.activeSelf) return;
 		mainNotes.SetActive(true);
 		iTween.ScaleBy(notes, iTween.Hash("y", 1/SCALE, "easeType", "linear", "loopType", "none", "delay", 0.0,
 		                                  "time", TIME, "oncomplete", "activate", "oncompletetarget", mainNotes));
@@ -34,6 +35,7 @@ public class NotesController : MonoBehaviour {
 		pointer.SetActive(true);
 	}
 	public void hideNotes(bool hurry=false) {
+		if (!mainNotes.activeSelf) return;
 		pointer.SetActive(false);
 		float time = hurry ? 0 : TIME;
 		iTween.ScaleBy(notes, iTween.Hash("y", SCALE, "easeType", "linear", "loopType", "none", "delay", 0.0,
