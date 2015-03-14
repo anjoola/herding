@@ -10,12 +10,14 @@ public class GeneralBoid : MonoBehaviour {
 	// Stores the velocity and gravity of the boid before pausing;
 	private Vector2 pauseVel;
 	private Vector2 gravity;
+	private float animatorSpeed;
 
 	// Boid controller.
 	private BoidController boidController;
 	protected float forceMag;
 	protected bool inCollision;
 	private bool isMouseDown;
+	private Animator animator;
 
 	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
 	private float _left, _right, _top, _bottom, _width, _height;
@@ -30,16 +32,23 @@ public class GeneralBoid : MonoBehaviour {
 			boidRigidbodies = new List<Rigidbody2D>();
 		}
 		Input.multiTouchEnabled = true;
+		animator = GetComponent<Animator>();
 	}
+
 	public void Pause() {
 		gravity = Physics2D.gravity;
 		Physics2D.gravity = new Vector2(0, 0);
 		pauseVel = rigidbody2D.velocity;
 		rigidbody2D.velocity = new Vector2(0,0);
+
+		animatorSpeed = animator.speed == 0 ? animatorSpeed : animator.speed;
+		animator.speed = 0;
 	}
 	public void Unpause() {
 		Physics2D.gravity = gravity;
 		rigidbody2D.velocity = pauseVel;
+
+		animator.speed = animatorSpeed;
 	}
 
 	public static void PauseBoids() {

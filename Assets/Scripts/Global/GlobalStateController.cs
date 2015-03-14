@@ -174,6 +174,7 @@ public class GlobalStateController : MonoBehaviour {
 
 		currentLevel.finish();
 	}
+	// TODO remove
 	public static void finishLevel(bool wasTimeUp=false) {
 		hideNotes(true);
 
@@ -225,7 +226,7 @@ public class GlobalStateController : MonoBehaviour {
 
 				finishLevel(CompletionType.TimeUp);
 			}
-			// 3 2 1 countdown
+			// 3 2 1 countdown.
 			if (currTime <= 3) {
 				AudioController.timerBeep();
 			}
