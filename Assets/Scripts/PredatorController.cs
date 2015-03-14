@@ -63,10 +63,13 @@ public class PredatorController : MonoBehaviour {
 			if (Input.GetMouseButtonDown (0) || Input.GetMouseButton (0) || Input.GetMouseButtonUp (0)){
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-				
+
+
 				// No hit
 				if (hit.collider == null) return;
 				if (hit.collider.gameObject == collider2D.gameObject){
+					
+					Debug.Log ("Mouse click");
 					// hit this particular game object
 					
 					Debug.Log (hit.collider.gameObject);
