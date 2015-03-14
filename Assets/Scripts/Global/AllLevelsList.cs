@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class AllLevelsList : MonoBehaviour {
-	public static int POINTS_PER_OBJECT = 40;
-
 	/**
 	 * Gets a list of all the levels in the game.
 	 */
@@ -13,7 +11,7 @@ public class AllLevelsList : MonoBehaviour {
 
 		// Cow palace.
 		// (prefix of all related assets, scene name, 5-star score, time limit).
-		levels.Add(new Level("Cow Palace", "CowFlight", (20 - 2) * POINTS_PER_OBJECT, 100));
+		levels.Add(new Level("Cow Palace", "CowFlight", (10 - 2) * CowBoid.POINT_PER_BOID, 10));
 
 		// Underwater.
 		levels.Add(new Level("Underwater Meal", "SharkWater", 100, 30));

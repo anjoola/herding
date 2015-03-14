@@ -2,17 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
-// Boid created by the BoidController class
-public class CowBoid : GeneralBoid
-{
+public class CowBoid : GeneralBoid {
+	public static int POINT_PER_BOID = 40;
+
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.tag == "DetectionTag")
-		{
+		if (other.gameObject.tag == "DetectionTag") {
 			if (!testing) {
-				GlobalStateController.addScore(AllLevelsList.POINTS_PER_OBJECT);
+				GlobalStateController.addScore(POINT_PER_BOID);
 				AudioController.playSFX("SingleCow");
             }
-			base.Destroy ();
+			base.Destroy();
         }
 	}
 }

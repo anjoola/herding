@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,14 +14,13 @@ public class GeneralBoid : MonoBehaviour {
 	// Boid controller.
 	private BoidController boidController;
 	protected float forceMag;
-
+	protected bool inCollision;
 	private bool isMouseDown;
 
-	// TODO remove all below?
-	private float _left, _right, _top, _bottom, _width, _height; // Screen positions in world space, used for wrapping the boids at the edge of the screen
+	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
+	private float _left, _right, _top, _bottom, _width, _height;
 
-	protected bool inCollision;
-
+	// TODO remove
 	public static bool testing = false;
 
 	public void Awake() {
@@ -73,8 +72,7 @@ public class GeneralBoid : MonoBehaviour {
 		vel *= Random.Range(20, 40);
 		rigidbody2D.velocity = vel;
 		
-		// Get some camera coordinates in world coordinates
-		// TODO remove?
+		// Get some camera coordinates in world coordinates.
 		_left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
 		_bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
 		_top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
@@ -82,48 +80,47 @@ public class GeneralBoid : MonoBehaviour {
 		_width = _right - _left;
 		_height = _top - _bottom;
 		
-		StartWrap ();
+		StartWrap();
+	}
+	void OnDestroy() {
+		boidRigidbodies.Remove(gameObject.rigidbody2D);
+		boidsList.Remove(this);
 	}
 	
 	private Vector3 v3Offset;
 	private Plane plane;
 
-	void OnInputDown(Vector2 mousePosition)
-	{
+	void OnInputDown(Vector2 mousePosition) {
 		isMouseDown = true;
 		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		float dist;
-		plane.Raycast (ray, out dist);
-		v3Offset = transform.position - ray.GetPoint (dist);  
+		plane.Raycast(ray, out dist);
+		v3Offset = transform.position - ray.GetPoint(dist);
 	}
 	
-	void OnInputUp(Vector2 mousePosition)
-	{
+	void OnInputUp(Vector2 mousePosition) {
 		isMouseDown = false; 
 	}
 	
-	void OnInputDrag(Vector2 mousePosition)
-	{
+	void OnInputDrag(Vector2 mousePosition) {
 		if (GlobalStateController.shouldPause() && !testing) return;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		float dist;
-		plane.Raycast (ray, out dist);
-		Vector3 v3Pos = ray.GetPoint (dist);
+		plane.Raycast(ray, out dist);
+		Vector3 v3Pos = ray.GetPoint(dist);
 		transform.position = v3Pos + v3Offset; 
 	}
 
 	protected void OnMouseDown() {
-		OnInputDown (Input.mousePosition);
+		OnInputDown(Input.mousePosition);
 	}
-
 	protected void OnMouseUp() {
-		OnInputUp (Input.mousePosition);
+		OnInputUp(Input.mousePosition);
 	}
-
 	protected void OnMouseDrag() {
-		OnInputDrag (Input.mousePosition);
+		OnInputDrag(Input.mousePosition);
 	}
 
 	// Fixed update used when dealing with rigid bodies
@@ -147,45 +144,35 @@ public class GeneralBoid : MonoBehaviour {
 		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
 		FaceTowardsHeading();
 
-		// TODO don't want to wrap
-		// When going off screen, wrap to the opposite screen edge
-		
-		//		DestroyNotWrap ();
+		// Check if boids go off the screen.
 		Wrap();
 	}
 
 	public void Destroy() {
-		boidRigidbodies.Remove(rigidbody2D);
-		boidsList.Remove(this);
 		Destroy(gameObject);
-		if (boidRigidbodies.Count == 0) {
-			if (!testing) GlobalStateController.finishLevel();
+		// All boids have hit the target.
+		Debug.Log (boidRigidbodies.Count);
+		if (boidRigidbodies.Count == 1) {
+			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.LevelComplete);
 		}
 	}
 
 	public void OutOfBoundsDestroy(bool rightSide) {
-		boidRigidbodies.Remove(gameObject.rigidbody2D);
-		boidsList.Remove(this);
 		Destroy(gameObject);
-		if (rightSide) {
-			// made it to the other side!
-			// TODO this breaks the cow palace level
-			// this should be moved to the subclasses
-			//GlobalStateController.addScore(40);
-        }
+
 		// All the boids have left, end the level.
 		if (boidRigidbodies.Count == 0) {
-			if (!testing) GlobalStateController.finishLevel();
+			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
     
+	// TODO remove
 	public void RemovePhysicsNoDestroy() {
-		boidRigidbodies.Remove(gameObject.rigidbody2D);
+		boidRigidbodies.Remove(rigidbody2D);
 		boidsList.Remove(this);
 		//Destroy(gameObject); TODO
 		// All the boids have been saved.
 		if (boidRigidbodies.Count == 0) {
-			// level complete! TODO
 			if (!testing) GlobalStateController.finishLevel();
 		}
 	}
@@ -199,9 +186,10 @@ public class GeneralBoid : MonoBehaviour {
 		rigidbody2D.MoveRotation(rotation);
 	}
 
-	// Wrap the edges of the screen to keep the boids from going off screen
-	void StartWrap ()
-	{
+	/**
+	 * Wrap edges of the screen to keep boids from going off screen.
+	 */
+	void StartWrap () {
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)
@@ -213,13 +201,14 @@ public class GeneralBoid : MonoBehaviour {
 		else if (rigidbody2D.position.y > _top)
 			rigidbody2D.position = new Vector2(rigidbody2D.position.x, centerY);
 	}
-	
-	void Wrap ()
-	{
+
+	/**
+	 * Handle if boids go off screen.
+	 */
+	void Wrap() {
 		bool rightSide = false;
 		bool changed = false;
-		if (rigidbody2D.position.x < _left) 
-		{
+		if (rigidbody2D.position.x < _left) {
 			changed = true;
 			rigidbody2D.position = rigidbody2D.position + new Vector2 (_width, 0);
 		} else if (rigidbody2D.position.x > _right) {
@@ -227,21 +216,18 @@ public class GeneralBoid : MonoBehaviour {
 			rightSide = true;
 			rigidbody2D.position = rigidbody2D.position - new Vector2 (_width, 0);
 		}
-		if (rigidbody2D.position.y < _bottom) 
-		{
+		if (rigidbody2D.position.y < _bottom) {
 			changed = true;
 			rigidbody2D.position = rigidbody2D.position + new Vector2 (0, _height);
 		} else if (rigidbody2D.position.y > _top) {
 			changed = true;
 			rigidbody2D.position = rigidbody2D.position - new Vector2 (0, _height);
 		}
-		
-		if (changed) 
-		{
-			OutOfBoundsDestroy (rightSide);
+
+		if (changed) {
+			OutOfBoundsDestroy(rightSide);
 		}
 	}
-	
 	
 	/**
 	 * Calculate the cohesive component of the flocking algorithm.

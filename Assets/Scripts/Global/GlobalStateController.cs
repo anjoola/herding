@@ -23,6 +23,7 @@ public class GlobalStateController : MonoBehaviour {
 	public static GameObject notes;
 	private static NotesController notesController;
 
+	// Pauses.
 	public static bool isPaused;
 	public static bool showNotesPaused;
 	public static bool timeUpPaused;
@@ -30,6 +31,12 @@ public class GlobalStateController : MonoBehaviour {
 	// Timer.
 	public static int currTime;
 	private static bool timerEnabled;
+
+	public enum CompletionType {
+		GameOver,
+		TimeUp,
+		LevelComplete
+	};
 
 	void Awake() {
 		instance = this.gameObject;
@@ -140,6 +147,33 @@ public class GlobalStateController : MonoBehaviour {
 
 		AudioController.resumeVolume();
 	}
+	public static void finishLevel(CompletionType type) {
+		hideNotes(true);
+
+		// Stop music and timer.
+		AudioController.resumeVolume();
+		AudioController.playAudio("LevelComplete", false);
+		stopTimer();
+
+		// Set level completion message.
+		switch (type) {
+			case CompletionType.GameOver:
+				levelCompleteController.gameOver();
+				break;
+			case CompletionType.LevelComplete:
+				levelCompleteController.levelComplete();
+				break;
+			case CompletionType.TimeUp:
+				levelCompleteController.timeUp();
+				break;
+		}
+
+		levelUIController.enableMenuButton(false);
+		enablePauseMenu(false, true);
+		enableLevelComplete(true);
+
+		currentLevel.finish();
+	}
 	public static void finishLevel(bool wasTimeUp=false) {
 		hideNotes(true);
 
@@ -189,7 +223,7 @@ public class GlobalStateController : MonoBehaviour {
 				timerEnabled = false;
 				timeUpPaused = true;
 
-				finishLevel(true);
+				finishLevel(CompletionType.TimeUp);
 			}
 			// 3 2 1 countdown
 			if (currTime <= 3) {
