@@ -40,20 +40,12 @@ public class BoidController : MonoBehaviour
 
 	void PointStart()
 	{
-		
+		/*
 		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
 		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
 		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
 		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-		float _width = _right - _left;
-		float _height = _top - _bottom;
-		
-		float centerX = _left + 0.5f * _width;
-		float centerY = _bottom + 0.5f * _height;
-		
-		float leftOffset = 20;
-		float stepX = 30;
-		float stepY = 20;
+		*/
 
 		float nucleusY = 20;
 		float nucleusX = -25;
@@ -61,57 +53,40 @@ public class BoidController : MonoBehaviour
 		// Create all the boids and add them as a child of the controller
 		for (int i=0; i<_number_of_boids; i++)
 		{
-			
 			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
 			go.transform.parent = transform;
-
-
 		}
 	}
 
 	void ChildStart()
 	{
-		
+		/*
 		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
 		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
 		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
 		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-		float _width = _right - _left;
-		float _height = _top - _bottom;
-		
-		float centerX = _left + 0.5f * _width;
-		float centerY = _bottom + 0.5f * _height;
-		
-		float leftOffset = 20;
-		float stepX = 30;
-		float stepY = 20;
-		
+		*/
+
 		float nucleusY = 20;
 		float nucleusX = -25;
 		
 		// Create all the boids and add them as a child of the controller
 		for (int i=0; i<_number_of_boids; i++)
 		{
-			
 			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(0, 0, 0));
 			go.transform.parent = transform;
-			
-			
 		}
 	}
 
 
 	void GridStart()
 	{
-		
 		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
 		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
 		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
-		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-		float _width = _right - _left;
+		//float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
 		float _height = _top - _bottom;
 		
-		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 
 		float leftOffset = 20;
@@ -129,10 +104,8 @@ public class BoidController : MonoBehaviour
 			for (int j=-1; j<=1; j++){
 				nucleusY = centerY + stepY * j;
 
-				
 				GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
 				go.transform.parent = transform;
-			
 			}
 		}
 	}
@@ -184,32 +157,22 @@ public class BoidController : MonoBehaviour
 
 	void FishStart()
 	{
-		
+		// TODO remove
+		/*
 		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
 		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
 		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
 		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-		float _width = _right - _left;
-		float _height = _top - _bottom;
-		
-		float centerX = _left + 0.5f * _width;
-		float centerY = _bottom + 0.5f * _height;
-		
-		float leftOffset = 20;
-		float stepX = 30;
-		float stepY = 20;
-		
+		*/
+
 		float nucleusY = 30;
 		float nucleusX = -5;
 		
 		// Create all the boids and add them as a child of the controller
 		for (int i=0; i<_number_of_boids; i++)
 		{
-			
 			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
             go.transform.parent = transform;
-            
-            
 		}
 	}
 }

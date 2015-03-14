@@ -24,7 +24,6 @@ public class LevelSelectController : MonoBehaviour {
 	public GameObject levelNamePanel;
 	private Transform levelNamePos;
 	public GameObject levelInfoPanel;
-	private Transform levelInfoPos;
 	public Text levelName;
 	public GameObject[] stars;
 	public Text levelScore;
@@ -44,7 +43,6 @@ public class LevelSelectController : MonoBehaviour {
 
 	void Start () {
 		levelNamePos = levelNamePanel.transform;
-		levelInfoPos = levelInfoPanel.transform;
 		zoomBackToSubworldButton.SetActive(false);
 
 		enableLevelNameUI(false, true);

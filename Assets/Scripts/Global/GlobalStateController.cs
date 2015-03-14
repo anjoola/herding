@@ -222,7 +222,7 @@ public class GlobalStateController : MonoBehaviour {
 		
 		if (showNotesPaused) {
 			try {
-				GeneralBoid.UnPauseBoids();
+				GeneralBoid.UnpauseBoids();
 			} catch {
 				// TODO Hack for demo
 				GeneralPreyBoid.UnPauseBoids();
@@ -259,7 +259,7 @@ public class GlobalStateController : MonoBehaviour {
 			pauseMenuController.slideIn();
 		}
 		else {
-			GeneralBoid.UnPauseBoids();
+			GeneralBoid.UnpauseBoids();
 			pauseMenuController.slideOut(hurry);
 		}
 	}
