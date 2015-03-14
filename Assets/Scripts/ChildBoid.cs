@@ -17,28 +17,30 @@ public class ChildBoid : GeneralBoid
 		}
 
 
-	}
 
-	void OnMouseDown()
-	{
-		if (physicsRemoved)
-			return;
-		base.OnMouseDown ();
 	}
 	
-	void OnMouseUp()
-	{
-		if (physicsRemoved)
-			return;
-		base.OnMouseUp ();
-	}
-	
-	void OnMouseDrag()
-	{
-		if (physicsRemoved)
-			return;
-		base.OnMouseDrag ();
-	}
+//	
+//	void OnMouseDown()
+//	{
+//		if (physicsRemoved)
+//			return;
+//		base.OnMouseDown ();
+//	}
+//	
+//	void OnMouseUp()
+//	{
+//		if (physicsRemoved)
+//			return;
+//		base.OnMouseUp ();
+//	}
+//	
+//	void OnMouseDrag()
+//	{
+//		if (physicsRemoved)
+//			return;
+//		base.OnMouseDrag ();
+//	}
 
 	void OnTriggerEnter2D(Collider2D other) {
 		Debug.Log ("Hello");
