@@ -2,8 +2,7 @@
 using System.Collections;
 
 // Creates a flock of boids and defines values for the boids to use.
-public class BoidController : MonoBehaviour 
-{
+public class BoidController : MonoBehaviour {
 	public GameObject _boid_prefab; // The prefab boid object
 	public int _number_of_boids = 0; // The number of boids to create upon startup
 
@@ -18,17 +17,16 @@ public class BoidController : MonoBehaviour
 	public int start_format; // To start in Grid, Random, etc
 	enum START_FORMATS {RANDOM=1, GRID, FISH, CHILD};
 
-	void Start () 
-	{
+	void Start () {
 		switch(start_format) {
 		case (int) START_FORMATS.GRID:
-			PointStart ();
+			PointStart();
 			break;
 		case (int) START_FORMATS.RANDOM:
-			RandomStart ();
+			RandomStart();
 			break;
 		case (int) START_FORMATS.FISH:
-			FishStart ();
+			FishStart();
 			break;
 		case (int) START_FORMATS.CHILD:
 			ChildStart();
@@ -155,24 +153,17 @@ public class BoidController : MonoBehaviour
 		}
 	}
 
-	void FishStart()
-	{
-		// TODO remove
-		/*
-		float _left = Camera.main.ScreenToWorldPoint(Vector2.zero).x;
-		float _bottom = Camera.main.ScreenToWorldPoint(Vector2.zero).y;
-		float _top = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
-		float _right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
-		*/
-
+	void FishStart() {
+		// Have fish start at central location.
 		float nucleusY = 30;
 		float nucleusX = -5;
 		
-		// Create all the boids and add them as a child of the controller
-		for (int i=0; i<_number_of_boids; i++)
-		{
-			GameObject go = (GameObject)Instantiate(_boid_prefab, new Vector3(nucleusX,nucleusY,0), Quaternion.Euler(90, -20, 180));
-            go.transform.parent = transform;
+		// Create all the boids and add them as a child of the controller.
+		for (int i = 0; i < _number_of_boids; i++) {
+			GameObject newObj = (GameObject)Instantiate(_boid_prefab,
+			                                            new Vector3(nucleusX, nucleusY, 0),
+			                                            Quaternion.Euler(90, -20, 180));
+			newObj.transform.parent = transform;
 		}
 	}
 }

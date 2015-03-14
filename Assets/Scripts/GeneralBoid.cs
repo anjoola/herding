@@ -107,7 +107,7 @@ public class GeneralBoid : MonoBehaviour {
 		isMouseDown = true;
 		if (GlobalStateController.shouldPause() && !testing) return;
 		plane.SetNormalAndPosition(Camera.main.transform.forward, transform.position);
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		float dist;
 		plane.Raycast(ray, out dist);
 		v3Offset = transform.position - ray.GetPoint(dist);
@@ -141,6 +141,7 @@ public class GeneralBoid : MonoBehaviour {
 		// Don't update position if being dragged or colliding.
 		if (isMouseDown || inCollision) return;
 
+		// Pausing game.
 		if (GlobalStateController.shouldPause() && !testing) {
 			Pause();
 			return;
@@ -178,7 +179,7 @@ public class GeneralBoid : MonoBehaviour {
 			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
-    
+
 	// TODO remove
 	public void RemovePhysicsNoDestroy() {
 		boidRigidbodies.Remove(rigidbody2D);
@@ -206,9 +207,9 @@ public class GeneralBoid : MonoBehaviour {
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)
-			rigidbody2D.position = new Vector2(centerX , rigidbody2D.position.y);
+			rigidbody2D.position = new Vector2(centerX, rigidbody2D.position.y);
 		else if (rigidbody2D.position.x > _right)
-			rigidbody2D.position = new Vector2(centerX , rigidbody2D.position.y);
+			rigidbody2D.position = new Vector2(centerY, rigidbody2D.position.y);
 		if (rigidbody2D.position.y < _bottom)
 			rigidbody2D.position = new Vector2(rigidbody2D.position.x, centerY);
 		else if (rigidbody2D.position.y > _top)
@@ -275,11 +276,11 @@ public class GeneralBoid : MonoBehaviour {
 	Vector2 Alignment() {
 		Vector2 sumVector = new Vector2();
 		int count = 0;
-		
+
 		// For each boid, check the distance from this boid, and if withing a neighbourhood, add to the sumVector.
 		for (int i = 0; i < boidRigidbodies.Count; i++) {
 			float dist = Vector2.Distance(rigidbody2D.position, boidRigidbodies[i].position);
-			
+
 			if (dist < boidController._cohesion_radius && dist > 0) {
 				sumVector += boidRigidbodies[i].velocity;
 				count++;
@@ -293,14 +294,14 @@ public class GeneralBoid : MonoBehaviour {
         }
 		return sumVector;
     }
-    
+
     /**
      * Calculate the separation component of the flocking algorithm.
      */
     Vector2 Separation() {
 		Vector2 sumVector = new Vector2();
         int count = 0;
-        
+
 		// For each boid, check the distance from this boid, and if within a neighbourhood, add to the sumVector
         for (int i = 0; i < boidRigidbodies.Count; i++) {
 			float dist = Vector2.Distance(rigidbody2D.position, boidRigidbodies[i].position);
@@ -310,14 +311,14 @@ public class GeneralBoid : MonoBehaviour {
                 count++;
             }
         }
-        
+
         // Average the sumVector.
         if (count > 0) {
 			sumVector /= count;
         }
 		return sumVector;
     }
-    
+
     /**
      * Draw the radius of the cohesion neighbourhood in green, and the radius of the separation
      * neighbourhood in red, in the scene view.
