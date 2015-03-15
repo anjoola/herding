@@ -2,9 +2,16 @@ using UnityEngine;
 using System.Collections;
 
 public class FishBoid : GeneralBoid {
+	public float TUNE;
+	private int prevFrameCollide;
 	int numFramesBeforeNotInCollision;
+	int speed_hash = Animator.StringToHash ("speed");
+
+	private Vector2 prevPosition;
+	Animator animator;
 
 	new void Start (){
+		animator = GetComponent<Animator> ();
 		base.forceMag = 2.0f;
 		base.Start();
 		Physics2D.gravity = new Vector2(5, 0);
@@ -29,6 +36,11 @@ public class FishBoid : GeneralBoid {
 	}
 
 	void Update () {
+		Vector2 currPosition = rigidbody2D.position;
+		float distTraveled = Vector2.SqrMagnitude (currPosition - prevPosition);
+		prevPosition = currPosition;
+		Debug.Log (distTraveled);
+		animator.SetFloat (speed_hash, Mathf.Abs (TUNE * distTraveled));
 		if (base.inCollision) {
 			// TODO remove?
 //			if (numFramesBeforeNotInCollision <= 0)
@@ -40,7 +52,7 @@ public class FishBoid : GeneralBoid {
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) {
-		if (coll.gameObject.tag.Equals("WallTag")) {
+		if (coll.gameObject.tag.Equals("WallTag") && numFramesBeforeNotInCollision <= 0) {
 			base.inCollision = true;
 			numFramesBeforeNotInCollision = 100;
 		}
