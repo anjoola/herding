@@ -18,6 +18,8 @@ public class GeneralBoid : Character {
 	protected bool inCollision;
 	private Animator animator;
 
+	public float STUN_VEL = 2;
+
 	
 	public bool isMouseDown;
 
@@ -124,7 +126,8 @@ public class GeneralBoid : Character {
 		
 		// Add the force to the rigid body and face the direction of movement.
 		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
-		FaceTowardsHeading(rigidbody2D.velocity.normalized);
+		if (Vector3.Magnitude(rigidbody2D.velocity) >= STUN_VEL)
+			FaceTowardsHeading(rigidbody2D.velocity.normalized);
 
 		// Check if boids go off the screen.
 		Wrap();
