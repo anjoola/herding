@@ -16,7 +16,6 @@ public class GeneralBoid : MultiTouchController {
 	private BoidController boidController;
 	protected float forceMag;
 	protected bool inCollision;
-	public bool isMouseDown;
 	private Animator animator;
 
 	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
@@ -136,7 +135,7 @@ public class GeneralBoid : MultiTouchController {
 		Destroy(gameObject);
 
 		// All the boids have left, end the level.
-		if (boidRigidbodies.Count == 0) {
+		if (boidRigidbodies.Count == 1) {
 			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }

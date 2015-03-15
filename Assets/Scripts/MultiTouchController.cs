@@ -7,7 +7,7 @@ public class MultiTouchController : MonoBehaviour {
 	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
-	private bool isMouseDown;
+	protected bool isMouseDown;
 	private Vector2 prevPosition;
 	
 	void Start () {
