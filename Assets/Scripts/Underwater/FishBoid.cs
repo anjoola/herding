@@ -22,7 +22,7 @@ public class FishBoid : GeneralBoid {
 	void OnTriggerEnter2D(Collider2D other) {
 		// Fish entered target zone.
 		if (other.gameObject.tag == "Food Tag") {
-			if (!testing) {
+			if (!MultiTouchCamera.testing) {
 				GlobalStateController.addScore(40);
 			}
 		}
@@ -31,7 +31,7 @@ public class FishBoid : GeneralBoid {
 	void OnTriggerExit2D(Collider2D other) {
 		if (other.gameObject.tag == "Food Tag") {
 			// Fish left target zone.
-			if (!testing) {
+			if (!MultiTouchCamera.testing) {
                 GlobalStateController.addScore(-40);
             }
         }
