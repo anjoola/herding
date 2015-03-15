@@ -69,7 +69,7 @@ public class LevelSelectController : MonoBehaviour {
 			bool clickedOnLevel = false;
 
 			// See if the user clicked on a level and try to load that level's information.
-			if (!isZoomedOut && !focusedOnLevel) {
+			if (!isZoomedOut && !focusedOnLevel && !zoomBackToSubworldButton.activeSelf) {
 				foreach (Level level in GlobalStateController.currentGame.levels) {
 					clickedOnLevel |= loadLevelInfo(mousePos, level);
 				}
@@ -138,7 +138,7 @@ public class LevelSelectController : MonoBehaviour {
 		StartCoroutine(MoveCameraLoc(previousZoomPos, false));
 		zoomBackToSubworldButton.SetActive(false);
 	}
-		/**
+	/**
 	 * Goes back to the world map if on the level info layer.
 	 */
 	public void goBack() {
