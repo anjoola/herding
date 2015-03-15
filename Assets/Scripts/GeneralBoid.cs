@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GeneralBoid : MultiTouchController {
+public class GeneralBoid : Character {
 	// List of all the boids.
 	public static List<GeneralBoid> boidsList;
 	public static List<Rigidbody2D> boidRigidbodies;
@@ -44,16 +44,15 @@ public class GeneralBoid : MultiTouchController {
 		pauseVel = rigidbody2D.velocity;
 		rigidbody2D.velocity = new Vector2(0,0);
 
-		if (animator != null) {
-			animatorSpeed = animator.speed == 0 ? animatorSpeed : animator.speed;
+		if (animator != null && animator.speed > 0) {
+			animatorSpeed = animator.speed;
 			animator.speed = 0;
 		}
 	}
 	public void Unpause() {
 		Physics2D.gravity = gravity;
 		rigidbody2D.velocity = pauseVel;
-
-		if (animator != null) {
+		if (animator != null && animatorSpeed > 0) {
 			animator.speed = animatorSpeed;
 		}
 	}
@@ -95,6 +94,10 @@ public class GeneralBoid : MultiTouchController {
 		_right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
 		_width = _right - _left;
 		_height = _top - _bottom;
+
+		if (animator != null) {
+			animatorSpeed = animator.speed;
+		}
 		
 		StartWrap();
 	}
@@ -124,7 +127,7 @@ public class GeneralBoid : MultiTouchController {
 		// Add the force to the rigid body and face the direction of movement.
 		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
 		if (Vector3.Magnitude(rigidbody2D.velocity) >= STUN_VEL)
-			FaceTowardsHeading();
+			FaceTowardsHeading(rigidbody2D.velocity.normalized);
 
 		// Check if boids go off the screen.
 		Wrap();
@@ -147,15 +150,6 @@ public class GeneralBoid : MultiTouchController {
 			if (!MultiTouchCamera.testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
-
-	/**
-	 * Face the rigid body towards the direction of travel.
-	 */
-	void FaceTowardsHeading() {
-		Vector2 heading = rigidbody2D.velocity.normalized;
-		float rotation = -Mathf.Atan2(heading.x, heading.y) * Mathf.Rad2Deg;
-		rigidbody2D.MoveRotation(rotation);
-	}
 
 	/**
 	 * Wrap edges of the screen to keep boids from going off screen.

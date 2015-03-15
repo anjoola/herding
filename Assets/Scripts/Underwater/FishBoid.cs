@@ -41,8 +41,6 @@ public class FishBoid : GeneralBoid {
 		Vector2 currPosition = rigidbody2D.position;
 		float distTraveled = Vector2.SqrMagnitude (currPosition - prevPosition);
 		prevPosition = currPosition;
-		// TODO remove
-		//Debug.Log (distTraveled);
 		animator.SetFloat (speedHash, Mathf.Abs(TUNE * distTraveled));
 		if (base.inCollision) {
 			numFramesBeforeNotInCollision--;
