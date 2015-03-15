@@ -18,6 +18,8 @@ public class GeneralBoid : MultiTouchController {
 	protected bool inCollision;
 	private Animator animator;
 
+	public float STUN_VEL = 2;
+
 	
 	public bool isMouseDown;
 
@@ -121,7 +123,9 @@ public class GeneralBoid : MultiTouchController {
 		
 		// Add the force to the rigid body and face the direction of movement.
 		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
-		FaceTowardsHeading();
+		Debug.Log ("Velocidad:" + Vector3.Magnitude (rigidbody2D.velocity));
+		if (Vector3.Magnitude(rigidbody2D.velocity) >= STUN_VEL)
+			FaceTowardsHeading();
 
 		// Check if boids go off the screen.
 		Wrap();
