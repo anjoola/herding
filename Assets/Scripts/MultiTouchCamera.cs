@@ -22,7 +22,7 @@ public class MultiTouchCamera : MonoBehaviour {
 					RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(t.position), Vector2.zero);
 
 					// No hit.
-					if (hit.collider == null || hit.collider.gameObject.tag.Equals("Background")) continue;
+					if (hit.collider == null || !hit.collider.gameObject.tag.Equals("Draggable")) continue;
 
 					// Hit this particular game object.
 					hmap.Add(t.fingerId, hit.collider);
@@ -58,6 +58,8 @@ public class MultiTouchCamera : MonoBehaviour {
 	}
 
 	void OnInputDown(Collider2D col, Ray ray) {
+		if (col == null || col.rigidbody2D == null || !col.gameObject.tag.Equals("Draggable")) return;
+
 		v3Offset = col.transform.position - ray.GetPoint (10.0f);
 		v3Offset.z = 0.0f;
 	}
@@ -65,8 +67,7 @@ public class MultiTouchCamera : MonoBehaviour {
 	void OnInputUp(Collider2D col, Ray ray) { }
 
 	void OnInputDrag(Collider2D col, Ray ray) {
-		Debug.Log ("a");
-		if (col == null || col.rigidbody2D == null) return;
+		if (col == null || col.rigidbody2D == null || !col.gameObject.tag.Equals("Draggable")) return;
 
 		Vector3 v3Pos = ray.GetPoint(10.0f);
 		col.transform.position = v3Pos + v3Offset;
@@ -74,8 +75,8 @@ public class MultiTouchCamera : MonoBehaviour {
 		Vector2 predictedDir = col.rigidbody2D.position - prevPosition;
 		if (predictedDir.magnitude > 2) {
 			prevPosition = col.rigidbody2D.position;
-			GeneralBoid boidController = col.gameObject.GetComponent<GeneralBoid>();;
-			boidController.FaceTowardsHeading(predictedDir);
+			Character character = col.gameObject.GetComponent<Character>();
+			character.FaceTowardsHeading(predictedDir);
 		}
 	}
 }
