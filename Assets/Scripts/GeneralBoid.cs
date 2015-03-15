@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GeneralBoid : MultiTouchController {
+public class GeneralBoid : MonoBehaviour {
 	// List of all the boids.
 	public static List<GeneralBoid> boidsList;
 	public static List<Rigidbody2D> boidRigidbodies;
@@ -124,7 +124,7 @@ public class GeneralBoid : MultiTouchController {
 		
 		// Add the force to the rigid body and face the direction of movement.
 		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
-		FaceTowardsHeading();
+		FaceTowardsHeading(rigidbody2D.velocity.normalized);
 
 		// Check if boids go off the screen.
 		Wrap();
@@ -151,8 +151,7 @@ public class GeneralBoid : MultiTouchController {
 	/**
 	 * Face the rigid body towards the direction of travel.
 	 */
-	void FaceTowardsHeading() {
-		Vector2 heading = rigidbody2D.velocity.normalized;
+	public void FaceTowardsHeading(Vector2 heading) {
 		float rotation = -Mathf.Atan2(heading.x, heading.y) * Mathf.Rad2Deg;
 		rigidbody2D.MoveRotation(rotation);
 	}

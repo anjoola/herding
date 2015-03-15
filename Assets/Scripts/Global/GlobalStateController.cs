@@ -235,7 +235,7 @@ public class GlobalStateController : MonoBehaviour {
 
 		if (showNotesPaused) {
 			try {
-				GeneralBoid.PauseBoids();
+				GeneralBoid.UnpauseBoids();
 			} catch { }
 			showNotesPaused = false;
 		}
