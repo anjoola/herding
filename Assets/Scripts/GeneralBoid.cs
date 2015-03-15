@@ -18,6 +18,9 @@ public class GeneralBoid : MultiTouchController {
 	protected bool inCollision;
 	private Animator animator;
 
+	
+	public bool isMouseDown;
+
 	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
 	private float _left, _right, _top, _bottom, _width, _height;
 
@@ -29,6 +32,8 @@ public class GeneralBoid : MultiTouchController {
 		}
 		Input.multiTouchEnabled = true;
 		animator = GetComponent<Animator>();
+
+		isMouseDown = false;
 	}
 
 	public void Pause() {
@@ -102,7 +107,7 @@ public class GeneralBoid : MultiTouchController {
 		if (isMouseDown || inCollision) return;
 
 		// Pausing game.
-		if (GlobalStateController.shouldPause() && !testing) {
+		if (GlobalStateController.shouldPause() && !MultiTouchCamera.testing) {
 			Pause();
 			return;
 		}
@@ -127,7 +132,7 @@ public class GeneralBoid : MultiTouchController {
 
 		// All boids have hit the target.
 		if (boidRigidbodies.Count == 1) {
-			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.LevelComplete);
+			if (!MultiTouchCamera.testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.LevelComplete);
 		}
 	}
 
@@ -136,7 +141,7 @@ public class GeneralBoid : MultiTouchController {
 
 		// All the boids have left, end the level.
 		if (boidRigidbodies.Count == 1) {
-			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
+			if (!MultiTouchCamera.testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
 
