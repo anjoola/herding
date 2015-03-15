@@ -37,16 +37,15 @@ public class GeneralBoid : MultiTouchController {
 		pauseVel = rigidbody2D.velocity;
 		rigidbody2D.velocity = new Vector2(0,0);
 
-		if (animator != null) {
-			animatorSpeed = animator.speed == 0 ? animatorSpeed : animator.speed;
+		if (animator != null && animator.speed > 0) {
+			animatorSpeed = animator.speed;
 			animator.speed = 0;
 		}
 	}
 	public void Unpause() {
 		Physics2D.gravity = gravity;
 		rigidbody2D.velocity = pauseVel;
-
-		if (animator != null) {
+		if (animator != null && animatorSpeed > 0) {
 			animator.speed = animatorSpeed;
 		}
 	}
@@ -88,6 +87,10 @@ public class GeneralBoid : MultiTouchController {
 		_right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
 		_width = _right - _left;
 		_height = _top - _bottom;
+
+		if (animator != null) {
+			animatorSpeed = animator.speed;
+		}
 		
 		StartWrap();
 	}
