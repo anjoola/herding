@@ -174,26 +174,6 @@ public class GlobalStateController : MonoBehaviour {
 
 		currentLevel.finish();
 	}
-	// TODO remove
-	public static void finishLevel(bool wasTimeUp=false) {
-		hideNotes(true);
-
-		AudioController.resumeVolume();
-		AudioController.playAudio("LevelComplete", false);
-		stopTimer();
-		if (wasTimeUp) {
-			levelCompleteController.timeUp();
-		} else {
-			// TODO levelCompleteController.levelComplete();
-			levelCompleteController.gameOver();
-		}
-	
-		levelUIController.enableMenuButton(false);
-		enablePauseMenu(false, true);
-		enableLevelComplete(true);
-
-		currentLevel.finish();
-	}
 
 	/* ---------------------------------------------------- TIMER ----------------------------------------------------*/
 
