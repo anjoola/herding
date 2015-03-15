@@ -2,33 +2,20 @@
 using System.Collections;
 
 public class MultiTouchController : MonoBehaviour {
-	
-	
-	
+
 	public static bool testing = true;
 	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
-	private bool isMouseDown;
+	protected bool isMouseDown;
 	private Vector2 prevPosition;
 	
 	void Start () {
 		isMouseDown = false;
 	}
-	// TODO pause shark animation
 
 	void Update(){
-		//		Transform hh = transform.FindChild("hammerhead");
-		//		if (!GlobalStateController.isPaused && !transform.FindChild("hammerhead").animation.enabled) {
-		//			transform.FindChild("hammerhead").animation.enabled = true;
-		//		} else 
-		
-		if (!testing && GlobalStateController.isPaused) {
-			transform.FindChild("hammerhead").animation.enabled = false;
-			return;
-		}
-		
-		Debug.Log ("Multitouch enabled?" + Input.multiTouchEnabled);
+		//Debug.Log ("Multitouch enabled?" + Input.multiTouchEnabled);
 		if (Input.touchCount > 0) {
 			Debug.Log ("Num touches: " + Input.touchCount);
 			for (int i = 0; i < Input.touchCount; i++) {
@@ -56,15 +43,12 @@ public class MultiTouchController : MonoBehaviour {
 						OnInputUp(hit.collider, ray);
 					}
 				}
-				
-				
 			}
 		} else {
 			if (Input.GetMouseButtonDown (0) || Input.GetMouseButton (0) || Input.GetMouseButtonUp (0)){
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-				
-				
+
 				// No hit
 				if (hit.collider == null) return;
 				if (hit.collider.gameObject == collider2D.gameObject){
@@ -91,7 +75,7 @@ public class MultiTouchController : MonoBehaviour {
 	
 	void OnInputDown(Collider2D col, Ray ray)
 	{
-		Debug.Log (col.gameObject);
+		//Debug.Log (col.gameObject);
 		v3Offset = col.transform.position - ray.GetPoint (10.0f);
 		v3Offset.z = 0.0f;
 		isMouseDown = true;
@@ -106,10 +90,9 @@ public class MultiTouchController : MonoBehaviour {
 	{
 		if (!isMouseDown) return;
 		
-		float dist;
-		Vector3 v3Pos = ray.GetPoint (10.0f);
+		Vector3 v3Pos = ray.GetPoint(10.0f);
 		transform.position = v3Pos + v3Offset;
-		
+
 		Vector2 predictedDir = rigidbody2D.position - prevPosition;
 		if (predictedDir.magnitude > 2) 
 		{
@@ -117,11 +100,7 @@ public class MultiTouchController : MonoBehaviour {
 			FaceTowardsHeading (predictedDir);
 		}
 	}
-	
-	/********/
-	
-	
-	
+
 	void FaceTowardsHeading(Vector2 heading) {
 		float rotation = -Mathf.Atan2(heading.x, heading.y) * Mathf.Rad2Deg;
 		rigidbody2D.MoveRotation(rotation);

@@ -16,14 +16,10 @@ public class GeneralBoid : MultiTouchController {
 	private BoidController boidController;
 	protected float forceMag;
 	protected bool inCollision;
-	public bool isMouseDown;
 	private Animator animator;
 
 	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
 	private float _left, _right, _top, _bottom, _width, _height;
-
-	// TODO remove
-	public static bool testing = false;
 
 	public void Awake() {
 		isMouseDown = false;
@@ -139,21 +135,10 @@ public class GeneralBoid : MultiTouchController {
 		Destroy(gameObject);
 
 		// All the boids have left, end the level.
-		if (boidRigidbodies.Count == 0) {
+		if (boidRigidbodies.Count == 1) {
 			if (!testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
-
-	// TODO remove
-	public void RemovePhysicsNoDestroy() {
-		boidRigidbodies.Remove(rigidbody2D);
-		boidsList.Remove(this);
-		//Destroy(gameObject); TODO
-		// All the boids have been saved.
-		if (boidRigidbodies.Count == 0) {
-			if (!testing) GlobalStateController.finishLevel();
-		}
-	}
 
 	/**
 	 * Face the rigid body towards the direction of travel.

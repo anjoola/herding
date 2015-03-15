@@ -8,11 +8,9 @@ public class PredatorController : MultiTouchController {
 	public float REPULSION_DISTANCE = 10;
 	public float TO_APPLY = 1;
 
-	public string name;
-
-
 	protected void FixedUpdate () {
-		if (GlobalStateController.isPaused && !MultiTouchController.testing) {
+		// TODO pause shark here
+		if (GlobalStateController.shouldPause() && !MultiTouchController.testing) {
 			return;
 		}
 		// Exert repulsion on other boids.

@@ -8,7 +8,7 @@ public class ChildBoid : GeneralBoid
 	private bool physicsRemoved = false;
 	public Material filledMaterial;
 
-	void FixedUpdate(){
+	new void FixedUpdate(){
 		if (physicsRemoved) {
 			gameObject.rigidbody2D.velocity = new Vector2(0,0);
 
@@ -49,7 +49,7 @@ public class ChildBoid : GeneralBoid
 			other.gameObject.tag = "Untagged";
 //			other.gameObject.GetComponentsInChildren<Renderer>()[0].material = filledMaterial;
 			
-			base.RemovePhysicsNoDestroy();
+			//base.RemovePhysicsNoDestroy();
 			physicsRemoved = true;
 			gameObject.rigidbody2D.transform.position = other.gameObject.rigidbody2D.transform.position;
 			
