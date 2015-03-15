@@ -123,7 +123,6 @@ public class GeneralBoid : MultiTouchController {
 		
 		// Add the force to the rigid body and face the direction of movement.
 		rigidbody2D.AddForce(acceleration * forceMag * Time.fixedDeltaTime);
-		Debug.Log ("Velocidad:" + Vector3.Magnitude (rigidbody2D.velocity));
 		if (Vector3.Magnitude(rigidbody2D.velocity) >= STUN_VEL)
 			FaceTowardsHeading();
 
