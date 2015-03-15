@@ -10,7 +10,7 @@ public class PredatorController : MultiTouchController {
 
 	protected void FixedUpdate () {
 		// TODO pause shark here
-		if (GlobalStateController.shouldPause() && !MultiTouchController.testing) {
+		if (GlobalStateController.shouldPause() && !MultiTouchCamera.testing) {
 			return;
 		}
 		// Exert repulsion on other boids.

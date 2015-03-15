@@ -42,29 +42,29 @@ public class ChildBoid : GeneralBoid
 //		base.OnMouseDrag ();
 //	}
 
-	void OnTriggerEnter2D(Collider2D other) {
-		Debug.Log ("Hello");
-		if (other.gameObject.tag == "SeatTag")
-		{
-			other.gameObject.tag = "Untagged";
-//			other.gameObject.GetComponentsInChildren<Renderer>()[0].material = filledMaterial;
-			
-			//base.RemovePhysicsNoDestroy();
-			physicsRemoved = true;
-			gameObject.rigidbody2D.transform.position = other.gameObject.rigidbody2D.transform.position;
-			
-			if (!testing) {
-				
-				Debug.Log ("Increment Point");
-				GlobalStateController.addScore(40);
-            }
-        }
-    }
-
-	void OnCollisionEnter2D(Collision2D coll)
-	{
-		Debug.Log ("Avoiding collision");
-		if (physicsRemoved)	return;
-
-	}
+//	void OnTriggerEnter2D(Collider2D other) {
+//		Debug.Log ("Hello");
+//		if (other.gameObject.tag == "SeatTag")
+//		{
+//			other.gameObject.tag = "Untagged";
+////			other.gameObject.GetComponentsInChildren<Renderer>()[0].material = filledMaterial;
+//			
+//			//base.RemovePhysicsNoDestroy();
+//			physicsRemoved = true;
+//			gameObject.rigidbody2D.transform.position = other.gameObject.rigidbody2D.transform.position;
+//			
+//			if (!esting) {
+//				
+//				Debug.Log ("Increment Point");
+//				GlobalStateController.addScore(40);
+//            }
+//        }
+//    }
+//
+//	void OnCollisionEnter2D(Collision2D coll)
+//	{
+//		Debug.Log ("Avoiding collision");
+//		if (physicsRemoved)	return;
+//
+//	}
 }

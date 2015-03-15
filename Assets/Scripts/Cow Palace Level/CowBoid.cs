@@ -12,7 +12,7 @@ public class CowBoid : GeneralBoid {
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.tag == "DetectionTag") {
-			if (!testing) {
+			if (!MultiTouchCamera.testing) {
 				GlobalStateController.addScore(POINT_PER_BOID);
 				AudioController.playSFX("SingleCow");
             }
