@@ -282,7 +282,7 @@ public class LevelSelectController : MonoBehaviour {
 		while (t < 1.0f) {
 			t += Time.deltaTime * (Time.timeScale / TRANSITION_DURATION);
 			Camera.main.transform.position = Vector3.Lerp(startingPos, targetPos, t);
-			yield return 0;
+			yield return 0.05f;
 		}
 
 		if (!enabled && !isZoomedOut) {

@@ -152,6 +152,7 @@ public class GlobalStateController : MonoBehaviour {
 
 		// Stop music and timer.
 		AudioController.resumeVolume();
+		AudioController.playSFX("EndLevel", 5.0f);
 		AudioController.playAudio("LevelComplete", false);
 		stopTimer();
 

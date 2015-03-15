@@ -30,10 +30,10 @@ public class AudioController : MonoBehaviour {
 	}
 
 	public static void buttonPress() {
-		AudioController.playSFX("ButtonPress", 1.0f);
+		AudioController.playSFX("ButtonPress", 2.0f);
 	}
 	public static void timerBeep() {
-		// TODO
+		AudioController.playSFX("Beep", 1.0f);
 	}
 
 	public static AudioSource getSource(string audioName) {
@@ -102,5 +102,6 @@ public class AudioController : MonoBehaviour {
 			if (fadeIn && a2 != null) a2.volume = i;
 			yield return new WaitForSeconds(0.1f);
 		}
+		if (a1 != null) a1.Stop();
 	}
 }
