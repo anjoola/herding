@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class CowBoid : GeneralBoid {
 	public static int POINT_PER_BOID = 40;
+	public int framesToGo;
+	public int FRAMES_STUNNED = 100;
 
-	void OnCollisionEnter2D(Collision2D col) {
-		//rigidbody2D.velocity = new Vector2(0, 0);
-		//rigidbody2D.AddForce(Random.onUnitSphere * 1.0f, ForceMode2D.Impulse);
+	public void Start(){
+		base.Start ();
+		framesToGo = -1;
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
