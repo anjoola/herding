@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PredatorController : MultiTouchController {
+public class PredatorController : Character {
     private List<Rigidbody2D> _prey;
 
 	public float REPULSION_DISTANCE = 10;

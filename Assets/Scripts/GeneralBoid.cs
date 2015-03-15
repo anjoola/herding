@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GeneralBoid : MonoBehaviour {
+public class GeneralBoid : Character {
 	// List of all the boids.
 	public static List<GeneralBoid> boidsList;
 	public static List<Rigidbody2D> boidRigidbodies;
@@ -147,14 +147,6 @@ public class GeneralBoid : MonoBehaviour {
 			if (!MultiTouchCamera.testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
-
-	/**
-	 * Face the rigid body towards the direction of travel.
-	 */
-	public void FaceTowardsHeading(Vector2 heading) {
-		float rotation = -Mathf.Atan2(heading.x, heading.y) * Mathf.Rad2Deg;
-		rigidbody2D.MoveRotation(rotation);
-	}
 
 	/**
 	 * Wrap edges of the screen to keep boids from going off screen.
