@@ -11,8 +11,8 @@ public class AllLevelsList : MonoBehaviour {
 
 		// Cow palace.
 		// (prefix of all related assets, scene name, 5-star score, time limit).
-		levels.Add(new Level("The Little Red Barn", "CowFlight", (10 - 2) * CowBoid.POINT_PER_BOID, 30));
-		levels.Add(new Level("Barn-by-the-Sea", "CowSea", (10 - 2) * CowBoid.POINT_PER_BOID, 30));
+		levels.Add(new Level("The Little Red Barn", "CowFlight", (10 - 2) * CowBoid.POINT_PER_BOID, 20));
+		levels.Add(new Level("Barn-by-the-Sea", "CowSea", (10 - 2) * CowBoid.POINT_PER_BOID, 20));
 		levels.Add(new Level("Cow Palace", "CowPalace", (12 - 1) * CowBoid.POINT_PER_BOID, 20));
 		levels.Add(new Level("Cows Overrun", "CowOverrun", (10 - 2) * CowBoid.POINT_PER_BOID, 20));
 
