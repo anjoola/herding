@@ -9,12 +9,12 @@ public class FishBoid : GeneralBoid {
 	int speedHash;
 
 	private Vector2 prevPosition;
-	Animator animator;
+	Animator myAnimator;
 
 	new void Start (){
 		speedHash = Animator.StringToHash("speed");
 
-		animator = GetComponent<Animator> ();
+		myAnimator = GetComponent<Animator>();
 		base.forceMag = 2.0f;
 		base.Start();
 		Physics2D.gravity = new Vector2(5, 0);
@@ -46,7 +46,7 @@ public class FishBoid : GeneralBoid {
 		Vector2 currPosition = rigidbody2D.position;
 		float distTraveled = Vector2.SqrMagnitude (currPosition - prevPosition);
 		prevPosition = currPosition;
-		animator.SetFloat (speedHash, Mathf.Abs(TUNE * distTraveled));
+		myAnimator.SetFloat(speedHash, Mathf.Abs(TUNE * distTraveled));
 		if (base.inCollision) {
 			numFramesBeforeNotInCollision--;
 		}
