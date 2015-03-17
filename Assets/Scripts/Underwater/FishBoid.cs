@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class FishBoid : GeneralBoid {
+	public static int POINT_PER_BOID = 40;
 	public float TUNE;
 	private int prevFrameCollide;
 	int numFramesBeforeNotInCollision;
@@ -21,18 +22,22 @@ public class FishBoid : GeneralBoid {
 
 	void OnTriggerEnter2D(Collider2D other) {
 		// Fish entered target zone.
-		if (other.gameObject.tag == "Food Tag") {
-			if (!MultiTouchCamera.testing) {
-				GlobalStateController.addScore(40);
+		if (other.gameObject.tag == "DetectionRemove") {
+			Destroy ();
+			GlobalStateController.addScore(POINT_PER_BOID);
+		}
+		else if (other.gameObject.tag == "DetectionTag") {
+			if (!Camera.main.GetComponent<MultiTouchCamera>().testing) {
+				GlobalStateController.addScore(POINT_PER_BOID);
 			}
 		}
 	}
 
 	void OnTriggerExit2D(Collider2D other) {
-		if (other.gameObject.tag == "Food Tag") {
+		if (other.gameObject.tag == "DetectionTag") {
 			// Fish left target zone.
-			if (!MultiTouchCamera.testing) {
-                GlobalStateController.addScore(-40);
+			if (!Camera.main.GetComponent<MultiTouchCamera>().testing) {
+				GlobalStateController.addScore(-POINT_PER_BOID);
             }
         }
 	}

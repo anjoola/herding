@@ -170,7 +170,7 @@ public class BoidController : MonoBehaviour {
 		for (int i = 0; i < _number_of_boids; i++) {
 			GameObject newObj = (GameObject)Instantiate(_boid_prefab,
 			                                            new Vector3(nucleusX, nucleusY, 0),
-			                                            Quaternion.Euler(90, -20, 180));
+			                                            Quaternion.Euler(90, 0, 180));
 			newObj.transform.parent = transform;
 		}
 	}

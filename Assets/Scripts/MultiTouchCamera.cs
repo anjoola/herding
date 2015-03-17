@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MultiTouchCamera : MonoBehaviour {
 
-	public static bool testing = true;
+	public bool testing = false;
 
 	// Mapping of all the touches.
 	public static Hashtable hmap = new Hashtable();

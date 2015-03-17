@@ -112,7 +112,7 @@ public class GeneralBoid : Character {
 		if (isMouseDown || inCollision) return;
 
 		// Pausing game.
-		if (GlobalStateController.shouldPause() && !MultiTouchCamera.testing) {
+		if (GlobalStateController.shouldPause() && !Camera.main.GetComponent<MultiTouchCamera>().testing) {
 			Pause();
 			return;
 		}
@@ -138,7 +138,7 @@ public class GeneralBoid : Character {
 
 		// All boids have hit the target.
 		if (boidRigidbodies.Count == 1) {
-			if (!MultiTouchCamera.testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.LevelComplete);
+			if (!Camera.main.GetComponent<MultiTouchCamera>().testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.LevelComplete);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class GeneralBoid : Character {
 
 		// All the boids have left, end the level.
 		if (boidRigidbodies.Count == 1) {
-			if (!MultiTouchCamera.testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
+			if (!Camera.main.GetComponent<MultiTouchCamera>().testing) GlobalStateController.finishLevel(GlobalStateController.CompletionType.GameOver);
         }
     }
 
