@@ -14,7 +14,7 @@ public class AllLevelsList : MonoBehaviour {
 		levels.Add(new Level("The Little Red Barn", "CowFlight", 10 * CowBoid.POINT_PER_BOID, 10));
 		levels.Add(new Level("Barn-by-the-Sea", "CowSea", 10 * CowBoid.POINT_PER_BOID, 10));
 		levels.Add(new Level("Cow Palace", "CowPalace", (12 - 2) * CowBoid.POINT_PER_BOID, 15));
-		levels.Add(new Level("Cows Overrun", "CowOverrun", (12 - 2) * CowBoid.POINT_PER_BOID, 15));
+		levels.Add(new Level("Cows Overrun", "CowOverrun", 8 * CowBoid.POINT_PER_BOID, 15));
 
 		// Underwater.
 		levels.Add(new Level("Crab Meal", "CrabMeal", 500, 15));
