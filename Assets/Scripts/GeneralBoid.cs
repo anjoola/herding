@@ -45,6 +45,7 @@ public class GeneralBoid : Character {
 		Physics2D.gravity = new Vector2(0, 0);
 		pauseVel = rigidbody2D.velocity;
 		rigidbody2D.velocity = new Vector2(0,0);
+		rigidbody2D.angularVelocity = 0;
 
 		if (animator != null && animator.speed > 0) {
 			animatorSpeed = animator.speed;
