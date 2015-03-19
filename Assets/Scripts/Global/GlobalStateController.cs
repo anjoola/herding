@@ -52,6 +52,7 @@ public class GlobalStateController : MonoBehaviour {
 		notesController = notes.GetComponent("NotesController") as NotesController;
 
 		// Make sure prefabs are not destroyed.
+		DontDestroyOnLoad(gameObject);
 		DontDestroyOnLoad(transform.gameObject);
 		DontDestroyOnLoad(pauseMenu);
 		DontDestroyOnLoad(levelUI);
