@@ -24,7 +24,9 @@ public class FishBoid : GeneralBoid {
 	void OnTriggerEnter2D(Collider2D other) {
 		// Fish entered target zone.
 		if (other.gameObject.tag == "DetectionRemove") {
-			Destroy ();
+			AudioController.playSFX("CrabBite");
+			Debug.Log ("crab");
+			Destroy();
 			GlobalStateController.addScore(POINT_PER_BOID);
 		}
 		else if (other.gameObject.tag == "DetectionTag") {
