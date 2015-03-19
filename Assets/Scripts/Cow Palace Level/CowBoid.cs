@@ -7,7 +7,7 @@ public class CowBoid : GeneralBoid {
 	public int framesToGo;
 	public int FRAMES_STUNNED = 100;
 
-	public void Start(){
+	new public void Start(){
 		base.Start ();
 		framesToGo = -1;
 	}

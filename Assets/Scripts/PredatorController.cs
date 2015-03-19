@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PredatorController : Character {
     private List<Rigidbody2D> _prey;
 
-	public float REPULSION_DISTANCE = 10;
+	public float REPULSION_DISTANCE = 8;
 	public float TO_APPLY = 1;
 
 	protected void FixedUpdate () {
@@ -21,6 +21,8 @@ public class PredatorController : Character {
 	 * Exerts replusion on the other boids.
 	 */
 	void ExertRepulsion() {
+		if (GeneralBoid.boidRigidbodies == null) return;
+
 		for (int i = 0; i < GeneralBoid.boidRigidbodies.Count; i++) {
 			float dist = Vector2.Distance(rigidbody2D.position, GeneralBoid.boidRigidbodies[i].position);
 			Vector2 forceDir = GeneralBoid.boidRigidbodies[i].position - rigidbody2D.position;
