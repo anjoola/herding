@@ -3,8 +3,8 @@ using System.Collections;
 
 public class SharkSceneController : MonoBehaviour {
 	void Start () {
-		GlobalStateController.showNotes("Deep in the dark depths of the ocean, two sharks hunger for a meal to eat. " +
-			"Move the sharks around to help them trap the fish in the light!", true);
+		GlobalStateController.showNotes("Deep in the dark depths of the ocean, Crab King hungers for a delicious " +
+			"meal. Move the shark minion around to direct fish towards the King!", true);
 		AudioController.playAudio("Underwater");
 	}
 }
