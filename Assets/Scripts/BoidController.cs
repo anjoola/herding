@@ -16,7 +16,7 @@ public class BoidController : MonoBehaviour {
 	public GameObject[] spawnLocations;
 
 	public int start_format; // To start in Grid, Random, etc
-	enum START_FORMATS {RANDOM=1, GRID, FISH, CHILD};
+	enum START_FORMATS {RANDOM=1, GRID, FISH, CHILD, FISH_CENTER};
 
 	void Start () {
 		switch(start_format) {
@@ -31,6 +31,9 @@ public class BoidController : MonoBehaviour {
 			break;
 		case (int) START_FORMATS.CHILD:
 			ChildStart();
+			break;
+		case (int) START_FORMATS.FISH_CENTER:
+			FishCenterStart();
 			break;
 		default:
 			break;
@@ -165,6 +168,21 @@ public class BoidController : MonoBehaviour {
 		// Have fish start at central location.
 		float nucleusY = 30;
 		float nucleusX = -5;
+		
+		// Create all the boids and add them as a child of the controller.
+		for (int i = 0; i < _number_of_boids; i++) {
+			GameObject newObj = (GameObject)Instantiate(_boid_prefab,
+			                                            new Vector3(nucleusX, nucleusY, 0),
+			                                            Quaternion.Euler(90, 0, 180));
+			newObj.transform.parent = transform;
+		}
+	}
+
+	void FishCenterStart()
+	{
+		// Have fish start at central location.
+		float nucleusY = 70;
+		float nucleusX = -766;
 		
 		// Create all the boids and add them as a child of the controller.
 		for (int i = 0; i < _number_of_boids; i++) {

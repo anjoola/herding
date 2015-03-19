@@ -33,6 +33,7 @@ public class FishBoid : GeneralBoid {
 		}
 	}
 
+
 	void OnTriggerExit2D(Collider2D other) {
 		if (other.gameObject.tag == "DetectionTag") {
 			// Fish left target zone.

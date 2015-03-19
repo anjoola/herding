@@ -12,9 +12,11 @@ public class GeneralBoid : Character {
 	private Vector2 gravity;
 	private float animatorSpeed;
 
+	public float SPEED = 0.01f;
+
 	// Boid controller.
 	private BoidController boidController;
-	protected float forceMag;
+	protected float forceMag = 1.0f;
 	protected bool inCollision;
 	private Animator animator;
 
@@ -24,7 +26,7 @@ public class GeneralBoid : Character {
 	public bool isMouseDown;
 
 	// Screen positions in world space, used for wrapping the boids at the edge of the screen.
-	private float _left, _right, _top, _bottom, _width, _height;
+	protected float _left, _right, _top, _bottom, _width, _height;
 
 	public void Awake() {
 		isMouseDown = false;
@@ -72,7 +74,6 @@ public class GeneralBoid : Character {
 	}
 
 	public void Start () {
-		forceMag = 1.0f;
 		inCollision = false;
 
 		// Get the boid controller from the parent.
@@ -154,7 +155,7 @@ public class GeneralBoid : Character {
 	/**
 	 * Wrap edges of the screen to keep boids from going off screen.
 	 */
-	void StartWrap () {
+	protected void StartWrap () {
 		float centerX = _left + 0.5f * _width;
 		float centerY = _bottom + 0.5f * _height;
 		if (rigidbody2D.position.x < _left)
