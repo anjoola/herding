@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SharkSceneController3 : MonoBehaviour {
 	void Start () {
-		GlobalStateController.showNotes("TODO maybe too hard??", true);
+		GlobalStateController.showNotes("The fish are getting smarter now... try to trap them between the sharks!", true);
 		AudioController.playAudio("Underwater");
 	}
 }

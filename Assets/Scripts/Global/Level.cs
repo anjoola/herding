@@ -38,7 +38,7 @@ public class Level {
 		this.score += score;
 	}
 	public int computeStars() {
-		this.numStars = Mathf.Min(5, score / maxScoreIncrement);
+		this.numStars = Mathf.Min(5, (score + 1) / (maxScoreIncrement - 1));
 		return this.numStars;
 	}
 

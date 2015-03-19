@@ -18,7 +18,7 @@ public class PredatorController : Character {
 	}
 
 	/**
-	 * Exerts replusion on the other boids.
+	 * Exerts repulsion on the other boids.
 	 */
 	void ExertRepulsion() {
 		if (GeneralBoid.boidRigidbodies == null) return;

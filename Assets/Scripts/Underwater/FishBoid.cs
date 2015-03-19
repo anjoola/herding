@@ -24,12 +24,12 @@ public class FishBoid : GeneralBoid {
 	void OnTriggerEnter2D(Collider2D other) {
 		// Fish entered target zone.
 		if (other.gameObject.tag == "DetectionRemove") {
-			AudioController.playSFX("CrabBite");
-			Debug.Log ("crab");
+			AudioController.playSFX("CrabAww");
 			Destroy();
 			GlobalStateController.addScore(POINT_PER_BOID);
 		}
 		else if (other.gameObject.tag == "DetectionTag") {
+			AudioController.playSFX("Bubbles");
 			if (!Camera.main.GetComponent<MultiTouchCamera>().testing) {
 				GlobalStateController.addScore(POINT_PER_BOID);
 			}
