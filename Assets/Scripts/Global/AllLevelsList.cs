@@ -17,10 +17,10 @@ public class AllLevelsList : MonoBehaviour {
 		levels.Add(new Level("Cows Overrun", "CowOverrun", (12 - 2) * CowBoid.POINT_PER_BOID, 20));
 
 		// Underwater.
-		levels.Add(new Level("Crab Meal", "SharkWater0", 600, 20));
-		levels.Add(new Level("Rock Cave", "SharkWater1", 640, 10));
-		levels.Add(new Level("Teamwork", "SharkWater2", 100, 15));
-		levels.Add(new Level("Freedom", "SharkWater3", 100, 15));
+		levels.Add(new Level("Crab Meal", "CrabMeal", 600, 20));
+		levels.Add(new Level("Rock Cave", "RockCave", 640, 10));
+		levels.Add(new Level("Teamwork", "Teamwork", 100, 15));
+		levels.Add(new Level("Freedom", "Freedom", 100, 15));
 
 		// Other
 		//levels.Add(new Level("Classroom Chaos", "Classroom", 100, 100));

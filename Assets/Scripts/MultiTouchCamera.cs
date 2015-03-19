@@ -44,6 +44,9 @@ public class MultiTouchCamera : MonoBehaviour {
 				// No hit.
 				if (hit.collider == null) return;
 
+				if (hmap.ContainsKey(1)) {
+					hmap.Remove(1);
+				}
 				hmap.Add(1, hit.collider);
 				OnInputDown(hit.collider, ray);
 
