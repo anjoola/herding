@@ -18,7 +18,7 @@ public class AllLevelsList : MonoBehaviour {
 
 		// Underwater.
 		levels.Add(new Level("Crab Meal", "CrabMeal", 600, 20));
-		levels.Add(new Level("Rock Cave", "RockCave", 640, 10));
+		levels.Add(new Level("Rock Cave", "RockCave", 640, 15));
 		levels.Add(new Level("Teamwork", "Teamwork", 100, 15));
 		levels.Add(new Level("Freedom", "Freedom", 100, 15));
 
