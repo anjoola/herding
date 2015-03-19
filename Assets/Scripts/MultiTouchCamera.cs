@@ -13,6 +13,8 @@ public class MultiTouchCamera : MonoBehaviour {
 	private Vector2 prevPosition;
 
 	void Update(){
+		if (GlobalStateController.shouldPause()) return;
+
 		if (Input.touchCount > 0) {
 			for (int i = 0; i < Input.touchCount; i++) {
 				Touch t = Input.GetTouch(i);

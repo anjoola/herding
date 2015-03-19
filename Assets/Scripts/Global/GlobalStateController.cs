@@ -79,7 +79,7 @@ public class GlobalStateController : MonoBehaviour {
 		SaveController.saveGame();
 	}
 	void Update() {
-		if (Input.GetMouseButtonDown(0) && notes.activeSelf && notesController.dismissAnywhere) {
+		if (Input.GetMouseButtonDown(0) && notes != null && notes.activeSelf && notesController.dismissAnywhere) {
 			hideNotes(false);
 		}
 	}
@@ -155,6 +155,7 @@ public class GlobalStateController : MonoBehaviour {
 		AudioController.playSFX("EndLevel", 5.0f);
 		AudioController.playAudio("LevelComplete", false);
 		stopTimer();
+		timeUpPaused = true;
 
 		// Set level completion message.
 		switch (type) {
