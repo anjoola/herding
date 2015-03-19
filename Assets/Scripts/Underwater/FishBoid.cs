@@ -7,6 +7,7 @@ public class FishBoid : GeneralBoid {
 	private int prevFrameCollide;
 	int numFramesBeforeNotInCollision;
 	int speedHash;
+	public float FORCEMAG = 2.0f;
 
 	private Vector2 prevPosition;
 	Animator myAnimator;
@@ -15,7 +16,7 @@ public class FishBoid : GeneralBoid {
 		speedHash = Animator.StringToHash("speed");
 
 		myAnimator = GetComponent<Animator>();
-		base.forceMag = 2.0f;
+		base.forceMag = FORCEMAG;
 		base.Start();
 		Physics2D.gravity = new Vector2(5, 0);
 	}
