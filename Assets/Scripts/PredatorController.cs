@@ -9,7 +9,6 @@ public class PredatorController : Character {
 	public float TO_APPLY = 1;
 
 	protected void FixedUpdate () {
-		// TODO pause shark here
 		if (GlobalStateController.shouldPause() && !Camera.main.GetComponent<MultiTouchCamera>().testing) {
 			return;
 		}

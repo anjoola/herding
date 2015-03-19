@@ -17,7 +17,6 @@ public class LevelSelectController : MonoBehaviour {
 	Vector3 cameraOrigPos;
 	Vector3 previousZoomPos;
 
-	// TODO remove
 	float CLICK_THRESHOLD = 100f;
 
 	// Level UI layer components.
@@ -225,7 +224,6 @@ public class LevelSelectController : MonoBehaviour {
 	bool loadLevelInfo(Vector3 mousePos, Level level) {
 		Vector3 objLoc = Camera.main.WorldToScreenPoint(
 			GameObject.Find(level.assetsName + " Model").transform.position);
-		// TODO detect clicks on the objects better
 		if (Mathf.Abs (objLoc.x - mousePos.x) < CLICK_THRESHOLD &&
 		    Mathf.Abs (objLoc.y - mousePos.y) < CLICK_THRESHOLD) {
 
