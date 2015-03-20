@@ -7,11 +7,11 @@ public class MultiTouchCamera : MonoBehaviour {
 
 	// Mapping of all the touches.
 	public static Hashtable hmap = new Hashtable();
-//	public static Hashtable prevMap
+	public static Hashtable prevMap = new Hashtable ();
 	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
-	private Vector2 prevPosition;
+//	private Vector2 prevPosition;
 
 	void Update(){
 		if (GlobalStateController.shouldPause()) return;
@@ -30,12 +30,14 @@ public class MultiTouchCamera : MonoBehaviour {
 					// Hit this particular game object.
 					hmap.Add(t.fingerId, hit.collider);
 					OnInputDown(hit.collider, ray);
+					prevMap.Add(t.fingerId, hit.collider.transform.position);
 
 				} else if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary) {
-					OnInputDrag((Collider2D)hmap[t.fingerId], ray);
+					OnInputDrag((Collider2D)hmap[t.fingerId], ray, t.fingerId);
 				} else {
 					OnInputUp((Collider2D)hmap[t.fingerId], ray);
 					hmap.Remove(t.fingerId);
+					prevMap.Remove(t.fingerId);
 				}
 			}
 		} else {
@@ -51,14 +53,16 @@ public class MultiTouchCamera : MonoBehaviour {
 				}
 				hmap.Add(1, hit.collider);
 				OnInputDown(hit.collider, ray);
+				prevMap.Add(1, hit.collider.transform.position);
 
 			} else if (Input.GetMouseButton(0) || Input.GetMouseButtonUp(0)) {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				if (Input.GetMouseButton(0)) {
-					OnInputDrag((Collider2D)hmap[1], ray);
+					OnInputDrag((Collider2D)hmap[1], ray, 1);
 				} else if (Input.GetMouseButtonUp(0)) {
 					OnInputUp((Collider2D)hmap[1], ray);
 					hmap.Remove(1);
+					prevMap.Remove(1);
 				}
 			}
 		}
@@ -73,17 +77,23 @@ public class MultiTouchCamera : MonoBehaviour {
 
 	void OnInputUp(Collider2D col, Ray ray) { }
 
-	void OnInputDrag(Collider2D col, Ray ray) {
+	void OnInputDrag(Collider2D col, Ray ray, int fingerID) {
 		if (col == null || col.rigidbody2D == null || !col.gameObject.tag.Equals("Draggable")) return;
 
 		Vector3 v3Pos = ray.GetPoint(10.0f);
 		col.transform.position = v3Pos + v3Offset;
 
-		Vector2 predictedDir = col.rigidbody2D.position - prevPosition;
-		if (predictedDir.magnitude > 2) {
-			prevPosition = col.rigidbody2D.position;
-			Character character = col.gameObject.GetComponent<Character>();
-			character.FaceTowardsHeading(predictedDir);
-		}
+		if (prevMap.ContainsKey(fingerID)){
+			Vector3 prevPosition = (Vector3) prevMap[fingerID];
+
+			Vector2 prevPosTwo  = new Vector2(prevPosition.x, prevPosition.y);
+			Vector2 predictedDir = col.rigidbody2D.position - prevPosTwo;
+			if (predictedDir.magnitude > 2) {
+				prevPosition = col.rigidbody2D.position;
+				prevMap[fingerID] = prevPosition;
+				Character character = col.gameObject.GetComponent<Character>();
+				character.FaceTowardsHeading(predictedDir);
+			}
+        }
 	}
 }
