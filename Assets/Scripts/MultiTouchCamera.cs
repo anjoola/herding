@@ -7,6 +7,7 @@ public class MultiTouchCamera : MonoBehaviour {
 
 	// Mapping of all the touches.
 	public static Hashtable hmap = new Hashtable();
+//	public static Hashtable prevMap
 	private float dist;
 	private Vector3 v3Offset;
 	private Plane plane;
@@ -29,6 +30,7 @@ public class MultiTouchCamera : MonoBehaviour {
 					// Hit this particular game object.
 					hmap.Add(t.fingerId, hit.collider);
 					OnInputDown(hit.collider, ray);
+
 				} else if (t.phase == TouchPhase.Moved || t.phase == TouchPhase.Stationary) {
 					OnInputDrag((Collider2D)hmap[t.fingerId], ray);
 				} else {

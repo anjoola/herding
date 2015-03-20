@@ -20,8 +20,8 @@ public class SaveController {
 	 * Loads an existing game or creates a new file if one doesn't exist.
 	 */
 	public static void loadGame() {
-		//GlobalStateController.currentGame = new GameModel();
-		//return;
+		GlobalStateController.currentGame = new GameModel();
+		return;
 		try {
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + SAVE_FILE, FileMode.Open);
